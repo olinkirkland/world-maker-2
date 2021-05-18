@@ -6,6 +6,7 @@
 
     <fx:Script><![CDATA[
         import events.ModelEvent;
+        import events.UIEvent;
 
         import global.Color;
         import global.Icons;
@@ -21,6 +22,7 @@
         import mx.events.FlexEvent;
 
         import ui.PopupManager;
+        import ui.panes.Pane;
 
         import ui.popups.ConfirmPopup;
         import ui.staticOverlays.StaticOverlay;
@@ -34,6 +36,7 @@
 
         private var toolbar:Toolbar;
         private var staticOverlay:StaticOverlay;
+        private var pane:Pane;
 
         private function onCreationComplete(event:FlexEvent):void
         {
@@ -42,6 +45,8 @@
             taskManager = TaskManager.instance;
 
             signal.addEventListener(ModelEvent.TASK_CHANGED, onTaskChanged);
+            signal.addEventListener(UIEvent.OPEN_PANE, onOpenPane);
+            signal.addEventListener(UIEvent.CLOSE_PANE, onClosePane);
 
             loadTask();
         }
@@ -49,6 +54,33 @@
         private function onTaskChanged(event:ModelEvent):void
         {
             loadTask();
+        }
+
+        private function onOpenPane(event:UIEvent):void
+        {
+            var paneClassName:String = null;
+
+            if (pane)
+            {
+                paneClassName = pane.className;
+                pane.dispose();
+                groupPane.removeElement(pane);
+                pane = null;
+
+                groupPane.visible = groupPane.includeInLayout = false;
+            }
+
+            if (!event.payload || event.payload.className == paneClassName)
+                return;
+
+            pane = event.payload;
+            groupPane.addElement(pane);
+            groupPane.visible = groupPane.includeInLayout = true;
+        }
+
+        private function onClosePane(event:UIEvent):void
+        {
+            onOpenPane(event);
         }
 
         private function loadTask():void
@@ -60,6 +92,7 @@
             {
                 toolbar.dispose();
                 groupToolbar.removeElement(toolbar);
+                toolbar = null;
             }
 
             // Add toolbar
@@ -73,6 +106,7 @@
             {
                 staticOverlay.dispose();
                 groupStaticOverlay.removeElement(staticOverlay);
+                staticOverlay = null;
             }
 
             // Add static overlay
@@ -80,6 +114,14 @@
             staticOverlay.percentWidth = 100;
             staticOverlay.percentHeight = 100;
             groupStaticOverlay.addElement(staticOverlay);
+
+            // Remove pane
+            if (pane)
+            {
+                pane.dispose();
+                groupPane.removeElement(pane);
+                pane = null;
+            }
 
             // Validate next task button
             buttonNextTask.visible = buttonNextTask.includeInLayout = taskManager.currentTask.index < taskManager.tasks.length - 1;

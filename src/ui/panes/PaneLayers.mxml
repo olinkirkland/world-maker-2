@@ -1,28 +1,19 @@
 <?xml version="1.0"?>
-<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009"
-         xmlns:s="library://ns.adobe.com/flex/spark"
-         skinClass="ui.parts.skins.PanelSkinOutline"
-         creationComplete="onCreationComplete(event)">
+<panes:Pane xmlns:fx="http://ns.adobe.com/mxml/2009"
+            xmlns:s="library://ns.adobe.com/flex/spark"
+            creationComplete="onCreationComplete(event)"
+            xmlns:panes="ui.panes.*">
     <fx:Script>
         <![CDATA[
         import events.LayerEvent;
-
-        import game.Layer;
-        import game.Map;
 
         import global.Color;
         import global.Icons;
         import global.Local;
 
-        import managers.State;
+        import logic.Layer;
 
         import mx.collections.ArrayCollection;
-        import mx.events.FlexEvent;
-
-        private function onCreationComplete(event:FlexEvent):void
-        {
-            addEventListeners();
-        }
 
         public function validate():void
         {
@@ -34,11 +25,18 @@
             return ArrayCollection(listLayers.dataProvider);
         }
 
-        private function addEventListeners():void
+        override protected function addEventListeners():void
         {
             listLayers.addEventListener(LayerEvent.UP, onLayerUp);
             listLayers.addEventListener(LayerEvent.DOWN, onLayerDown);
             listLayers.addEventListener(LayerEvent.TOGGLE, onLayerToggle);
+        }
+
+        override protected function removeEventListeners():void
+        {
+            listLayers.removeEventListener(LayerEvent.UP, onLayerUp);
+            listLayers.removeEventListener(LayerEvent.DOWN, onLayerDown);
+            listLayers.removeEventListener(LayerEvent.TOGGLE, onLayerToggle);
         }
 
         private function onLayerUp(event:LayerEvent):void
@@ -75,7 +73,7 @@
 
         private function onClose(event:MouseEvent):void
         {
-            dispatchEvent(new Event(Event.CLOSE, true));
+            close();
         }
 
         private function validateLayersCount():void
@@ -95,7 +93,7 @@
 
         private function onResetLayers(event:MouseEvent):void
         {
-            Map.instance.resetLayers();
+            //Map.instance.resetLayers();
             layers.refresh();
             validateLayersCount();
         }
@@ -130,4 +128,4 @@
                       click="onResetLayers(event)"/>
         </s:HGroup>
     </s:VGroup>
-</s:Panel>
+</panes:Pane>

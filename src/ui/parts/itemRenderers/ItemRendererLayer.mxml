@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
                 xmlns:s="library://ns.adobe.com/flex/spark"
-                xmlns:c="ui.parts.components.*"
                 autoDrawBackground="false"
                 width="100%">
 
@@ -17,14 +16,12 @@
     <fx:Script><![CDATA[
         import events.LayerEvent;
 
-        import game.Layer;
-        import game.Map;
-
         import global.Color;
-
         import global.Icons;
         import global.Local;
         import global.Util;
+
+        import logic.Layer;
 
         private var layer:Layer;
 
@@ -35,7 +32,7 @@
                 return;
 
             buttonUp.enabled = itemIndex > 0;
-            buttonDown.enabled = itemIndex < Map.instance.layers.length - 1;
+            //buttonDown.enabled = itemIndex < Map.instance.layers.length - 1;
 
             layer = value as Layer;
 

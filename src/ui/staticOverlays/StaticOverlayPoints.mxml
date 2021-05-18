@@ -13,6 +13,8 @@
 
         import mx.events.FlexEvent;
 
+        import ui.panes.PaneLayers;
+
         override protected function onCreationComplete(event:FlexEvent):void
         {
             super.onCreationComplete(event);
@@ -36,7 +38,7 @@
 
         private function onToggleLayers(event:MouseEvent):void
         {
-
+            signal.dispatchEvent(new UIEvent(UIEvent.OPEN_PANE, new PaneLayers()));
         }
 
         private function onZoomOut(event:MouseEvent):void

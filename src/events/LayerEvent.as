@@ -2,8 +2,6 @@ package events
 {
     import flash.events.Event;
 
-    import game.Layer;
-
     import logic.Layer;
 
     public class LayerEvent extends Event
