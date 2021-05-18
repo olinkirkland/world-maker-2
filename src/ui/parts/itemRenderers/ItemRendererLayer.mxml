@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:c="ui.parts.components.*"
+                autoDrawBackground="false"
+                width="100%">
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+        <s:State name="down"/>
+        <s:State name="over"/>
+        <s:State name="up"/>
+        <s:State name="selected"/>
+    </s:states>
+
+    <fx:Script><![CDATA[
+        import events.LayerEvent;
+
+        import game.Layer;
+        import game.Map;
+
+        import global.Color;
+
+        import global.Icons;
+        import global.Local;
+        import global.Util;
+
+        private var layer:Layer;
+
+        override public function set data(value:Object):void
+        {
+            super.data = value;
+            if (!value)
+                return;
+
+            buttonUp.enabled = itemIndex > 0;
+            buttonDown.enabled = itemIndex < Map.instance.layers.length - 1;
+
+            layer = value as Layer;
+
+            labelName.text = Local.text(Util.camelCaseToUnderScore(layer.id));
+            buttonToggle.setStyle("icon", layer.visible ? Icons.Show : Icons.Hide);
+            buttonToggle.enabled = layer.allowed;
+            labelName.alpha = labelIndex.alpha = layer.allowed ? 1 : .5;
+
+            if (!layer.allowed)
+                buttonToggle.setStyle("icon", Icons.Lock);
+
+            labelIndex.text = "" + itemIndex;
+        }
+
+        private function onUp(event:MouseEvent):void
+        {
+            // Swap with the item above
+            dispatchEvent(new LayerEvent(LayerEvent.UP, layer));
+        }
+
+        private function onDown(event:MouseEvent):void
+        {
+            // Swap with the item below
+            dispatchEvent(new LayerEvent(LayerEvent.DOWN, layer));
+        }
+
+        private function onToggle(event:MouseEvent):void
+        {
+            layer.visible = !layer.visible;
+            dispatchEvent(new LayerEvent(LayerEvent.TOGGLE, layer));
+        }
+        ]]>
+    </fx:Script>
+
+    <s:HGroup width="100%">
+
+        <s:Group width="100%">
+
+            <s:VGroup width="100%"
+                      gap="0">
+
+                <s:HGroup id="groupContent"
+                          width="100%"
+                          padding="5"
+                          paddingTop="10"
+                          paddingBottom="10"
+                          verticalAlign="middle">
+
+                    <s:Label id="labelIndex"/>
+
+                    <s:Button id="buttonToggle"
+                              skinClass="ui.parts.skins.ButtonSkinIcon"
+                              click="onToggle(event)"/>
+                    <s:Label id="labelName"
+                             width="100%"/>
+
+                    <s:HGroup>
+                        <s:Button id="buttonUp"
+                                  skinClass="ui.parts.skins.ButtonSkinIcon"
+                                  icon="{Icons.Up}"
+                                  click="onUp(event)"/>
+                        <s:Button id="buttonDown"
+                                  skinClass="ui.parts.skins.ButtonSkinIcon"
+                                  icon="{Icons.Down}"
+                                  click="onDown(event)"/>
+                    </s:HGroup>
+                </s:HGroup>
+                <s:Line width="100%">
+                    <s:stroke>
+                        <s:SolidColorStroke color="{Color.textLow}"
+                                            alpha=".5"/>
+                    </s:stroke>
+                </s:Line>
+
+            </s:VGroup>
+
+        </s:Group>
+
+    </s:HGroup>
+
+
+</s:ItemRenderer>

@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<popups:Popup xmlns:fx="http://ns.adobe.com/mxml/2009"
+              xmlns:s="library://ns.adobe.com/flex/spark"
+              xmlns:popups="ui.popups.*"
+              xmlns:ui="ui.parts.components.*"
+              width="320">
+
+    <fx:Script><![CDATA[
+        import data.ProjectManager;
+
+        import global.Color;
+
+        import global.Icons;
+
+        import mx.events.FlexEvent;
+
+        import spark.events.TextOperationEvent;
+
+        public var callbackConfirm:Function = null;
+        public var validateFunction:Function = null;
+        public var header:String = "Confirm decision";
+        public var description:String = "Input text.";
+        public var textConfirm:String = "Confirm";
+        public var textCancel:String = "Cancel";
+        public var textPrompt:String = "Text";
+
+        private var _validateTooltip:String;
+        private var _initialInputText:String;
+
+        override public function onCreationComplete(event:FlexEvent):void
+        {
+            super.onCreationComplete(event);
+
+            groupImageNameValidation.toolTip = _validateTooltip;
+            input.text = _initialInputText;
+
+            callLater(function ():void
+            {
+                focusManager.setFocus(input);
+            });
+        }
+
+        public function set validateTooltip(value:String):void
+        {
+            _validateTooltip = value;
+            if (groupImageNameValidation)
+                groupImageNameValidation.toolTip = _validateTooltip;
+        }
+
+        public function set initialInputText(value:String):void
+        {
+            _initialInputText = value;
+            if (input)
+                input.text = _initialInputText;
+        }
+
+        private function cancelAndClose(event:MouseEvent):void
+        {
+            close();
+        }
+
+        private function confirmAndClose(event:MouseEvent):void
+        {
+            if (callbackConfirm != null) callbackConfirm.apply(this, [input.text]);
+            close();
+        }
+
+        private function onInputChange(event:TextOperationEvent):void
+        {
+            validateName();
+        }
+
+        private function validateName():void
+        {
+            var valid:Boolean = validateFunction.apply(this, [input.text]);
+            groupImageNameValidation.includeInLayout = groupImageNameValidation.visible = !valid;
+            buttonConfirm.enabled = valid;
+        }
+        ]]>
+    </fx:Script>
+
+    <s:VGroup gap="10"
+              width="100%">
+
+        <s:HGroup width="100%"
+                  verticalAlign="middle">
+            <s:Label id="labelHeader"
+                     text="{header}"
+                     width="100%"
+                     styleName="header"/>
+        </s:HGroup>
+
+        <s:Panel width="100%">
+            <s:VGroup width="100%">
+                <s:Label id="labelDescription"
+                         text="{description}"
+                         width="100%"/>
+                <s:HGroup width="100%"
+                          verticalAlign="middle"
+                          gap="10">
+                    <s:Group id="groupImageNameValidation">
+                        <ui:ColorBitmapImage id="imageNameValidation"
+                                             width="16"
+                                             height="16"
+                                             source="{Icons.Error}"
+                                             color="{Color.textHigh}"/>
+                    </s:Group>
+                </s:HGroup>
+            </s:VGroup>
+        </s:Panel>
+
+        <s:HGroup width="100%"
+                  horizontalAlign="right">
+            <s:Button id="buttonCancel"
+                      label="{textCancel}"
+                      click="cancelAndClose(event)"/>
+            <s:Button id="buttonConfirm"
+                      label="{textConfirm}"
+                      click="confirmAndClose(event)"/>
+        </s:HGroup>
+
+    </s:VGroup>
+</popups:Popup>

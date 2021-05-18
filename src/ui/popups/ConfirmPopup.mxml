@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<popups:Popup xmlns:fx="http://ns.adobe.com/mxml/2009"
+              xmlns:s="library://ns.adobe.com/flex/spark"
+              xmlns:popups="ui.popups.*"
+              width="280">
+
+    <fx:Script><![CDATA[
+        import mx.events.FlexEvent;
+
+        public var callbackConfirm:Function = null;
+        public var callbackCancel:Function = null;
+        public var header:String;      // Confirm decision
+        public var description:String; // Are you sure?
+        public var textConfirm:String; // Confirm
+        public var textCancel:String;  // Cancel
+
+        override public function onCreationComplete(event:FlexEvent):void
+        {
+            super.onCreationComplete(event);
+        }
+
+        private function cancelAndClose(event:MouseEvent):void
+        {
+            if (callbackCancel != null) callbackCancel.apply();
+            close();
+        }
+
+        private function confirmAndClose(event:MouseEvent):void
+        {
+            if (callbackConfirm != null) callbackConfirm.apply();
+            close();
+        }
+        ]]>
+    </fx:Script>
+
+    <s:VGroup gap="15"
+              width="100%">
+
+        <s:Label id="labelHeader"
+                 text="{header}"
+                 width="100%"
+                 styleName="header"/>
+
+        <s:Label id="labelDescription"
+                 text="{description}"
+                 width="100%"/>
+
+        <s:HGroup width="100%"
+                  horizontalAlign="right"
+                  top="5">
+            <s:Button id="buttonCancel"
+                      label="{textCancel}"
+                      click="cancelAndClose(event)"/>
+            <s:Button id="buttonConfirm"
+                      label="{textConfirm}"
+                      skinClass="ui.parts.skins.ButtonThemeSkin"
+                      click="confirmAndClose(event)"/>
+        </s:HGroup>
+
+    </s:VGroup>
+</popups:Popup>

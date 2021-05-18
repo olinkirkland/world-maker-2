@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         skinClass="ui.parts.skins.PanelSkinOutline"
+         creationComplete="onCreationComplete(event)">
+    <fx:Script>
+        <![CDATA[
+        import events.LayerEvent;
+
+        import game.Layer;
+        import game.Map;
+
+        import global.Color;
+        import global.Icons;
+        import global.Local;
+
+        import managers.State;
+
+        import mx.collections.ArrayCollection;
+        import mx.events.FlexEvent;
+
+        private function onCreationComplete(event:FlexEvent):void
+        {
+            addEventListeners();
+        }
+
+        public function validate():void
+        {
+            validateLayersCount();
+        }
+
+        private function get layers():ArrayCollection
+        {
+            return ArrayCollection(listLayers.dataProvider);
+        }
+
+        private function addEventListeners():void
+        {
+            listLayers.addEventListener(LayerEvent.UP, onLayerUp);
+            listLayers.addEventListener(LayerEvent.DOWN, onLayerDown);
+            listLayers.addEventListener(LayerEvent.TOGGLE, onLayerToggle);
+        }
+
+        private function onLayerUp(event:LayerEvent):void
+        {
+            var l:Layer = event.layer;
+            var i:int = layers.getItemIndex(l);
+
+            if (i <= 0)
+                return;
+
+            layers.addItemAt(layers.removeItemAt(i), i - 1);
+            layers.refresh();
+            validateLayersCount();
+        }
+
+        private function onLayerDown(event:LayerEvent):void
+        {
+            var l:Layer = event.layer;
+            var i:int = layers.getItemIndex(l);
+
+            if (i >= layers.length - 1)
+                return;
+
+            layers.addItemAt(layers.removeItemAt(i), i + 1);
+            layers.refresh();
+            validateLayersCount();
+        }
+
+        private function onLayerToggle(event:LayerEvent):void
+        {
+            listLayers.dataProvider.itemUpdated(event.layer);
+            validateLayersCount();
+        }
+
+        private function onClose(event:MouseEvent):void
+        {
+            dispatchEvent(new Event(Event.CLOSE, true));
+        }
+
+        private function validateLayersCount():void
+        {
+            var visibleCount:int = 0;
+            var allowedCount:int = 0;
+            for each (var layer:Layer in layers)
+            {
+                if (layer.allowed)
+                    allowedCount++;
+                if (layer.allowed && layer.visible)
+                    visibleCount++;
+            }
+
+            labelLayersCount.text = visibleCount + "/" + allowedCount;
+        }
+
+        private function onResetLayers(event:MouseEvent):void
+        {
+            Map.instance.resetLayers();
+            layers.refresh();
+            validateLayersCount();
+        }
+        ]]>
+    </fx:Script>
+    <s:VGroup width="100%"
+              height="100%">
+        <s:HGroup width="100%"
+                  verticalAlign="middle"
+                  padding="10">
+            <s:Label text="{Local.text('map_layers')}"/>
+            <s:Label id="labelLayersCount"
+                     color="{Color.theme}"
+                     toolTip="{Local.text('layers_count_tooltip')}"/>
+            <s:Spacer width="100%"/>
+            <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                      icon="{Icons.Multiply}"
+                      click="onClose(event)"/>
+        </s:HGroup>
+        <s:List id="listLayers"
+                useVirtualLayout="false"
+                width="100%"
+                height="100%"
+                contentBackgroundAlpha="0"
+                borderVisible="false"
+                horizontalScrollPolicy="off"
+                preventSelection="true"
+                itemRenderer="ui.parts.itemRenderers.ItemRendererLayer"/>
+        <s:HGroup width="100%"
+                  horizontalAlign="center">
+            <s:Button label="{Local.text('reset')}"
+                      click="onResetLayers(event)"/>
+        </s:HGroup>
+    </s:VGroup>
+</s:Panel>

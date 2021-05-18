@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:ui="ui.*"
+         creationComplete="onCreationComplete(event)">
+
+    <fx:Script><![CDATA[
+        import events.ModelEvent;
+
+        import global.Color;
+        import global.Icons;
+        import global.Local;
+        import global.Signal;
+        import global.Util;
+
+        import logic.Model;
+        import logic.tasks.Task;
+
+        import managers.TaskManager;
+
+        import mx.events.FlexEvent;
+
+        import ui.PopupManager;
+
+        import ui.popups.ConfirmPopup;
+        import ui.staticOverlays.StaticOverlay;
+
+        import ui.toolbars.Toolbar;
+
+        // Singletons
+        private var signal:Signal;
+        private var model:Model;
+        private var taskManager:TaskManager;
+
+        private var toolbar:Toolbar;
+        private var staticOverlay:StaticOverlay;
+
+        private function onCreationComplete(event:FlexEvent):void
+        {
+            signal = Signal.instance;
+            model = Model.instance;
+            taskManager = TaskManager.instance;
+
+            signal.addEventListener(ModelEvent.TASK_CHANGED, onTaskChanged);
+
+            loadTask();
+        }
+
+        private function onTaskChanged(event:ModelEvent):void
+        {
+            loadTask();
+        }
+
+        private function loadTask():void
+        {
+            var task:Task = taskManager.currentTask;
+
+            // Remove toolbar
+            if (toolbar)
+            {
+                toolbar.dispose();
+                groupToolbar.removeElement(toolbar);
+            }
+
+            // Add toolbar
+            toolbar = new task.toolbar;
+            toolbar.percentWidth = 100;
+            toolbar.percentHeight = 100;
+            groupToolbar.addElement(toolbar);
+
+            // Remove static overlay
+            if (staticOverlay)
+            {
+                staticOverlay.dispose();
+                groupStaticOverlay.removeElement(staticOverlay);
+            }
+
+            // Add static overlay
+            staticOverlay = new task.staticOverlay;
+            staticOverlay.percentWidth = 100;
+            staticOverlay.percentHeight = 100;
+            groupStaticOverlay.addElement(staticOverlay);
+
+            // Validate next task button
+            buttonNextTask.visible = buttonNextTask.includeInLayout = taskManager.currentTask.index < taskManager.tasks.length - 1;
+        }
+
+        private function onClickSave(event:MouseEvent):void
+        {
+            model.save();
+        }
+
+        private function onClickReset(event:MouseEvent):void
+        {
+            // Overwrite the current save file with a blank one, then exit the app
+            model.save({});
+            NativeApplication.nativeApplication.exit();
+        }
+
+        private function onClickOptions(event:MouseEvent):void
+        {
+            // todo open the options popup
+        }
+
+        private function onClickNextTask(event:MouseEvent):void
+        {
+            var p:ConfirmPopup = new ConfirmPopup();
+            p.header = Local.text("complete_task"); // Complete this task
+            p.description = Local.text("complete_task_text"); // Completing this task will lock in your choices permanently and progress to the next task
+            p.textConfirm = Local.text("yes_im_sure"); // Yes, I'm sure
+            p.textCancel = Local.text("cancel"); // Cancel
+            p.callbackConfirm = onNextTaskConfirm;
+            PopupManager.open(p);
+        }
+
+        public function onNextTaskConfirm():void
+        {
+            // Go to the next task
+            taskManager.goToNextTask();
+        }
+        ]]></fx:Script>
+
+    <!--Frame-->
+    <s:VGroup width="100%"
+              height="100%">
+
+        <!--Navigation Bar (Top Bar)-->
+        <s:Group width="100%">
+
+            <s:RectangularDropShadow width="100%"
+                                     height="100%"
+                                     blurX="10"
+                                     blurY="10"
+                                     alpha=".5"
+                                     distance="0"
+                                     angle="90"
+                                     color="{Color.black}"/>
+
+            <s:HGroup width="100%"
+                      verticalAlign="middle"
+                      padding="15">
+
+                <s:HGroup height="100%"
+                          verticalAlign="middle"
+                          gap="10">
+
+                    <s:Label text="Worldmaker"
+                             fontSize="24"
+                             fontFamily="Logo"
+                             color="{Color.textMedium}"/>
+
+                </s:HGroup>
+
+                <s:Spacer width="100%"/>
+
+                <s:Button id="buttonReset"
+                          label="{Local.text('reset')}"
+                          click="onClickReset(event)"
+                          skinClass="ui.parts.skins.ButtonTextSkin"/>
+
+                <s:Button label="{Local.text('options')}"
+                          icon="{Icons.Settings}"
+                          click="onClickOptions(event)"/>
+
+                <s:Button id="buttonSave"
+                          label="{Local.text('save')}"
+                          icon="{Icons.Save}"
+                          click="onClickSave(event)"/>
+
+            </s:HGroup>
+        </s:Group>
+
+        <s:HGroup width="100%"
+                  height="100%"
+                  padding="15">
+
+            <!--Panes-->
+            <s:Group id="groupPane"
+                     width="300"
+                     height="100%"
+                     includeInLayout="false"
+                     visible="false"/>
+
+            <!--Map & Overlays-->
+
+            <s:Group width="100%"
+                     height="100%">
+
+                <!--Map-->
+                <ui:Map width="100%"
+                        height="100%"/>
+
+                <!--Anchored Overlay-->
+
+                <!--Static Overlay  -->
+                <s:Group id="groupStaticOverlay"
+                         width="100%"
+                         height="100%"/>
+
+            </s:Group>
+
+            <s:Panel width="300"
+                     height="100%"
+                     skinClass="ui.parts.skins.PanelSkinOutline">
+
+                <s:VGroup width="100%"
+                          height="100%"
+                          padding="10"
+                          horizontalAlign="center">
+
+                    <!--Toolbar-->
+                    <s:Group id="groupToolbar"
+                             width="100%"
+                             height="100%"/>
+
+                    <s:Button id="buttonNextTask"
+                              skinClass="ui.parts.skins.ButtonThemeSkin"
+                              label="{Local.text('next_task')}"
+                              click="onClickNextTask(event)"/>
+
+                </s:VGroup>
+
+            </s:Panel>
+
+        </s:HGroup>
+
+    </s:VGroup>
+
+    <ui:Modal width="100%"
+              height="100%"/>
+</s:Group>

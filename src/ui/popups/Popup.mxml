@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         skinClass="ui.parts.skins.PanelSkinPopup"
+         creationComplete="onCreationComplete(event)"
+         title="Popup">
+
+    <fx:Script><![CDATA[
+        import com.greensock.TweenLite;
+
+        import ui.PopupManager;
+
+        import mx.events.FlexEvent;
+
+        import spark.components.Group;
+
+        protected var fadeSpeed:Number = .5;
+
+        public function onCreationComplete(event:FlexEvent):void
+        {
+            visible = false;
+            TweenLite.fromTo(this, fadeSpeed, {alpha: 0}, {alpha: 1});
+            callLater(function ():void
+            {
+                visible = true;
+            });
+        }
+
+        public function dispose():void
+        {
+        }
+
+        public function close():void
+        {
+            dispose();
+            (owner as Group).removeElement(this);
+
+            PopupManager.close();
+        }
+        ]]>
+    </fx:Script>
+</s:Panel>

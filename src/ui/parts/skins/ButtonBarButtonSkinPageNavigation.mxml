@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<s:SparkButtonSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:components="ui.parts.components.*"
+                   minWidth="21"
+                   minHeight="21"
+                   alpha.disabled="0.5"
+                   creationComplete="onCreationComplete(event)"
+                   stateChangeComplete="onStateChangeComplete(event)"
+                   autoIconManagement="false">
+
+    <fx:Metadata>
+        <![CDATA[
+        [HostComponent("spark.components.ButtonBarButton")]
+        ]]>
+    </fx:Metadata>
+
+    <fx:Script><![CDATA[
+        import global.Color;
+
+        import mx.events.FlexEvent;
+
+        import spark.components.ButtonBarButton;
+
+        import ui.parts.components.ColorBitmapImage;
+
+        private function onCreationComplete(event:FlexEvent):void
+        {
+            validateIconDisplay();
+        }
+
+        private function onStateChangeComplete(event:FlexEvent):void
+        {
+            validateIconDisplay();
+        }
+
+        private function validateIconDisplay():void
+        {
+            if (!iconDisplay)
+                return;
+
+            iconDisplay.width = 16;
+            iconDisplay.height = 16;
+
+            ColorBitmapImage(iconDisplay).color = Label(labelDisplay).getStyle("color");
+        }
+
+        override protected function contentChangeHandler(event:Event):void
+        {
+            super.contentChangeHandler(event);
+            badge.visible = badge.includeInLayout = hostComponent.content.showBadge;
+        }
+        ]]></fx:Script>
+
+    <!-- States -->
+    <s:states>
+        <s:State name="up"/>
+        <s:State name="over"
+                 stateGroups="overStates"/>
+        <s:State name="down"
+                 stateGroups="downStates"/>
+        <s:State name="disabled"
+                 stateGroups="disabledStates"/>
+        <s:State name="upAndSelected"
+                 stateGroups="selectedStates, selectedUpStates"/>
+        <s:State name="overAndSelected"
+                 stateGroups="overStates, selectedStates"/>
+        <s:State name="downAndSelected"
+                 stateGroups="downStates, selectedStates"/>
+        <s:State name="disabledAndSelected"
+                 stateGroups="selectedUpStates, disabledStates, selectedStates"/>
+    </s:states>
+
+    <s:Group>
+
+        <s:Rect width="100%"
+                height="100%">
+            <s:fill>
+                <s:SolidColor alpha="0"/>
+            </s:fill>
+        </s:Rect>
+
+        <s:HGroup height="30"
+                  verticalAlign="middle">
+
+            <components:ColorBitmapImage id="iconDisplay"
+                                         includeInLayout="{iconDisplay.source}"/>
+
+            <s:Label id="labelDisplay"
+                     fontSize="18"
+                     color.overStates="{Color.textHigh}"
+                     color.selectedStates="{Color.theme}"
+                     color.up="{Color.textMedium}"/>
+
+            <s:VGroup id="badge"
+                      height="15">
+                <s:Ellipse width="7"
+                           height="7">
+                    <s:fill>
+                        <s:SolidColor color="{Color.theme}"/>
+                    </s:fill>
+                </s:Ellipse>
+            </s:VGroup>
+
+        </s:HGroup>
+
+    </s:Group>
+
+</s:SparkButtonSkin>

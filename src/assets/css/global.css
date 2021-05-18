@@ -1,0 +1,124 @@
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+@font-face {
+    src: url("/assets/fonts/OpenSans-Regular.ttf");
+    fontFamily: Body;
+    fontWeight: normal;
+    fontStyle: normal;
+    letterSpacing: 10;
+}
+
+@font-face {
+    src: url("/assets/fonts/OpenSans-Bold.ttf");
+    fontFamily: Body;
+    fontWeight: bold;
+    fontStyle: normal;
+    letterSpacing: 10;
+}
+
+@font-face {
+    src: url("/assets/fonts/Afternoon.ttf");
+    fontFamily: Logo;
+    fontWeight: normal;
+    fontStyle: normal;
+    letterSpacing: 15;
+}
+
+/*
+Labels
+ */
+
+s|Label {
+    lineHeight: 16;
+    paddingBottom: -2;
+    font-family: Body;
+    color: #6d7173;
+    fontSize: 12;
+}
+
+s|Label.pageTitle {
+    color: #fcfcfb;
+    fontWeight: bold;
+    fontSize: 24;
+}
+
+s|Label.button {
+    color: #fcfcfb;
+    fontSize: 12;
+}
+
+s|Label.header {
+    paddingBottom: -5;
+    color: #fcfcfb;
+    fontWeight: bold;
+    fontSize: 16;
+}
+
+s|RichEditableText {
+    fontFamily: Body;
+    color: #6d7173;
+    fontSize: 12;
+}
+
+s|TextInput {
+    skinClass: ClassReference("ui.parts.skins.TextInputSkin");
+    focusAlpha: 0;
+}
+
+/*
+Scrollbars
+ */
+
+s|Scroller {
+    skinClass: ClassReference("ui.parts.skins.scrollbars.ScrollerSkin");
+}
+
+s|VScrollBar {
+    skinClass: ClassReference("ui.parts.skins.scrollbars.VScrollBarSkin");
+}
+
+s|HScrollBar {
+    skinClass: ClassReference("ui.parts.skins.scrollbars.HScrollBarSkin");
+}
+
+/*
+Sliders
+ */
+
+s|HSlider {
+    skinClass: ClassReference("ui.parts.skins.sliders.HSliderSkin");
+}
+
+.slider {
+    thumb_color: #d3d3d3;
+    track_color: #eeeeee;
+}
+
+/*
+Misc
+ */
+
+s|Panel {
+    skinClass: ClassReference("ui.parts.skins.PanelSkin");
+}
+
+s|ButtonBar {
+    skinClass: ClassReference("ui.parts.skins.ButtonBarSkin");
+}
+
+s|Button {
+    skinClass: ClassReference("ui.parts.skins.ButtonSkin");
+}
+
+s|CheckBox {
+    skinClass: ClassReference("ui.parts.skins.CheckBoxSkin");
+}
+
+s|DropDownList {
+    skinClass: ClassReference("ui.parts.skins.DropDownListSkin");
+}
+
+s|RadioButton {
+    skinClass: ClassReference("ui.parts.skins.RadioButtonSkin");
+}

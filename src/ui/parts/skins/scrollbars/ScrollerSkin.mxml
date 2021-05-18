@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:s="library://ns.adobe.com/flex/spark">
+
+    <fx:Metadata>
+    <![CDATA[
+        [HostComponent("spark.components.Scroller")]
+        ]]>
+    </fx:Metadata>
+
+    <fx:Script>
+    <![CDATA[
+        import com.greensock.TweenLite;
+
+        import mx.core.IInvalidating;
+        import mx.events.FlexEvent;
+        import mx.events.StateChangeEvent;
+
+        import spark.core.IViewport;
+
+        private var scrollDistance:int = 100;
+
+        internal function vScrollBarWheelChanging(event:MouseEvent):void
+        {
+            event.preventDefault();
+
+            const vp:IViewport = hostComponent.verticalScrollBar.viewport;
+
+            var delta:int = event.delta / Math.abs(event.delta);
+            var scrollPositionChanged:Boolean = true;
+
+            // Perform scroll
+            TweenLite.killTweensOf(vp);
+            var scrollTarget:int = vp.verticalScrollPosition - (delta * scrollDistance);
+
+            TweenLite.to(vp, .2, {verticalScrollPosition: scrollTarget, ease: "none"});
+            if (vp is IInvalidating)
+                IInvalidating(vp).validateNow();
+
+            if (scrollPositionChanged)
+                hostComponent.verticalScrollBar.dispatchEvent(new Event(Event.CHANGE));
+        }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <fx:Component id="horizontalScrollBarFactory">
+            <s:HScrollBar visible="false"/>
+        </fx:Component>
+        <fx:Component id="verticalScrollBarFactory">
+            <s:VScrollBar visible="false"
+                          mouseWheelChanging="outerDocument.vScrollBarWheelChanging(event)">
+                <fx:Script><![CDATA[
+                    ]]></fx:Script>
+            </s:VScrollBar>
+        </fx:Component>
+    </fx:Declarations>
+
+</s:SparkSkin>

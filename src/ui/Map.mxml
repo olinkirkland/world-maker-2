@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         creationComplete="onCreationComplete(event)"
+         middleMouseDown="onMouseDown(event)"
+         mouseChildren="false"
+         doubleClickEnabled="true"
+         doubleClick="onDoubleClick(event)">
+    <fx:Script><![CDATA[
+        import com.greensock.TweenLite;
+
+        import events.MapEvent;
+        import events.PayloadEvent;
+        import events.UIEvent;
+
+        import global.Signal;
+
+        import mx.core.UIComponent;
+        import mx.events.FlexEvent;
+        import mx.events.ResizeEvent;
+
+        // Singletons
+        private var signal:Signal;
+
+        public var isDragging:Boolean = false;
+        public var zoomLevel:Number = 1;
+
+        private var mapLayers:Object = {};
+        private var dragPoint:Point;
+        private var zoomLevels:Array = [.25, .5, .67, .8, .9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
+        private var keepInBitmapMode:Boolean = false;
+
+        private function onCreationComplete(event:FlexEvent):void
+        {
+            signal = Signal.instance;
+
+            addEventListeners();
+
+            centerMap();
+        }
+
+        private function addEventListeners():void
+        {
+            systemManager.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+            systemManager.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUp);
+            systemManager.stage.addEventListener(Event.MOUSE_LEAVE, onMouseUp);
+
+            addEventListener(MouseEvent.MOUSE_WHEEL, onScroll);
+
+            signal.addEventListener(UIEvent.ZOOM_IN, onZoomIn);
+            signal.addEventListener(UIEvent.ZOOM_OUT, onZoomOut);
+            signal.addEventListener(UIEvent.MOVE_MAP_TO_CENTER, onMoveMapToCenter);
+        }
+
+        private function onZoomIn(event:UIEvent):void
+        {
+            zoomIn();
+        }
+
+        private function onZoomOut(event:UIEvent):void
+        {
+            zoomOut();
+        }
+
+        private function onMoveMapToCenter(event:UIEvent):void
+        {
+            centerMap();
+        }
+
+        private function showBitmapLayers():void
+        {
+            keepInBitmapMode = true;
+
+            for each (var c:UIComponent in mapLayers)
+            {
+                for (var i:int = 0; i < c.numChildren; i++)
+                    c.getChildAt(i).visible = false;
+
+                var bmp:Bitmap = Bitmap(c.getChildByName("bmp"));
+                if (bmp != null)
+                    bmp.visible = true;
+            }
+        }
+
+        private function hideBitmapLayers():void
+        {
+            if (keepInBitmapMode)
+                return;
+
+            for each (var c:UIComponent in mapLayers)
+            {
+                for (var i:int = 0; i < c.numChildren; i++)
+                    c.getChildAt(i).visible = true;
+
+                var bmp:Bitmap = Bitmap(c.getChildByName("bmp"));
+                if (bmp != null)
+                    bmp.visible = false;
+            }
+        }
+
+        private function onMouseMove(event:MouseEvent):void
+        {
+            if (dragPoint)
+            {
+                if (!isDragging)
+                    showBitmapLayers();
+
+                var newX:Number = systemManager.stage.mouseX - dragPoint.x;
+                var newY:Number = systemManager.stage.mouseY - dragPoint.y;
+                var distance:Point = new Point(newX, newY);
+                isDragging = true;
+
+                dragPoint = new Point(systemManager.stage.mouseX, systemManager.stage.mouseY);
+                mapLayerGroup.x += distance.x;
+                mapLayerGroup.y += distance.y;
+            }
+
+            var mapEvent:MapEvent = new MapEvent(MapEvent.MOUSE_MOVE, new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY));
+            signal.dispatchEvent(mapEvent);
+        }
+
+        private function onMouseDown(event:MouseEvent):void
+        {
+            isDragging = false;
+            dragPoint = new Point(event.stageX, event.stageY);
+        }
+
+        private function onMouseUp(event:Event):void
+        {
+            callLater(function ():void
+            {
+                isDragging = false;
+
+                keepInBitmapMode = false;
+                setTimeout(hideBitmapLayers, 500);
+            });
+            dragPoint = null;
+        }
+
+        private function onScroll(event:MouseEvent):void
+        {
+            if (event.delta > 0)
+                zoomIn();
+            if (event.delta < 0)
+                zoomOut();
+        }
+
+        public function zoomIn():void
+        {
+            var zoomLevelIndex:int = zoomLevels.indexOf(zoomLevel);
+            if (zoomLevelIndex < 0)
+                zoomLevel = 1;
+            else if (zoomLevelIndex + 1 < zoomLevels.length)
+                zoomLevel = zoomLevels[zoomLevelIndex + 1];
+
+            validateZoom();
+        }
+
+        public function zoomOut():void
+        {
+            var zoomLevelIndex:int = zoomLevels.indexOf(zoomLevel);
+            if (zoomLevelIndex < 0)
+                zoomLevel = 1;
+            else if (zoomLevelIndex > 0)
+                zoomLevel = zoomLevels[zoomLevelIndex - 1];
+
+            validateZoom();
+        }
+
+        public function centerMap():void
+        {
+            centerMapOnPoint(new Point(mapLayerGroup.width / 2, mapLayerGroup.height / 2));
+        }
+
+        private function validateZoom():void
+        {
+            // Get the viewport's center point
+            var p:Point = new Point(width / 2, height / 2);
+            p = mapLayerGroup.globalToLocal(localToGlobal(p));
+
+            showBitmapLayers();
+            TweenLite.to(mapLayerGroup, .2, {
+                scaleX: zoomLevel, onUpdate: function ():void
+                {
+                    mapLayerGroup.scaleY = mapLayerGroup.scaleX;
+                    centerMapOnPoint(p, false);
+                }, onComplete: endZoom
+            });
+        }
+
+        private function endZoom():void
+        {
+            keepInBitmapMode = false;
+            setTimeout(hideBitmapLayers, 500);
+        }
+
+        private function centerMapOnPoint(p:Point, animate:Boolean = true):void
+        {
+            var v:Point = new Point(width / 2, height / 2);
+            v = mapLayerGroup.globalToLocal(localToGlobal(v));
+
+            var goal:Point = new Point();
+            goal.x = mapLayerGroup.x + ((v.x - p.x) * mapLayerGroup.scaleX);
+            goal.y = mapLayerGroup.y + ((v.y - p.y) * mapLayerGroup.scaleY);
+
+            if (animate)
+            {
+                TweenLite.to(mapLayerGroup, .6, {x: goal.x, y: goal.y});
+            } else
+            {
+                mapLayerGroup.x = goal.x;
+                mapLayerGroup.y = goal.y;
+            }
+        }
+
+        private function onDoubleClick(event:MouseEvent):void
+        {
+            centerMapOnPoint(new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY));
+        }
+
+        private function onLayerGroupContainerResize(event:ResizeEvent):void
+        {
+            var t:Object = event.target;
+            t.height = (t.width / t.contentWidth) * t.contentHeight;
+        }
+
+        private function dispatchMapMoveEvent():void
+        {
+            signal.dispatchEvent(new MapEvent(MapEvent.MAP_MOVED));
+        }
+        ]]></fx:Script>
+
+    <s:Group id="layerGroupMask"
+             width="100%"
+             height="100%">
+        <s:Rect width="100%"
+                height="100%">
+            <s:fill>
+                <s:SolidColor color="{0xff0000}"/>
+            </s:fill>
+        </s:Rect>
+    </s:Group>
+
+    <s:VGroup id="layerGroupContainer"
+              padding="15"
+              includeInLayout="false"
+              mask="{layerGroupMask}"
+              resize="onLayerGroupContainerResize(event)">
+
+        <s:Group id="mapLayerGroup"
+                 width="2000"
+                 height="1000">
+            <s:Rect width="100%"
+                    height="100%">
+                <s:fill>
+                    <s:SolidColor color="0xff0000"
+                                  alpha=".2"/>
+                </s:fill>
+            </s:Rect>
+        </s:Group>
+    </s:VGroup>
+
+</s:Group>

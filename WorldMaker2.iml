@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="Flex" version="4">
+  <component name="FlexBuildConfigurationManager" active="WorldMaker2">
+    <configurations>
+      <configuration name="WorldMaker2" target-platform="Desktop" main-class="Main" output-file="Main.swf" output-folder="$MODULE_DIR$/out/production/WorldMaker2">
+        <dependencies target-player="30.0">
+          <entries>
+            <entry library-id="bbb1f1cc-8e1e-4660-9319-611347d167c2">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="ApacheAirMerged" />
+        </dependencies>
+        <compiler-options />
+        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app.xml" package-file-name="Main" />
+        <packaging-android />
+        <packaging-ios />
+      </configuration>
+    </configurations>
+    <compiler-options />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="ApacheAirMerged" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="bbb1f1cc-8e1e-4660-9319-611347d167c2" />
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/src/libs" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/src/libs" recursive="false" />
+      </library>
+    </orderEntry>
+  </component>
+</module>

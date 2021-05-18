@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+          xmlns:s="library://ns.adobe.com/flex/spark"
+          width="100%"
+          height="100%"
+          creationComplete="onCreationComplete(event)">
+
+    <fx:Script><![CDATA[
+        import global.Icons;
+        import global.Local;
+        import global.Util;
+
+        import managers.TaskManager;
+
+        import mx.events.FlexEvent;
+
+        import ui.PopupManager;
+        import ui.popups.TasksPopup;
+
+        public function onCreationComplete(event:FlexEvent):void
+        {
+            var taskManager:TaskManager = TaskManager.instance;
+            labelTaskNumber.text = (taskManager.currentTask.index + 1) + "/" + taskManager.tasks.length;
+            labelTaskName.text = Local.text(taskManager.currentTask.name);
+        }
+
+        public function dispose():void
+        {
+
+        }
+
+        protected function onAllTasks(event:MouseEvent):void
+        {
+            var p:TasksPopup = new TasksPopup();
+            PopupManager.open(p);
+        }
+        ]]>
+    </fx:Script>
+
+    <s:HGroup width="100%"
+              verticalAlign="middle">
+
+        <s:Label id="labelTaskNumber"
+                 toolTip="{Local.text('task_progress')}"/>
+
+        <s:Label id="labelTaskName"
+                 showTruncationTip="true"
+                 width="100%"/>
+
+        <s:Button label="{Local.text('all_tasks')}"
+                  icon="{Icons.Tasks}"
+                  click="onAllTasks(event)"/>
+
+    </s:HGroup>
+
+</s:VGroup>

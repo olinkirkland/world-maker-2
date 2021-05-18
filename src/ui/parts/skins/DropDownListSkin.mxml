@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:s="library://ns.adobe.com/flex/spark"
+             width="200"
+             height="30"
+             alpha.disabled=".5">
+
+    <fx:Metadata>
+    <![CDATA[
+        [HostComponent("spark.components.DropDownList")]
+        ]]>
+    </fx:Metadata>
+
+    <fx:Script>
+        <![CDATA[
+        import global.Color;
+        import global.Icons;
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="open"/>
+        <s:State name="disabled"/>
+    </s:states>
+
+    <s:Group width="100%"
+             height="100%">
+
+        <s:Rect width="100%"
+                height="100%"
+                radiusX="5"
+                radiusY="5">
+            <s:fill>
+                <s:SolidColor color="{Color.fillInset}"/>
+            </s:fill>
+            <s:stroke>
+                <s:SolidColorStroke color="{Color.fillMedium}"
+                                    weight="1"/>
+            </s:stroke>
+        </s:Rect>
+
+        <s:HGroup width="100%"
+                  padding="7"
+                  paddingLeft="15"
+                  verticalAlign="middle"
+                  gap="7">
+
+            <s:Label id="labelDisplay"
+                     width="100%"/>
+
+            <s:Button id="openButton"
+                      skinClass="ui.parts.skins.ButtonSkinIcon"
+                      icon="{Icons.Down}"
+                      focusEnabled="false"
+                      tabEnabled="false"/>
+
+        </s:HGroup>
+
+    </s:Group>
+
+    <!--The PopUpAnchor control that opens the drop-down list-->
+    <s:PopUpAnchor id="popUp"
+                   displayPopUp.normal="false"
+                   displayPopUp.open="true"
+                   includeIn="open"
+                   width="100%"
+                   height="100%"
+                   itemDestructionPolicy="auto"
+                   popUpPosition="below"
+                   popUpWidthMatchesAnchorWidth="true">
+
+        <s:Group id="dropDown">
+
+            <s:RectangularDropShadow id="dropShadow"
+                                     width="100%"
+                                     height="100%"
+                                     blurX="20"
+                                     blurY="20"
+                                     alpha="0.4"
+                                     distance="5"
+                                     angle="90"
+                                     color="{Color.black}"/>
+
+            <!-- DropDown List Background -->
+            <s:Rect id="background"
+                    width="100%"
+                    height="100%"
+                    radiusX="5"
+                    radiusY="5">
+                <s:fill>
+                    <s:SolidColor color="{Color.fillHigh}"/>
+                </s:fill>
+            </s:Rect>
+
+            <s:HGroup width="100%"
+                      height="100%"
+                      padding="5">
+                <s:Scroller id="scroller"
+                            width="100%"
+                            height="100%"
+                            hasFocusableChildren="false"
+                            minViewportInset="1">
+                    <s:DataGroup id="dataGroup"
+                                 itemRenderer="ui.parts.itemRenderers.ItemRendererDropDownList">
+                        <s:layout>
+                            <s:VerticalLayout gap="0"
+                                              horizontalAlign="contentJustify"
+                                              requestedMinRowCount="1"
+                                              requestedMaxRowCount="6"/>
+                        </s:layout>
+                    </s:DataGroup>
+                </s:Scroller>
+            </s:HGroup>
+        </s:Group>
+    </s:PopUpAnchor>
+
+</s:SparkSkin>

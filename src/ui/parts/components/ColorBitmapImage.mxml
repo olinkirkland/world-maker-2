@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<s:BitmapImage xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:s="library://ns.adobe.com/flex/spark"
+               smoothingQuality="high"
+               smooth="true"
+               width="16"
+               height="16">
+    <fx:Script><![CDATA[
+        public function set color(value:uint):void
+        {
+            var t:ColorTransform = transform.colorTransform;
+            t.color = value;
+            transform.colorTransform = t;
+        }
+
+        public function get color():uint
+        {
+            return transform.colorTransform.color;
+        }
+        ]]></fx:Script>
+</s:BitmapImage>

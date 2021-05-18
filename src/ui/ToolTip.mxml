@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         implements="mx.core.IToolTip,mx.core.IFontContextComponent">
+    <fx:Script><![CDATA[
+        import com.greensock.TweenLite;
+
+        import global.Color;
+
+        import mx.core.UIComponent;
+
+        import mx.managers.ToolTipManager;
+
+        private var _text:String;
+
+        public function get text():String
+        {
+            return _text;
+        }
+
+        public function set text(value:String):void
+        {
+            _text = value;
+            visible = false;
+
+            label.text = value;
+
+            callLater(function ():void
+            {
+                // Force the location
+                visible = true;
+                var target:DisplayObject = ToolTipManager.currentTarget;
+                if (!target)
+                    return;
+
+                var targetWidth:int = target.localToGlobal(new Point(target.width, 0)).x;
+
+                callLater(function ():void
+                {
+                    var coordinates:Point = target.localToGlobal(new Point(target.width / 2, target.height));
+                    x = coordinates.x - width / 2;
+                    y = coordinates.y + 5;
+                });
+            });
+        }
+
+        public function get fontContext():IFlexModuleFactory
+        {
+            return null;
+        }
+
+        public function set fontContext(moduleFactory:IFlexModuleFactory):void
+        {
+        }
+        ]]></fx:Script>
+
+    <s:Group>
+        <s:Rect width="100%"
+                height="100%"
+                radiusX="5"
+                radiusY="5">
+            <s:fill>
+                <s:SolidColor color="{Color.black}"
+                              alpha=".8"/>
+            </s:fill>
+        </s:Rect>
+        <s:HGroup padding="7">
+            <s:Label id="label"
+                     text="test"
+                     maxWidth="160"
+                     textAlign="center"
+                     color="{Color.textHigh}"/>
+        </s:HGroup>
+    </s:Group>
+
+</s:Group>

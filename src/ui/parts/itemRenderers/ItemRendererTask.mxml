@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:c="ui.parts.components.*"
+                autoDrawBackground="false"
+                width="100%">
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+        <s:State name="down"/>
+        <s:State name="over"/>
+        <s:State name="up"/>
+        <s:State name="selected"/>
+    </s:states>
+
+    <fx:Script><![CDATA[
+        import global.Color;
+        import global.Icons;
+        import global.Local;
+
+        import logic.tasks.Task;
+
+        import managers.TaskManager;
+
+        override public function set data(value:Object):void
+        {
+            super.data = value;
+            if (!value)
+                return;
+
+            var task:Task = Task(value);
+            labelId.text = Local.text(task.name);
+
+            var isCurrent:Boolean = task == TaskManager.instance.currentTask;
+            labelId.setStyle("color", isCurrent ? Color.textHigh : Color.textMedium);
+
+            imageIcon.visible = imageIcon.includeInLayout = task.index < TaskManager.instance.currentTask.index;
+        }
+        ]]>
+    </fx:Script>
+
+    <s:VGroup width="100%"
+              gap="0">
+        <s:HGroup width="100%"
+                  verticalAlign="middle"
+                  padding="10">
+            <c:ColorBitmapImage id="imageIcon"
+                                source="{Icons.Complete}"
+                                color="{Color.textMedium}"/>
+            <s:Label id="labelId"
+                     width="100%"/>
+        </s:HGroup>
+
+        <s:Line width="100%">
+            <s:stroke>
+                <s:SolidColorStroke color="{Color.textLow}"
+                                    alpha=".5"/>
+            </s:stroke>
+        </s:Line>
+    </s:VGroup>
+
+</s:ItemRenderer>

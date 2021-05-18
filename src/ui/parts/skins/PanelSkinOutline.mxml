@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin name="PanelSkin"
+             xmlns:fx="http://ns.adobe.com/mxml/2009"
+             xmlns:s="library://ns.adobe.com/flex/spark">
+
+    <s:states>
+
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+        <s:State name="normalWithControlBar"
+                 stateGroups="withControls"/>
+        <s:State name="disabledWithControlBar"
+                 stateGroups="withControls"/>
+
+    </s:states>
+
+    <fx:Metadata>
+
+        [HostComponent("spark.components.Panel")]
+
+    </fx:Metadata>
+
+    <s:Group width="100%"
+             height="100%">
+
+        <s:Rect width="100%"
+                height="100%">
+
+            <s:stroke>
+                <s:SolidColorStroke color="{Color.textLow}"/>
+            </s:stroke>
+
+        </s:Rect>
+
+        <s:Group id="contents"
+                 left="10"
+                 right="10"
+                 top="10"
+                 bottom="10">
+
+            <s:layout>
+                <s:VerticalLayout gap="0"
+                                  horizontalAlign="justify"/>
+            </s:layout>
+
+            <s:Group id="contentGroup"
+                     width="100%"
+                     height="100%"
+                     minWidth="0"
+                     minHeight="0">
+            </s:Group>
+
+        </s:Group>
+
+    </s:Group>
+
+    <fx:Script><![CDATA[
+        import global.Color;
+        ]]></fx:Script>
+
+</s:SparkSkin>

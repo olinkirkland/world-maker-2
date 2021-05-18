@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<s:SparkButtonSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:s="library://ns.adobe.com/flex/spark"
+                   xmlns:ui="ui.parts.components.*"
+                   autoIconManagement="false">
+
+    <fx:Metadata>
+		<![CDATA[
+        [HostComponent("spark.components.Button")]
+        ]]>
+	</fx:Metadata>
+
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+        <s:State name="down"/>
+        <s:State name="over"/>
+        <s:State name="up"/>
+    </s:states>
+
+    <ui:ColorBitmapImage id="iconDisplay"
+                         includeInLayout="{iconDisplay.source}"
+                         color="0x4e5357"
+                         color.over="0x6d7173"
+                         width="16"
+                         height="16"
+                         smooth="true"
+                         alpha.normal="1"
+                         alpha.disabled=".5"/>
+
+</s:SparkButtonSkin>

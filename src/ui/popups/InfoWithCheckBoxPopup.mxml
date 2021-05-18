@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<popups:Popup xmlns:fx="http://ns.adobe.com/mxml/2009"
+              xmlns:s="library://ns.adobe.com/flex/spark"
+              xmlns:popups="ui.popups.*"
+              width="240">
+
+    <fx:Script><![CDATA[
+        import mx.events.FlexEvent;
+
+        public var callbackWithCheckBox:Function = null;
+        public var callbackWithoutCheckBox:Function = null;
+        public var header:String = "Popup with Checkbox";
+        public var description:String = "Click the Checkbox, or don't?";
+        public var textConfirm:String = "Okay";
+        public var textCheckBox:String = "Check this box";
+        public var checkBoxInitiallySelected:Boolean = false;
+
+        override public function onCreationComplete(event:FlexEvent):void
+        {
+            super.onCreationComplete(event);
+
+            checkBox.selected = checkBoxInitiallySelected;
+        }
+
+        private function confirmAndClose(event:MouseEvent):void
+        {
+            if (checkBox.selected)
+            {
+                if (callbackWithCheckBox != null)
+                    callbackWithCheckBox.apply();
+            } else
+            {
+                if (callbackWithoutCheckBox != null)
+                    callbackWithoutCheckBox.apply();
+            }
+
+            close();
+        }
+        ]]>
+    </fx:Script>
+
+    <s:VGroup gap="15"
+              width="100%">
+
+        <s:Label id="labelHeader"
+                 text="{header}"
+                 width="100%"
+                 styleName="header"/>
+
+        <s:Label id="labelDescription"
+                 text="{description}"
+                 width="100%"/>
+
+        <s:CheckBox id="checkBox"
+                    label="{textCheckBox}"
+                    width="100%"/>
+
+        <s:HGroup width="100%"
+                  horizontalAlign="right"
+                  top="5">
+            <s:Button id="buttonConfirm"
+                      label="{textConfirm}"
+                      skinClass="ui.parts.skins.ButtonThemeSkin"
+                      click="confirmAndClose(event)"/>
+        </s:HGroup>
+
+    </s:VGroup>
+</popups:Popup>

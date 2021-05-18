@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<popups:Popup xmlns:fx="http://ns.adobe.com/mxml/2009"
+              xmlns:s="library://ns.adobe.com/flex/spark"
+              xmlns:popups="ui.popups.*"
+              width="480">
+
+    <fx:Script><![CDATA[
+        import mx.events.FlexEvent;
+
+        public var header:String = "Popup with info";
+        public var description:String = "Lorem Ipsum, I guess?";
+        public var callback:Function = null;
+
+        override public function onCreationComplete(event:FlexEvent):void
+        {
+            super.onCreationComplete(event);
+        }
+
+        private function onClose(event:MouseEvent):void
+        {
+            if (callback != null)
+                callback.apply();
+
+            close();
+        }
+        ]]>
+    </fx:Script>
+
+
+    <s:VGroup gap="15"
+              width="100%">
+
+        <s:Label id="labelHeader"
+                 text="{header}"
+                 width="100%"
+                 styleName="header"/>
+
+        <s:Scroller width="100%"
+                    maxHeight="640"
+                    horizontalScrollPolicy="off"
+                    verticalScrollPolicy="auto">
+            <s:VGroup width="100%">
+                <s:Label id="labelDescription"
+                         text="{description}"
+                         width="100%"/>
+            </s:VGroup>
+        </s:Scroller>
+
+        <s:HGroup width="100%"
+                  horizontalAlign="right"
+                  top="5">
+            <s:Button id="buttonConfirm"
+                      label="Ok"
+                      skinClass="ui.parts.skins.ButtonThemeSkin"
+                      click="onClose(event)"/>
+        </s:HGroup>
+
+    </s:VGroup>
+</popups:Popup>

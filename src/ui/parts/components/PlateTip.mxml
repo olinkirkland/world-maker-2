@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:c="ui.parts.components.*"
+         skinClass="ui.parts.skins.PanelSkinTip"
+         creationComplete="onCreationComplete(event)">
+
+    <fx:Script><![CDATA[
+        import global.Icons;
+
+        import mx.events.FlexEvent;
+
+        private var created:Boolean = false;
+        private var data:Object;
+
+        public function onCreationComplete(event:FlexEvent):void
+        {
+            x -= width / 2;
+            y -= height + 4;
+
+            created = true;
+            plate = data;
+        }
+
+        public function set plate(data:Object):void
+        {
+            this.data = data;
+            if (!created)
+                return;
+
+            imageMarker.color = data.color;
+        }
+        ]]>
+    </fx:Script>
+
+    <s:VGroup horizontalAlign="center">
+
+        <c:ColorBitmapImage id="imageMarker"
+                            source="{Icons.Marker}"
+                            y="-24"
+                            width="24"
+                            height="24"/>
+
+    </s:VGroup>
+
+</s:Panel>
