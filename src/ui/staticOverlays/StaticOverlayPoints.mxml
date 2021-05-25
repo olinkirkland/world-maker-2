@@ -4,8 +4,8 @@
                               xmlns:c="ui.parts.components.*"
                               xmlns:staticOverlays="ui.staticOverlays.*">
     <fx:Script><![CDATA[
-        import events.MapEvent;
-        import events.UIEvent;
+        import events.AppEvent;
+        import events.AppEvent;
 
         import global.Color;
         import global.Icons;
@@ -22,25 +22,25 @@
 
         override protected function addEventListeners():void
         {
-            signal.addEventListener(MapEvent.MOUSE_MOVE, onMouseMoveAnywhere);
-            signal.addEventListener(MapEvent.MAP_ZOOM, onZoom);
-            signal.addEventListener(MapEvent.MAP_ZOOM, onZoom);
+            signal.addEventListener(AppEvent.MAP_MOUSE_MOVE, onMouseMoveAnywhere);
+            signal.addEventListener(AppEvent.MAP_ZOOM, onZoom);
+            signal.addEventListener(AppEvent.MAP_ZOOM, onZoom);
         }
 
         override protected function removeEventListeners():void
         {
-            signal.removeEventListener(MapEvent.MOUSE_MOVE, onMouseMoveAnywhere);
-            signal.removeEventListener(MapEvent.MAP_ZOOM, onZoom);
-            signal.removeEventListener(MapEvent.MAP_ZOOM, onZoom);
+            signal.removeEventListener(AppEvent.MAP_MOUSE_MOVE, onMouseMoveAnywhere);
+            signal.removeEventListener(AppEvent.MAP_ZOOM, onZoom);
+            signal.removeEventListener(AppEvent.MAP_ZOOM, onZoom);
         }
 
-        private function onMouseMoveAnywhere(event:MapEvent):void
+        private function onMouseMoveAnywhere(event:AppEvent):void
         {
             var point:Point = event.payload;
             labelMouse.text = "x=" + point.x + ", y=" + point.y;
         }
 
-        private function onZoom(event:MapEvent):void
+        private function onZoom(event:AppEvent):void
         {
             var zoomLevel:Number = event.payload;
             labelZoom.text = int(zoomLevel * 100) + "%";
@@ -48,22 +48,22 @@
 
         private function onToggleLayers(event:MouseEvent):void
         {
-            signal.dispatchEvent(new UIEvent(UIEvent.OPEN_PANE, new PaneLayers()));
+            signal.dispatchEvent(new AppEvent(AppEvent.OPEN_PANE, new PaneLayers()));
         }
 
         private function onZoomOut(event:MouseEvent):void
         {
-            signal.dispatchEvent(new UIEvent(UIEvent.ZOOM_OUT));
+            signal.dispatchEvent(new AppEvent(AppEvent.ZOOM_OUT));
         }
 
         private function onZoomIn(event:MouseEvent):void
         {
-            signal.dispatchEvent(new UIEvent(UIEvent.ZOOM_IN));
+            signal.dispatchEvent(new AppEvent(AppEvent.ZOOM_IN));
         }
 
         private function onCenterMap(event:MouseEvent):void
         {
-            signal.dispatchEvent(new UIEvent(UIEvent.MOVE_MAP_TO_CENTER));
+            signal.dispatchEvent(new AppEvent(AppEvent.MOVE_MAP_TO_CENTER));
         }
         ]]></fx:Script>
     <s:Panel skinClass="ui.parts.skins.PanelSkinOutline"

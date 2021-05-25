@@ -1,6 +1,6 @@
 package logic
 {
-    import events.ModelEvent;
+    import events.AppEvent;
 
     import flash.filesystem.File;
     import flash.filesystem.FileMode;
@@ -61,7 +61,7 @@ package logic
             // before progressing to the next task
 
             isValid = false;
-            signal.dispatchEvent(new ModelEvent(ModelEvent.VALIDITY_CHANGED));
+            signal.dispatchEvent(new AppEvent(AppEvent.VALIDITY_CHANGED));
         }
 
         public function build():void
@@ -81,7 +81,8 @@ package logic
             }
 
             isValid = true;
-            signal.dispatchEvent(new ModelEvent(ModelEvent.VALIDITY_CHANGED));
+            signal.dispatchEvent(new AppEvent(AppEvent.VALIDITY_CHANGED));
+            signal.dispatchEvent(new AppEvent(AppEvent.DRAW));
         }
 
         public function save(u:Object = null):void
@@ -92,7 +93,7 @@ package logic
 
         private static function standaloneSave(u:Object):void
         {
-            Util.log("@Model: save (standalone)");
+            Util.log("Model: save (standalone)");
 
             var fileStream:FileStream = new FileStream();
             fileStream.open(File.applicationStorageDirectory.resolvePath("localSave.json"), FileMode.WRITE);
@@ -107,7 +108,7 @@ package logic
 
         public function standaloneLoad():void
         {
-            Util.log("@Model: load (standalone)");
+            Util.log("Model: load (standalone)");
 
             // Only triggered in standalone mode
             var file:File = File.applicationStorageDirectory.resolvePath("localSave.json");
@@ -128,7 +129,7 @@ package logic
 
         public function serialize():Object
         {
-            Util.log("@Model: serialize");
+            Util.log("Model: serialize");
 
             var u:Object = {};
             u.currentTaskId = taskManager.currentTask.id;
@@ -140,7 +141,7 @@ package logic
 
         public function deserialize(u:Object):void
         {
-            Util.log("@Model: deserialize");
+            Util.log("Model: deserialize");
 
             if (u.pointsSeed)
                 pointsModule.seed = u.pointsSeed;
@@ -150,7 +151,7 @@ package logic
             if (u.currentTaskId)
                 TaskManager.instance.setCurrentTaskById(u.currentTaskId);
             else
-                signal.dispatchEvent(new ModelEvent(ModelEvent.TASK_CHANGED));
+                signal.dispatchEvent(new AppEvent(AppEvent.TASK_CHANGED));
 
             loaded = true;
         }

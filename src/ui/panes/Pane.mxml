@@ -5,7 +5,7 @@
          width="100%"
          height="100%">
     <fx:Script><![CDATA[
-        import events.UIEvent;
+        import events.AppEvent;
 
         import global.Signal;
 
@@ -20,7 +20,7 @@
 
         protected function close():void
         {
-            signal.dispatchEvent(new UIEvent(UIEvent.CLOSE_PANE));
+            signal.dispatchEvent(new AppEvent(AppEvent.CLOSE_PANE));
         }
 
         protected function addEventListeners():void

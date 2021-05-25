@@ -138,11 +138,6 @@ package logic.modules
         public function loadPoints(arr:Array):void
         {
             trace("PointsModule:loadPoints");
-            bounds = new Rectangle(0,
-                    0,
-                    2000,
-                    1000);
-
             points = new Vector.<Point>();
             quad = new QuadTree(bounds);
 

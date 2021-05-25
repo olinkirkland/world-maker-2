@@ -1,6 +1,6 @@
 package managers
 {
-    import events.ModelEvent;
+    import events.AppEvent;
 
     import global.Signal;
 
@@ -44,7 +44,7 @@ package managers
         {
             _currentTask = task;
 
-            signal.dispatchEvent(new ModelEvent(ModelEvent.TASK_CHANGED));
+            signal.dispatchEvent(new AppEvent(AppEvent.TASK_CHANGED));
         }
 
         public function setCurrentTaskByIndex(index:int):void

@@ -5,9 +5,9 @@
          creationComplete="onCreationComplete(event)">
 
     <fx:Script><![CDATA[
-        import events.ModelEvent;
-        import events.UIEvent;
-        import events.UIEvent;
+        import events.AppEvent;
+        import events.AppEvent;
+        import events.AppEvent;
 
         import global.Color;
         import global.Icons;
@@ -45,27 +45,32 @@
             model = Model.instance;
             taskManager = TaskManager.instance;
 
-            signal.addEventListener(ModelEvent.TASK_CHANGED, onTaskChanged);
-            signal.addEventListener(ModelEvent.VALIDITY_CHANGED, onValidityChanged);
-            signal.addEventListener(UIEvent.OPEN_PANE, onOpenPane);
-            signal.addEventListener(UIEvent.CLOSE_PANE, onClosePane);
+            groupContent.visible = false;
+
+            signal.addEventListener(AppEvent.TASK_CHANGED, onTaskChanged);
+            signal.addEventListener(AppEvent.VALIDITY_CHANGED, onValidityChanged);
+            signal.addEventListener(AppEvent.OPEN_PANE, onOpenPane);
+            signal.addEventListener(AppEvent.CLOSE_PANE, onClosePane);
         }
 
-        private function onTaskChanged(event:ModelEvent):void
+        private function onTaskChanged(event:AppEvent):void
         {
             loadTask();
         }
 
-        private function onValidityChanged(event:ModelEvent):void
+        private function onValidityChanged(event:AppEvent):void
         {
-            groupContent.visible = true;
+            setTimeout(function ():void
+            {
+                groupContent.visible = true;
+            }, 200);
 
             var isValid:Boolean = Model.instance.isValid;
             buttonBuild.visible = buttonBuild.includeInLayout = !isValid;
             buttonNextTask.visible = buttonNextTask.includeInLayout = isValid;
         }
 
-        private function onOpenPane(event:UIEvent):void
+        private function onOpenPane(event:AppEvent):void
         {
             var paneClassName:String = null;
 
@@ -87,7 +92,7 @@
             groupPane.visible = groupPane.includeInLayout = true;
         }
 
-        private function onClosePane(event:UIEvent):void
+        private function onClosePane(event:AppEvent):void
         {
             onOpenPane(event);
         }
@@ -139,7 +144,7 @@
 
             callLater(function ():void
             {
-                signal.dispatchEvent(new UIEvent(UIEvent.INITIALIZE));
+                signal.dispatchEvent(new AppEvent(AppEvent.INITIALIZE));
             });
         }
 
@@ -255,7 +260,7 @@
                         width="100%"
                         height="100%"/>
 
-                <!--Anchored Overlay-->
+                <!--Dynamic Overlay-->
 
                 <!--Static Overlay  -->
                 <s:Group id="groupStaticOverlay"
@@ -288,6 +293,7 @@
                                   click="onClickBuild(event)"/>
 
                         <s:Button id="buttonNextTask"
+                                  skinClass="ui.parts.skins.ButtonThemeSkin"
                                   label="{Local.text('next_task')}"
                                   click="onClickNextTask(event)"/>
 

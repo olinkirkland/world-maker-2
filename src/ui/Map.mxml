@@ -9,11 +9,11 @@
     <fx:Script><![CDATA[
         import com.greensock.TweenLite;
 
-        import events.MapEvent;
-        import events.PayloadEvent;
-        import events.UIEvent;
+        import events.AppEvent;
 
         import global.Signal;
+
+        import managers.TaskManager;
 
         import mx.core.UIComponent;
         import mx.events.FlexEvent;
@@ -47,32 +47,40 @@
 
             addEventListener(MouseEvent.MOUSE_WHEEL, onScroll);
 
-            signal.addEventListener(UIEvent.INITIALIZE, onInitializeUI);
-
-            signal.addEventListener(UIEvent.ZOOM_IN, onZoomIn);
-            signal.addEventListener(UIEvent.ZOOM_OUT, onZoomOut);
-            signal.addEventListener(UIEvent.MOVE_MAP_TO_CENTER, onMoveMapToCenter);
+            signal.addEventListener(AppEvent.INITIALIZE, onInitializeUI);
+            signal.addEventListener(AppEvent.ZOOM_IN, onZoomIn);
+            signal.addEventListener(AppEvent.ZOOM_OUT, onZoomOut);
+            signal.addEventListener(AppEvent.MOVE_MAP_TO_CENTER, onMoveMapToCenter);
+            signal.addEventListener(AppEvent.DRAW, onDraw);
         }
 
-        private function onInitializeUI(event:UIEvent):void
+        private function onDraw(event:Event):void
+        {
+            trace("Map:onDraw");
+
+            // Draw
+            var layersToDraw:Array = TaskManager.instance.currentTask.layers;
+            trace(layersToDraw);
+        }
+
+        private function onInitializeUI(event:AppEvent):void
         {
             // Dispatches initial signals to UI
-            // Use: When task is changed and the new UI elements need values
-            signal.dispatchEvent(new MapEvent(MapEvent.MAP_ZOOM, zoomLevel));
-            signal.dispatchEvent(new MapEvent(MapEvent.MOUSE_MOVE, new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY)));
+            signal.dispatchEvent(new AppEvent(AppEvent.MAP_ZOOM, zoomLevel));
+            signal.dispatchEvent(new AppEvent(AppEvent.MAP_MOUSE_MOVE, new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY)));
         }
 
-        private function onZoomIn(event:UIEvent):void
+        private function onZoomIn(event:AppEvent):void
         {
             zoomIn();
         }
 
-        private function onZoomOut(event:UIEvent):void
+        private function onZoomOut(event:AppEvent):void
         {
             zoomOut();
         }
 
-        private function onMoveMapToCenter(event:UIEvent):void
+        private function onMoveMapToCenter(event:AppEvent):void
         {
             centerMap();
         }
@@ -108,6 +116,18 @@
             }
         }
 
+        public function getMapLayer(id:String):UIComponent
+        {
+            if (!mapLayers.hasOwnProperty(id))
+            {
+                var c:UIComponent = mapLayers[id] = new UIComponent();
+                c.cacheAsBitmap = true;
+                mapLayerGroup.addElement(c);
+            }
+
+            return mapLayers[id];
+        }
+
         private function onMouseMove(event:MouseEvent):void
         {
             if (dragPoint)
@@ -125,8 +145,8 @@
                 mapLayerGroup.y += distance.y;
             }
 
-            var mapEvent:MapEvent = new MapEvent(MapEvent.MOUSE_MOVE, new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY));
-            signal.dispatchEvent(mapEvent);
+            var appEvent:AppEvent = new AppEvent(AppEvent.MAP_MOUSE_MOVE, new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY));
+            signal.dispatchEvent(appEvent);
         }
 
         private function onMouseDown(event:MouseEvent):void
@@ -203,7 +223,7 @@
             keepInBitmapMode = false;
             setTimeout(hideBitmapLayers, 500);
 
-            signal.dispatchEvent(new MapEvent(MapEvent.MAP_ZOOM, zoomLevel))
+            signal.dispatchEvent(new AppEvent(AppEvent.MAP_ZOOM, zoomLevel))
         }
 
         private function centerMapOnPoint(p:Point, animate:Boolean = true):void
@@ -234,11 +254,6 @@
         {
             var t:Object = event.target;
             t.height = (t.width / t.contentWidth) * t.contentHeight;
-        }
-
-        private function dispatchMapMoveEvent():void
-        {
-            signal.dispatchEvent(new MapEvent(MapEvent.MAP_MOVED));
         }
         ]]></fx:Script>
 
