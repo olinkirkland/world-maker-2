@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<t:Toolbar xmlns:fx="http://ns.adobe.com/mxml/2009"
+           xmlns:s="library://ns.adobe.com/flex/spark"
+           xmlns:c="ui.parts.components.*"
+           creationComplete="onCreationComplete(event)"
+           xmlns:t="ui.toolbars.*">
+
+    <fx:Script><![CDATA[
+        import global.Color;
+        import global.Icons;
+        import global.Local;
+        import global.Util;
+
+        import mx.events.FlexEvent;
+
+        import spark.events.TextOperationEvent;
+
+        override public function onCreationComplete(event:FlexEvent):void
+        {
+            super.onCreationComplete(event);
+
+            if (!model.pointsModule.seed)
+                model.pointsModule.applyRandomSeed();
+
+            validate();
+        }
+
+        private function validate():void
+        {
+            // Validate UI from model
+            inputSeed.text = model.pointsModule.seed;
+            updateSeedHash();
+        }
+
+        private function onSeedChange(event:TextOperationEvent):void
+        {
+            // Seed was changed
+            model.pointsModule.seed = inputSeed.text;
+            updateSeedHash();
+        }
+
+        private function onRandomizeSeed(event:MouseEvent):void
+        {
+            // Pick random seed
+            model.pointsModule.applyRandomSeed();
+            model.invalidate();
+            validate();
+        }
+
+        private function updateSeedHash():void
+        {
+            labelSeedHash.text = Local.text('seed_hash', [Util.stringToSeed(model.pointsModule.seed)]);
+        }
+        ]]>
+    </fx:Script>
+
+    <s:HGroup width="100%"
+              verticalAlign="middle">
+
+        <s:Label id="labelTaskNumber"
+                 toolTip="{Local.text('task_progress')}"/>
+
+        <s:Label id="labelTaskName"
+                 showTruncationTip="true"
+                 width="100%"/>
+
+        <s:Button label="{Local.text('all_tasks')}"
+                  icon="{Icons.Tasks}"
+                  click="onAllTasks(event)"/>
+
+    </s:HGroup>
+
+    <s:VGroup width="100%"
+              height="100%"
+              verticalAlign="bottom">
+        <s:VGroup width="100%"
+                  height="100%">
+            <s:VGroup width="100%"
+                      gap="10">
+                <s:Label text="{Local.text('seed')}"
+                         width="100%"/>
+                <s:VGroup width="100%">
+                    <s:HGroup width="100%">
+                        <c:IconTextInput id="inputSeed"
+                                         width="100%"
+                                         icon="{Icons.Flower}"
+                                         change="onSeedChange(event)"/>
+                        <s:Button toolTip="{Local.text('randomize')}"
+                                  icon="{Icons.Dice}"
+                                  click="onRandomizeSeed(event)"/>
+                    </s:HGroup>
+                    <s:Label id="labelSeedHash"
+                             fontSize="10"
+                             color="{Color.textLow}"/>
+                </s:VGroup>
+
+            </s:VGroup>
+        </s:VGroup>
+    </s:VGroup>
+
+</t:Toolbar>

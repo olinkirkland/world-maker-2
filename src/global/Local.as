@@ -19,7 +19,9 @@ package global
             if (!dictionary[key])
             {
                 //trace("@Local, missing key: " + key);
-                return "[" + key + "]";
+                if (args && args.length > 0)
+                    return "[ " + key + " ] " + args.join(", ");
+                return "[ " + key + " ]";
             }
 
             var str:String = dictionary[key];

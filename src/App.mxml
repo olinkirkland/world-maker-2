@@ -7,6 +7,7 @@
     <fx:Script><![CDATA[
         import events.ModelEvent;
         import events.UIEvent;
+        import events.UIEvent;
 
         import global.Color;
         import global.Icons;
@@ -45,15 +46,23 @@
             taskManager = TaskManager.instance;
 
             signal.addEventListener(ModelEvent.TASK_CHANGED, onTaskChanged);
+            signal.addEventListener(ModelEvent.VALIDITY_CHANGED, onValidityChanged);
             signal.addEventListener(UIEvent.OPEN_PANE, onOpenPane);
             signal.addEventListener(UIEvent.CLOSE_PANE, onClosePane);
-
-            loadTask();
         }
 
         private function onTaskChanged(event:ModelEvent):void
         {
             loadTask();
+        }
+
+        private function onValidityChanged(event:ModelEvent):void
+        {
+            groupContent.visible = true;
+
+            var isValid:Boolean = Model.instance.isValid;
+            buttonBuild.visible = buttonBuild.includeInLayout = !isValid;
+            buttonNextTask.visible = buttonNextTask.includeInLayout = isValid;
         }
 
         private function onOpenPane(event:UIEvent):void
@@ -125,6 +134,13 @@
 
             // Validate next task button
             buttonNextTask.visible = buttonNextTask.includeInLayout = taskManager.currentTask.index < taskManager.tasks.length - 1;
+
+            model.build();
+
+            callLater(function ():void
+            {
+                signal.dispatchEvent(new UIEvent(UIEvent.INITIALIZE));
+            });
         }
 
         private function onClickSave(event:MouseEvent):void
@@ -160,10 +176,16 @@
             // Go to the next task
             taskManager.goToNextTask();
         }
+
+        private function onClickBuild(event:MouseEvent):void
+        {
+            model.build();
+        }
         ]]></fx:Script>
 
     <!--Frame-->
-    <s:VGroup width="100%"
+    <s:VGroup id="groupContent"
+              width="100%"
               height="100%">
 
         <!--Navigation Bar (Top Bar)-->
@@ -229,7 +251,8 @@
                      height="100%">
 
                 <!--Map-->
-                <ui:Map width="100%"
+                <ui:Map id="map"
+                        width="100%"
                         height="100%"/>
 
                 <!--Anchored Overlay-->
@@ -255,10 +278,20 @@
                              width="100%"
                              height="100%"/>
 
-                    <s:Button id="buttonNextTask"
-                              skinClass="ui.parts.skins.ButtonThemeSkin"
-                              label="{Local.text('next_task')}"
-                              click="onClickNextTask(event)"/>
+                    <s:HGroup width="100%"
+                              horizontalAlign="center">
+
+                        <s:Button id="buttonBuild"
+                                  skinClass="ui.parts.skins.ButtonThemeSkin"
+                                  label="{Local.text('apply')}"
+                                  icon="{Icons.Build}"
+                                  click="onClickBuild(event)"/>
+
+                        <s:Button id="buttonNextTask"
+                                  label="{Local.text('next_task')}"
+                                  click="onClickNextTask(event)"/>
+
+                    </s:HGroup>
 
                 </s:VGroup>
 

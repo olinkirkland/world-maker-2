@@ -4,8 +4,7 @@ package events
     {
         public static const MAP_MOVED:String = "mapMoved";
         public static const MOUSE_MOVE:String = "mapMoved";
-        public static const MAP_ZOOM_OUT:String = "mapZoomOut";
-        public static const MAP_ZOOM_IN:String = "mapZoomIn";
+        public static const MAP_ZOOM:String = "mapZoomIn";
         public static const MAP_CENTER:String = "mapCenter";
         public static const PICK_CELL:String = "pickCell";
 

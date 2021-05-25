@@ -47,9 +47,19 @@
 
             addEventListener(MouseEvent.MOUSE_WHEEL, onScroll);
 
+            signal.addEventListener(UIEvent.INITIALIZE, onInitializeUI);
+
             signal.addEventListener(UIEvent.ZOOM_IN, onZoomIn);
             signal.addEventListener(UIEvent.ZOOM_OUT, onZoomOut);
             signal.addEventListener(UIEvent.MOVE_MAP_TO_CENTER, onMoveMapToCenter);
+        }
+
+        private function onInitializeUI(event:UIEvent):void
+        {
+            // Dispatches initial signals to UI
+            // Use: When task is changed and the new UI elements need values
+            signal.dispatchEvent(new MapEvent(MapEvent.MAP_ZOOM, zoomLevel));
+            signal.dispatchEvent(new MapEvent(MapEvent.MOUSE_MOVE, new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY)));
         }
 
         private function onZoomIn(event:UIEvent):void
@@ -192,6 +202,8 @@
         {
             keepInBitmapMode = false;
             setTimeout(hideBitmapLayers, 500);
+
+            signal.dispatchEvent(new MapEvent(MapEvent.MAP_ZOOM, zoomLevel))
         }
 
         private function centerMapOnPoint(p:Point, animate:Boolean = true):void

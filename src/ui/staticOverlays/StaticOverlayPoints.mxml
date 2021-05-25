@@ -23,17 +23,27 @@
         override protected function addEventListeners():void
         {
             signal.addEventListener(MapEvent.MOUSE_MOVE, onMouseMoveAnywhere);
+            signal.addEventListener(MapEvent.MAP_ZOOM, onZoom);
+            signal.addEventListener(MapEvent.MAP_ZOOM, onZoom);
         }
 
         override protected function removeEventListeners():void
         {
             signal.removeEventListener(MapEvent.MOUSE_MOVE, onMouseMoveAnywhere);
+            signal.removeEventListener(MapEvent.MAP_ZOOM, onZoom);
+            signal.removeEventListener(MapEvent.MAP_ZOOM, onZoom);
         }
 
         private function onMouseMoveAnywhere(event:MapEvent):void
         {
             var point:Point = event.payload;
             labelMouse.text = "x=" + point.x + ", y=" + point.y;
+        }
+
+        private function onZoom(event:MapEvent):void
+        {
+            var zoomLevel:Number = event.payload;
+            labelZoom.text = int(zoomLevel * 100) + "%";
         }
 
         private function onToggleLayers(event:MouseEvent):void

@@ -8,9 +8,10 @@ package events
         public static const MOVE_MAP_TO_CENTER:String = "moveMapToCenter";
 
         // UI
+        public static const INITIALIZE:String = "initialize";
         public static const OPEN_PANE:String = "openPane";
         public static const CLOSE_PANE:String = "closePane";
-
+        
         public function UIEvent(type:String, payload:* = null, bubbles:Boolean = false, cancelable:Boolean = false)
         {
             super(type, payload, bubbles, cancelable);

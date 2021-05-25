@@ -10,6 +10,8 @@
         import global.Local;
         import global.Util;
 
+        import logic.Model;
+
         import managers.TaskManager;
 
         import mx.events.FlexEvent;
@@ -17,8 +19,13 @@
         import ui.PopupManager;
         import ui.popups.TasksPopup;
 
+        protected var model:Model;
+
         public function onCreationComplete(event:FlexEvent):void
         {
+            // Singletons
+            model = Model.instance;
+
             var taskManager:TaskManager = TaskManager.instance;
             labelTaskNumber.text = (taskManager.currentTask.index + 1) + "/" + taskManager.tasks.length;
             labelTaskName.text = Local.text(taskManager.currentTask.name);
