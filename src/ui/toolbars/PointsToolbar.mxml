@@ -11,16 +11,30 @@
         import global.Local;
         import global.Util;
 
+        import logic.modules.PointsModule;
+        import logic.tasks.Task;
+
+        import managers.TaskManager;
+
         import mx.events.FlexEvent;
 
         import spark.events.TextOperationEvent;
+
+        private var module:PointsModule;
 
         override public function onCreationComplete(event:FlexEvent):void
         {
             super.onCreationComplete(event);
 
-            if (!model.pointsModule.seed)
-                model.pointsModule.applyRandomSeed();
+            var task:Task = TaskManager.instance.currentTask;
+            module = new task.module;
+
+            // Set initial seed to random
+            if (!model.pointsSeed)
+            {
+                model.pointsSeed = Util.randomSeed();
+                model.invalidate();
+            }
 
             validate();
         }
@@ -28,28 +42,29 @@
         private function validate():void
         {
             // Validate UI from model
-            inputSeed.text = model.pointsModule.seed;
+            inputSeed.text = model.pointsSeed;
             updateSeedHash();
         }
 
         private function onSeedChange(event:TextOperationEvent):void
         {
             // Seed was changed
-            model.pointsModule.seed = inputSeed.text;
+            model.pointsSeed = inputSeed.text;
+            model.invalidate();
             updateSeedHash();
         }
 
         private function onRandomizeSeed(event:MouseEvent):void
         {
             // Pick random seed
-            model.pointsModule.applyRandomSeed();
+            model.pointsSeed = Util.randomSeed();
             model.invalidate();
             validate();
         }
 
         private function updateSeedHash():void
         {
-            labelSeedHash.text = Local.text('seed_hash', [Util.stringToSeed(model.pointsModule.seed)]);
+            labelSeedHash.text = Local.text('seed_hash', [Util.stringToSeed(model.pointsSeed)]);
         }
         ]]>
     </fx:Script>
@@ -72,30 +87,29 @@
 
     <s:VGroup width="100%"
               height="100%"
-              verticalAlign="bottom">
-        <s:VGroup width="100%"
-                  height="100%">
-            <s:VGroup width="100%"
-                      gap="10">
-                <s:Label text="{Local.text('seed')}"
-                         width="100%"/>
-                <s:VGroup width="100%">
-                    <s:HGroup width="100%">
-                        <c:IconTextInput id="inputSeed"
-                                         width="100%"
-                                         icon="{Icons.Flower}"
-                                         change="onSeedChange(event)"/>
-                        <s:Button toolTip="{Local.text('randomize')}"
-                                  icon="{Icons.Dice}"
-                                  click="onRandomizeSeed(event)"/>
-                    </s:HGroup>
-                    <s:Label id="labelSeedHash"
-                             fontSize="10"
-                             color="{Color.textLow}"/>
-                </s:VGroup>
-
+              gap="10">
+        <s:Label text="{Local.text('task_points')}"
+                 width="100%"/>
+        <s:Label text="{Local.text('points_seed')}"
+                 width="100%"
+                 textAlign="center"/>
+        <s:Panel width="100%"
+                 skinClass="ui.parts.skins.PanelSkinInset">
+            <s:VGroup width="100%">
+                <s:HGroup width="100%">
+                    <c:IconTextInput id="inputSeed"
+                                     width="100%"
+                                     icon="{Icons.Flower}"
+                                     change="onSeedChange(event)"/>
+                    <s:Button toolTip="{Local.text('randomize')}"
+                              icon="{Icons.Dice}"
+                              click="onRandomizeSeed(event)"/>
+                </s:HGroup>
+                <s:Label id="labelSeedHash"
+                         fontSize="10"
+                         color="{Color.textLow}"/>
             </s:VGroup>
-        </s:VGroup>
+        </s:Panel>
     </s:VGroup>
 
 </t:Toolbar>

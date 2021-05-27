@@ -4,6 +4,7 @@ package logic.tasks
     import logic.modules.TectonicsModule;
 
     import ui.staticOverlays.StaticOverlay;
+    import ui.staticOverlays.StaticOverlayStandard;
     import ui.toolbars.TectonicsToolbar;
 
     public class TectonicsTask extends Task
@@ -12,10 +13,10 @@ package logic.tasks
         {
             id = TECTONICS;
             toolbar = TectonicsToolbar;
-            staticOverlay = StaticOverlay;
+            staticOverlay = StaticOverlayStandard;
             name = "task_tectonics";
             module = TectonicsModule;
-            layers = [Layer.POINTS, Layer.VORONOI, Layer.DELAUNAY, Layer.TECTONIC_PLATES];
+            layers = [Layer.VORONOI, Layer.TECTONIC_PLATES];
         }
     }
 }

@@ -5,7 +5,7 @@ package logic.tasks
     import logic.tasks.Task;
 
     import ui.staticOverlays.StaticOverlay;
-    import ui.staticOverlays.StaticOverlayPoints;
+    import ui.staticOverlays.StaticOverlayStandard;
 
     import ui.toolbars.PointsToolbar;
 
@@ -15,10 +15,10 @@ package logic.tasks
         {
             id = POINTS;
             toolbar = PointsToolbar;
-            staticOverlay = StaticOverlayPoints;
+            staticOverlay = StaticOverlayStandard;
             name = "task_points";
             module = PointsModule;
-            layers = [Layer.POINTS, Layer.VORONOI, Layer.DELAUNAY];
+            layers = [Layer.VORONOI];
         }
     }
 }

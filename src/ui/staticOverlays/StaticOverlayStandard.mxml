@@ -4,12 +4,13 @@
                               xmlns:c="ui.parts.components.*"
                               xmlns:staticOverlays="ui.staticOverlays.*">
     <fx:Script><![CDATA[
-        import events.AppEvent;
-        import events.AppEvent;
+        import events.PayloadEvent;
 
         import global.Color;
         import global.Icons;
         import global.Local;
+
+        import logic.graph.Cell;
 
         import mx.events.FlexEvent;
 
@@ -22,25 +23,48 @@
 
         override protected function addEventListeners():void
         {
-            signal.addEventListener(AppEvent.MAP_MOUSE_MOVE, onMouseMoveAnywhere);
-            signal.addEventListener(AppEvent.MAP_ZOOM, onZoom);
-            signal.addEventListener(AppEvent.MAP_ZOOM, onZoom);
+            signal.addEventListener(PayloadEvent.MAP_MOUSE_MOVE, onMouseMoveAnywhere);
+            signal.addEventListener(PayloadEvent.MAP_ZOOM, onZoom);
+            signal.addEventListener(PayloadEvent.MAP_ZOOM, onZoom);
+            signal.addEventListener(PayloadEvent.PICK_CELL_START, onPickCellStart);
+            signal.addEventListener(PayloadEvent.PICK_CELL_END, onPickCellEnd);
         }
 
         override protected function removeEventListeners():void
         {
-            signal.removeEventListener(AppEvent.MAP_MOUSE_MOVE, onMouseMoveAnywhere);
-            signal.removeEventListener(AppEvent.MAP_ZOOM, onZoom);
-            signal.removeEventListener(AppEvent.MAP_ZOOM, onZoom);
+            signal.removeEventListener(PayloadEvent.MAP_MOUSE_MOVE, onMouseMoveAnywhere);
+            signal.removeEventListener(PayloadEvent.MAP_ZOOM, onZoom);
+            signal.removeEventListener(PayloadEvent.MAP_ZOOM, onZoom);
+            signal.removeEventListener(PayloadEvent.PICK_CELL_START, onPickCellStart);
+            signal.removeEventListener(PayloadEvent.PICK_CELL_END, onPickCellEnd);
         }
 
-        private function onMouseMoveAnywhere(event:AppEvent):void
+        private function onPickCellStart(event:PayloadEvent):void
         {
-            var point:Point = event.payload;
-            labelMouse.text = "x=" + point.x + ", y=" + point.y;
+            groupPickCell.visible = true;
         }
 
-        private function onZoom(event:AppEvent):void
+        private function onPickCellEnd(event:PayloadEvent):void
+        {
+            groupPickCell.visible = false;
+        }
+
+        private function onMouseMoveAnywhere(event:PayloadEvent):void
+        {
+            var p:Point = event.payload;
+            labelMouse.text = "x=" + p.x + ", y=" + p.y;
+
+            if (model.isPickingCell)
+            {
+                p = model.getClosestPoint(p);
+                if (!p)
+                    return;
+                var cell:Cell = model.getCellByPoint(p);
+                labelNearestCell.text = Local.text('cell', [cell.index]);
+            }
+        }
+
+        private function onZoom(event:PayloadEvent):void
         {
             var zoomLevel:Number = event.payload;
             labelZoom.text = int(zoomLevel * 100) + "%";
@@ -48,22 +72,28 @@
 
         private function onToggleLayers(event:MouseEvent):void
         {
-            signal.dispatchEvent(new AppEvent(AppEvent.OPEN_PANE, new PaneLayers()));
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.OPEN_PANE, new PaneLayers()));
         }
 
         private function onZoomOut(event:MouseEvent):void
         {
-            signal.dispatchEvent(new AppEvent(AppEvent.ZOOM_OUT));
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.ZOOM_OUT));
         }
 
         private function onZoomIn(event:MouseEvent):void
         {
-            signal.dispatchEvent(new AppEvent(AppEvent.ZOOM_IN));
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.ZOOM_IN));
         }
 
         private function onCenterMap(event:MouseEvent):void
         {
-            signal.dispatchEvent(new AppEvent(AppEvent.MOVE_MAP_TO_CENTER));
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.MOVE_MAP_TO_CENTER));
+        }
+
+        private function onEndPickCell(event:MouseEvent):void
+        {
+            model.isPickingCell = false;
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.PICK_CELL_END));
         }
         ]]></fx:Script>
     <s:Panel skinClass="ui.parts.skins.PanelSkinOutline"
@@ -114,7 +144,7 @@
 
                 </s:HGroup>
             </s:Group>
-            <s:HGroup id="groupNearestPoint"
+            <s:HGroup id="groupPickCell"
                       width="100%"
                       height="100%"
                       horizontalAlign="center"
@@ -132,15 +162,19 @@
                                           alpha=".7"/>
                         </s:fill>
                     </s:Rect>
-                    <s:HGroup verticalAlign="middle"
-                              padding="5"
-                              paddingRight="10">
-                        <c:ColorBitmapImage id="iconNearestPoint"
-                                            color="{Color.theme}"
-                                            source="{Icons.Target}"/>
-                        <s:Label id="labelNearestPoint"
-                                 color="{Color.theme}"/>
-                    </s:HGroup>
+                    <s:VGroup horizontalAlign="center"
+                              padding="10"
+                              minWidth="150">
+                        <s:HGroup verticalAlign="middle">
+                            <c:ColorBitmapImage color="{Color.theme}"
+                                                source="{Icons.Target}"/>
+                            <s:Label id="labelNearestCell"
+                                     color="{Color.theme}"/>
+                        </s:HGroup>
+                        <s:Button label="{Local.text('cancel')}"
+                                  skinClass="ui.parts.skins.ButtonTextSkin"
+                                  click="onEndPickCell(event)"/>
+                    </s:VGroup>
                 </s:Group>
             </s:HGroup>
         </s:Group>

@@ -1,6 +1,6 @@
 package nodename.delaunay {
-    import com.nodename.geom.Polygon;
-    import com.nodename.geom.Winding;
+    import nodename.geom.Polygon;
+    import nodename.geom.Winding;
 
     import flash.geom.Point;
     import flash.geom.Rectangle;

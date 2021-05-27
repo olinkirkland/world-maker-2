@@ -14,8 +14,6 @@
 	</fx:Metadata>
 
     <fx:Script><![CDATA[
-        import global.Color;
-
         import mx.events.FlexEvent;
 
         private function onCreationComplete(event:FlexEvent):void
@@ -50,9 +48,8 @@
 
             <ui:ColorBitmapImage id="iconDisplay"
                                  includeInLayout="{iconDisplay.source}"
-                                 color="0x6d7173"
-                                 color.over="0xfcfcfb"
-                                 color.down="0xffbb33"
+                                 color="0x4e5357"
+                                 color.over="0x6d7173"
                                  width="16"
                                  height="16"
                                  smooth="true"
@@ -63,9 +60,8 @@
                      styleName="button"
                      height="16"
                      verticalAlign="middle"
-                     color="0x6d7173"
-                     color.over="0xfcfcfb"
-                     color.down="0xffbb33"
+                     color="0x4e5357"
+                     color.over="0x6d7173"
                      alpha.normal="1"
                      alpha.disabled=".5"/>
 

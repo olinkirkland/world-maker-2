@@ -19,15 +19,15 @@
     <!-- The name that is displayed in the AIR application installer. May have multiple values for each language. See samples or xsd schema file. Optional. -->
     <name>WorldMakerV2</name>
 
-    <!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade.
-         Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
-         An updated version of application must have a versionNumber value higher than the previous version. Required for namespace >= 2.5.
+    <!-- A string cell of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade.
+         Values can also be 1-part or 2-part. It is not necessary to have a 3-part cell.
+         An updated version of application must have a versionNumber cell higher than the previous version. Required for namespace >= 2.5.
          For iOS Apps, this represents build number. -->
     <versionNumber>0.0.0</versionNumber>
 
-    <!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users.
+    <!-- A string cell (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users.
          For iOS Apps, this represents application version number and format should be (<0-999>.<0-999>.<0-999>).
-         If this tag is not specified or the value is not according to the format, then this tag will be ignored
+         If this tag is not specified or the cell is not according to the format, then this tag will be ignored
          and <versionNumber> will be used for application version number.Optional. -->
     <!--<versionLabel></versionLabel>-->
 
@@ -189,7 +189,7 @@
 
     <!-- iOS specific capabilities -->
     <!--<iPhone>-->
-    <!-- A list of plist key/value pairs to be added to the application Info.plist -->
+    <!-- A list of plist key/cell pairs to be added to the application Info.plist -->
     <!--<InfoAdditions>-->
     <!--<![CDATA[-->
     <!--<key>UIDeviceFamily</key>-->
@@ -206,7 +206,7 @@
     <!--]]>-->
     <!--</InfoAdditions>-->
 
-    <!-- A list of plist key/value pairs to be added to the application Entitlements.plist -->
+    <!-- A list of plist key/cell pairs to be added to the application Entitlements.plist -->
     <!--<Entitlements>
         <![CDATA[
         <key>keychain-access-groups</key>
@@ -264,10 +264,10 @@
     <!-- <supportsAndroidTV></supportsAndroidTV> -->
     <!-- Path to the image used for banner when the app is shown on TV. Optional. The banner should be a .png image of size 320*180.-->
     <!-- <banner></banner> -->
-    <!-- Indicates if webContents (HTML/CSS/JavaScript) can be inspected in browser. Optional . Default value is 'false' -->
+    <!-- Indicates if webContents (HTML/CSS/JavaScript) can be inspected in browser. Optional . Default cell is 'false' -->
     <!-- <webContentsDebuggingEnabled></webContentsDebuggingEnabled> -->
 
-    <!-- Indicates if disableMediaCodec is enabled or not. Optional . Default value is 'false' -->
+    <!-- Indicates if disableMediaCodec is enabled or not. Optional . Default cell is 'false' -->
     <!-- <disableMediaCodec></disableMediaCodec> -->
 
     <!--</android>-->

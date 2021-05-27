@@ -1,6 +1,6 @@
 package managers
 {
-    import events.AppEvent;
+    import events.PayloadEvent;
 
     import global.Signal;
 
@@ -44,7 +44,7 @@ package managers
         {
             _currentTask = task;
 
-            signal.dispatchEvent(new AppEvent(AppEvent.TASK_CHANGED));
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.TASK_CHANGED));
         }
 
         public function setCurrentTaskByIndex(index:int):void
@@ -61,6 +61,7 @@ package managers
 
         public function goToNextTask():void
         {
+            trace("TaskManager:goToNextTask");
             setCurrentTaskByIndex(currentTask.index + 1);
         }
 

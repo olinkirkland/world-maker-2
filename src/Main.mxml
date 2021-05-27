@@ -25,6 +25,8 @@
 
         private function onCreationComplete(event:FlexEvent):void
         {
+            visible = false;
+
             model = Model.instance;
 
             // Workaround for stage video
@@ -37,6 +39,11 @@
             // Load locally (only if external loading hasn't occurred yet)
             if (!model.loaded)
                 model.standaloneLoad();
+
+            callLater(function ():void
+            {
+                visible = true;
+            });
         }
 
         /** Top level function; Only accessed by Launcher */

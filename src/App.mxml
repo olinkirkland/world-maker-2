@@ -5,9 +5,9 @@
          creationComplete="onCreationComplete(event)">
 
     <fx:Script><![CDATA[
-        import events.AppEvent;
-        import events.AppEvent;
-        import events.AppEvent;
+        import events.PayloadEvent;
+        import events.PayloadEvent;
+        import events.PayloadEvent;
 
         import global.Color;
         import global.Icons;
@@ -47,30 +47,27 @@
 
             groupContent.visible = false;
 
-            signal.addEventListener(AppEvent.TASK_CHANGED, onTaskChanged);
-            signal.addEventListener(AppEvent.VALIDITY_CHANGED, onValidityChanged);
-            signal.addEventListener(AppEvent.OPEN_PANE, onOpenPane);
-            signal.addEventListener(AppEvent.CLOSE_PANE, onClosePane);
+            signal.addEventListener(PayloadEvent.TASK_CHANGED, onTaskChanged);
+            signal.addEventListener(PayloadEvent.VALIDITY_CHANGED, onValidityChanged);
+            signal.addEventListener(PayloadEvent.OPEN_PANE, onOpenPane);
+            signal.addEventListener(PayloadEvent.CLOSE_PANE, onClosePane);
         }
 
-        private function onTaskChanged(event:AppEvent):void
+        private function onTaskChanged(event:PayloadEvent):void
         {
             loadTask();
         }
 
-        private function onValidityChanged(event:AppEvent):void
+        private function onValidityChanged(event:PayloadEvent):void
         {
-            setTimeout(function ():void
-            {
-                groupContent.visible = true;
-            }, 200);
+            groupContent.visible = true;
 
             var isValid:Boolean = Model.instance.isValid;
             buttonBuild.visible = buttonBuild.includeInLayout = !isValid;
             buttonNextTask.visible = buttonNextTask.includeInLayout = isValid;
         }
 
-        private function onOpenPane(event:AppEvent):void
+        private function onOpenPane(event:PayloadEvent):void
         {
             var paneClassName:String = null;
 
@@ -92,7 +89,7 @@
             groupPane.visible = groupPane.includeInLayout = true;
         }
 
-        private function onClosePane(event:AppEvent):void
+        private function onClosePane(event:PayloadEvent):void
         {
             onOpenPane(event);
         }
@@ -144,7 +141,7 @@
 
             callLater(function ():void
             {
-                signal.dispatchEvent(new AppEvent(AppEvent.INITIALIZE));
+                signal.dispatchEvent(new PayloadEvent(PayloadEvent.INITIALIZE));
             });
         }
 
@@ -287,8 +284,7 @@
                               horizontalAlign="center">
 
                         <s:Button id="buttonBuild"
-                                  skinClass="ui.parts.skins.ButtonThemeSkin"
-                                  label="{Local.text('apply')}"
+                                  label="{Local.text('build')}"
                                   icon="{Icons.Build}"
                                   click="onClickBuild(event)"/>
 

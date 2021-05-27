@@ -9,7 +9,7 @@ package global
 
         public static function text(key:String, args:Array = null):String
         {
-            // Returns value of key from the dictionary pair
+            // Returns cell of key from the dictionary pair
             // If no such key exists, returns the key with brackets around it
             // If there are arguments, replace each "%%" in the key with an arg
 

@@ -1,11 +1,11 @@
 package nodename.delaunay
 {
-	import com.nodename.geom.Circle;
-	import com.nodename.utils.IDisposable;
-	
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+
+	import nodename.geom.Circle;
+	import nodename.utils.IDisposable;
 
 	internal final class SiteList implements IDisposable
 	{

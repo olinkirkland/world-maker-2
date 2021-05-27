@@ -4,43 +4,29 @@ package logic.modules
     import flash.geom.Rectangle;
 
     import global.Rand;
-
     import global.Util;
 
-    import logic.graph.Cell;
-    import logic.graph.Corner;
+    import logic.Model;
     import logic.graph.QuadTree;
-    import logic.graph.Edge;
 
     public class PointsModule extends Module
     {
+        // Singletons
+        private var model:Model;
+
         // Options
-        public var seed:String;
         public var spacing:int;
         public var precision:int;
-        public var bounds:Rectangle;
-
-        // Graph
-        public var points:Vector.<Point>;
-        public var cells:Vector.<Cell>;
-        public var corners:Vector.<Corner>;
-        public var edges:Vector.<Edge>;
-
-        // Point Mapping
-        public var cellsByPoints:Object;
-        private var quad:QuadTree;
 
         public function PointsModule()
         {
-            spacing = 15;
-            precision = 5;
-            bounds = new Rectangle(0,
-                    0,
-                    2000,
-                    1000);
+            model = Model.instance;
 
-            points = new Vector.<Point>();
-            quad = new QuadTree(bounds);
+            spacing = 10;
+            precision = 20;
+
+            model.points = new Vector.<Point>();
+            model.quad = new QuadTree(model.bounds);
         }
 
         override public function run():void
@@ -48,19 +34,20 @@ package logic.modules
             trace("PointsModule:run");
 
             makePoints();
+            model.makeGraphFromPoints();
         }
 
         private function makePoints():void
         {
             trace("PointsModule:makePoints");
 
-            var rand:Rand = new Rand(Util.stringToSeed(seed));
+            var rand:Rand = new Rand(Util.stringToSeed(model.pointsSeed));
 
             // The active point queue
             var queue:Vector.<Point> = new Vector.<Point>();
 
-            var point:Point = new Point(int(bounds.width / 2),
-                    int(bounds.height / 2));
+            var point:Point = new Point(int(model.bounds.width / 2),
+                    int(model.bounds.height / 2));
 
             var doubleSpacing:Number = spacing * 2;
             var doublePI:Number = 2 * Math.PI;
@@ -72,20 +59,20 @@ package logic.modules
 
             // Make border points
             var gap:int = spacing;
-            for (var i:int = gap; i < bounds.width; i += 2 * gap)
+            for (var i:int = gap; i < model.bounds.width; i += 2 * gap)
             {
-                addPoint(new Point(i, gap));
-                addPoint(new Point(i, bounds.height - gap));
+                model.addPoint(new Point(i, gap));
+                model.addPoint(new Point(i, model.bounds.height - gap));
             }
 
-            for (i = 2 * gap; i < bounds.height - gap; i += 2 * gap)
+            for (i = 2 * gap; i < model.bounds.height - gap; i += 2 * gap)
             {
-                addPoint(new Point(gap, i));
-                addPoint(new Point(bounds.width - gap, i));
+                model.addPoint(new Point(gap, i));
+                model.addPoint(new Point(model.bounds.width - gap, i));
             }
 
             // Initial point
-            addPoint(point);
+            model.addPoint(point);
             queue.push(point);
 
             var candidate:Point = null;
@@ -107,13 +94,13 @@ package logic.modules
                     // Check point distance to nearby points
                     box.x = candidate.x - spacing;
                     box.y = candidate.y - spacing;
-                    if (quad.isRangePopulated(box))
+                    if (model.quad.isRangePopulated(box))
                     {
                         candidate = null;
                     } else
                     {
                         // Valid candidate
-                        if (!bounds.contains(candidate.x, candidate.y))
+                        if (!model.bounds.contains(candidate.x, candidate.y))
                         {
                             // Candidate is outside the area, so don't include it
                             candidate = null;
@@ -125,7 +112,7 @@ package logic.modules
 
                 if (candidate)
                 {
-                    addPoint(candidate);
+                    model.addPoint(candidate);
                     queue.push(candidate);
                 } else
                 {
@@ -133,32 +120,6 @@ package logic.modules
                     queue.shift();
                 }
             }
-        }
-
-        public function loadPoints(arr:Array):void
-        {
-            trace("PointsModule:loadPoints");
-            points = new Vector.<Point>();
-            quad = new QuadTree(bounds);
-
-            trace("Adding " + arr.length + " points");
-
-            for each (var u:Object in arr)
-                addPoint(new Point(u.x, u.y));
-        }
-
-        public function addPoint(p:Point):void
-        {
-            p.x = Util.fixed(p.x, 2);
-            p.y = Util.fixed(p.y, 2);
-
-            points.push(p);
-            quad.insert(p);
-        }
-
-        public function applyRandomSeed():void
-        {
-            seed = Util.randomSeed();
         }
     }
 }

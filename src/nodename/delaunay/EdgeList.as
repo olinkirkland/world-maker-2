@@ -1,8 +1,8 @@
 package nodename.delaunay
 {
-	import com.nodename.utils.IDisposable;
-
 	import flash.geom.Point;
+
+	import nodename.utils.IDisposable;
 
 	internal final class EdgeList implements IDisposable
 	{

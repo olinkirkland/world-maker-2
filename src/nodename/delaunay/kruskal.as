@@ -1,7 +1,7 @@
 package nodename.delaunay {
     import flash.utils.Dictionary;
 
-    import com.nodename.geom.Segment;
+    import nodename.geom.Segment;
 
     /**
      *  Kruskal's spanning trees algorithm with union-find

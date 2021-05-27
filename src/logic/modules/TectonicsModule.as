@@ -5,5 +5,11 @@ package logic.modules
         public function TectonicsModule()
         {
         }
+
+        public static function addPlate():TectonicPlate
+        {
+            var t:TectonicPlate = new TectonicPlate();
+            return t;
+        }
     }
 }

@@ -1,5 +1,5 @@
 package nodename.delaunay {
-    import com.nodename.geom.Segment;
+    import nodename.geom.Segment;
 
     import flash.display.BitmapData;
     import flash.display.CapsStyle;

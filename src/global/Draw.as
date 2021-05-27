@@ -3,7 +3,9 @@ package global
     import flash.display.Graphics;
     import flash.geom.Point;
 
-    import game.graph.*;
+    import logic.graph.Cell;
+    import logic.graph.Corner;
+    import logic.graph.Edge;
 
     public class Draw
     {
@@ -15,9 +17,9 @@ package global
             graphics.lineStyle();
         }
 
-        public static function fillCell(graphics:Graphics, cell:Cell, color:uint, alpha:Number = 1):void
+        public static function fillCell(graphics:Graphics, cell:Cell, color:uint):void
         {
-            graphics.beginFill(color, alpha);
+            graphics.beginFill(color);
             for each (var edge:Edge in cell.edges)
             {
                 if (!edge.v0 || !edge.v1)

@@ -14,8 +14,8 @@
 
 
 package nodename.delaunay {
-    import com.nodename.geom.Circle;
-    import com.nodename.geom.Segment;
+    import nodename.geom.Circle;
+    import nodename.geom.Segment;
 
     import flash.display.BitmapData;
     import flash.geom.Point;

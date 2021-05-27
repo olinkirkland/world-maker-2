@@ -7,11 +7,15 @@
     <fx:Script><![CDATA[
         import global.Signal;
 
+        import logic.Model;
+
         protected var signal:Signal;
+        protected var model:Model;
 
         protected function onCreationComplete(event:FlexEvent):void
         {
             signal = Signal.instance;
+            model = Model.instance;
 
             addEventListeners();
         }

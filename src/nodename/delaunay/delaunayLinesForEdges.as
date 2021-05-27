@@ -1,6 +1,6 @@
 package nodename.delaunay
 {
-	import com.nodename.geom.Segment;
+	import nodename.geom.Segment;
 	
 	internal function delaunayLinesForEdges(edges:Vector.<Edge>):Vector.<Segment>
 	{

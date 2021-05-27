@@ -1,14 +1,8 @@
 package global
 {
-    import flash.desktop.NativeApplication;
-    import flash.desktop.NativeProcess;
-    import flash.desktop.NativeProcessStartupInfo;
-    import flash.filesystem.File;
-    import flash.system.Capabilities;
+    import flash.geom.Point;
     import flash.utils.Timer;
     import flash.utils.describeType;
-
-    import mx.utils.StringUtil;
 
     public class Util
     {
@@ -215,6 +209,42 @@ package global
         public static function checkClassName(className:String, qualifiedClassName:String):Boolean
         {
             return className == qualifiedClassName.substr(qualifiedClassName.indexOf("::") + "::".length);
+        }
+
+        public static function distanceBetweenTwoPoints(point1:Point, point2:Point):Number
+        {
+            return Math.sqrt((point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y));
+        }
+
+        public static function degreesBetweenTwoPoints(p1:Point, p2:Point):Number
+        {
+            return toDegrees(Math.atan2(p2.y - p1.y, p2.x - p1.x));
+        }
+
+        public static function differenceBetweenTwoDegrees(d1:Number, d2:Number):Number
+        {
+            return toDegrees(Math.atan2(Math.sin(d1 - d2), Math.cos(d1 - d2)));
+        }
+
+        public static function round(value:Number):Number
+        {
+            return Math.round(1024 * value) / 1024;
+        }
+
+        public static function toDegrees(value:Number):Number
+        {
+            return round(value * 180 / Math.PI);
+        }
+
+        public static function toRadians(value:Number):Number
+        {
+            return value * Math.PI / 180
+        }
+
+        public static function pointFromAngleAndDistance(point:Point, degrees:Number, distance:Number):Point
+        {
+            var r:Number = toRadians(degrees);
+            return new Point(point.x + Math.cos(r) * distance, point.y + Math.sin(r) * distance);
         }
     }
 }

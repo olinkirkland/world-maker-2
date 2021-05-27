@@ -24,7 +24,6 @@
 
             label.visible = label.includeInLayout = text != null;
             label.text = text;
-            TweenMax.fromTo(groupIcon, 1, {rotation: 0, ease: Linear.easeNone}, {rotation: 360, repeat: -1, ease: Linear.easeNone});
 
             setTimeout(function ():void
             {
@@ -51,7 +50,7 @@
                                 top="-15"
                                 width="30"
                                 height="30"
-                                source="{Icons.Hourglass}"
+                                source="{Icons.Build}"
                                 color="{Color.theme}"/>
         </s:Group>
         <s:VGroup paddingTop="20">

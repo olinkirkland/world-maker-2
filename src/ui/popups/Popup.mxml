@@ -14,7 +14,7 @@
 
         import spark.components.Group;
 
-        protected var fadeSpeed:Number = .5;
+        protected var fadeSpeed:Number = 1;
         protected var closed:Boolean = false;
 
         public function onCreationComplete(event:FlexEvent):void

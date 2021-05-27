@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+          xmlns:s="library://ns.adobe.com/flex/spark"
+          width="100%"
+          gap="5">
+
+    <fx:Script><![CDATA[
+        import events.PayloadEvent;
+
+        import global.Icons;
+        import global.Local;
+        import global.Signal;
+
+        import logic.graph.Cell;
+
+        private var _cell:Cell;
+
+        public function set cell(cell:Cell):void
+        {
+            _cell = cell;
+        }
+
+        public function get cell():Cell
+        {
+            return _cell;
+        }
+
+        private function onCellPicked(pickedCell:Cell):void
+        {
+            trace("Picked cell #" + pickedCell.index);
+            cell = pickedCell;
+            dispatchEvent(new Event(Event.CHANGE));
+        }
+
+        private function onPickRandomCell(event:MouseEvent):void
+        {
+            // todo
+        }
+
+        private function onPickCell(event:MouseEvent):void
+        {
+            // Click handler for the pick cell button
+            Signal.instance.dispatchEvent(new PayloadEvent(PayloadEvent.PICK_CELL_START, onCellPicked));
+        }
+        ]]></fx:Script>
+
+    <s:Label id="label"
+             width="100%"
+             text="Slider"/>
+    <s:HGroup width="100%"
+              verticalAlign="middle"
+              gap="15">
+        <s:Button id="buttonCell"
+                  label="foo"
+                  width="100%"
+                  click="onPickCell(event)"/>
+        <s:Button toolTip="{Local.text('randomize')}"
+                  icon="{Icons.Dice}"
+                  click="onPickRandomCell(event)"/>
+    </s:HGroup>
+</s:VGroup>

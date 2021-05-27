@@ -9,9 +9,17 @@
     <fx:Script><![CDATA[
         import com.greensock.TweenLite;
 
-        import events.AppEvent;
+        import events.PayloadEvent;
 
+        import global.Color;
+        import global.Draw;
         import global.Signal;
+        import global.Util;
+
+        import logic.Layer;
+        import logic.Model;
+        import logic.graph.Cell;
+        import logic.graph.Edge;
 
         import managers.TaskManager;
 
@@ -21,18 +29,28 @@
 
         // Singletons
         private var signal:Signal;
+        private var model:Model;
 
         public var isDragging:Boolean = false;
         public var zoomLevel:Number = 1;
+        private var hideBitmapLayersCountdown:Timer;
 
         private var mapLayers:Object = {};
         private var dragPoint:Point;
+        private var initialDragPoint:Point;
         private var zoomLevels:Array = [.25, .5, .67, .8, .9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
         private var keepInBitmapMode:Boolean = false;
 
         private function onCreationComplete(event:FlexEvent):void
         {
             signal = Signal.instance;
+            model = Model.instance;
+
+            hideBitmapLayersCountdown = new Timer(500, 1);
+            hideBitmapLayersCountdown.addEventListener(TimerEvent.TIMER_COMPLETE, function (timerEvent:TimerEvent):void
+            {
+                hideBitmapLayers();
+            });
 
             addEventListeners();
 
@@ -45,42 +63,120 @@
             systemManager.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUp);
             systemManager.stage.addEventListener(Event.MOUSE_LEAVE, onMouseUp);
 
+            addEventListener(MouseEvent.CLICK, onClick);
             addEventListener(MouseEvent.MOUSE_WHEEL, onScroll);
 
-            signal.addEventListener(AppEvent.INITIALIZE, onInitializeUI);
-            signal.addEventListener(AppEvent.ZOOM_IN, onZoomIn);
-            signal.addEventListener(AppEvent.ZOOM_OUT, onZoomOut);
-            signal.addEventListener(AppEvent.MOVE_MAP_TO_CENTER, onMoveMapToCenter);
-            signal.addEventListener(AppEvent.DRAW, onDraw);
+            signal.addEventListener(PayloadEvent.INITIALIZE, onInitializeUI);
+            signal.addEventListener(PayloadEvent.ZOOM_IN, onZoomIn);
+            signal.addEventListener(PayloadEvent.ZOOM_OUT, onZoomOut);
+            signal.addEventListener(PayloadEvent.MOVE_MAP_TO_CENTER, onMoveMapToCenter);
+            signal.addEventListener(PayloadEvent.DRAW, onDraw);
+        }
+
+        private function onClick(event:MouseEvent):void
+        {
+            var p:Point = new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY);
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.MAP_CLICK, p));
         }
 
         private function onDraw(event:Event):void
         {
             trace("Map:onDraw");
 
-            // Draw
             var layersToDraw:Array = TaskManager.instance.currentTask.layers;
-            trace(layersToDraw);
+            for each (var layer:String in layersToDraw)
+            {
+                switch (layer)
+                {
+                    case Layer.POINTS:
+                        drawPoints();
+                        break;
+                    case Layer.VORONOI:
+                        drawVoronoi();
+                        break;
+                    case Layer.DELAUNAY:
+                        drawDelaunay();
+                        break;
+                }
+            }
         }
 
-        private function onInitializeUI(event:AppEvent):void
+        public function drawPoints():void
+        {
+            trace("Map:drawPoints");
+            var c:UIComponent = getMapLayer(Layer.POINTS);
+            while (c.numChildren > 0)
+                c.removeChildAt(0);
+            var spr:Sprite = new Sprite();
+            c.addChild(spr);
+            var g:Graphics = spr.graphics;
+
+            for each (var p:Point in model.points)
+            {
+                g.beginFill(0xffffff);
+                g.drawCircle(p.x, p.y, 2);
+                g.endFill();
+            }
+
+            cacheLayer(c);
+        }
+
+        public function drawVoronoi():void
+        {
+            trace("Map:drawVoronoi");
+            var c:UIComponent = getMapLayer(Layer.VORONOI);
+            while (c.numChildren > 0)
+                c.removeChildAt(0);
+            var spr:Sprite = new Sprite();
+            c.addChild(spr);
+            var g:Graphics = spr.graphics;
+            g.lineStyle(1, Color.textLow);
+            g.drawRect(0, 0, 1999, 999);
+
+            for each (var cell:Cell in model.cells)
+                for each (var edge:Edge in cell.edges)
+                    if (edge.v0 && edge.v1)
+                        Draw.drawLine(g, edge.v0.point, edge.v1.point, Color.textLow);
+
+            cacheLayer(c);
+        }
+
+        public function drawDelaunay():void
+        {
+            trace("Map:drawDelaunay");
+            var c:UIComponent = getMapLayer(Layer.DELAUNAY);
+            while (c.numChildren > 0)
+                c.removeChildAt(0);
+            var spr:Sprite = new Sprite();
+            c.addChild(spr);
+            var g:Graphics = spr.graphics;
+
+            for each (var cell:Cell in model.cells)
+                for each (var edge:Edge in cell.edges)
+                    if (edge.d0 && edge.d1)
+                        Draw.drawLine(g, edge.d0.point, edge.d1.point, Color.pacificBlue);
+
+            cacheLayer(c);
+        }
+
+        private function onInitializeUI(event:PayloadEvent):void
         {
             // Dispatches initial signals to UI
-            signal.dispatchEvent(new AppEvent(AppEvent.MAP_ZOOM, zoomLevel));
-            signal.dispatchEvent(new AppEvent(AppEvent.MAP_MOUSE_MOVE, new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY)));
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.MAP_ZOOM, zoomLevel));
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.MAP_MOUSE_MOVE, new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY)));
         }
 
-        private function onZoomIn(event:AppEvent):void
+        private function onZoomIn(event:PayloadEvent):void
         {
             zoomIn();
         }
 
-        private function onZoomOut(event:AppEvent):void
+        private function onZoomOut(event:PayloadEvent):void
         {
             zoomOut();
         }
 
-        private function onMoveMapToCenter(event:AppEvent):void
+        private function onMoveMapToCenter(event:PayloadEvent):void
         {
             centerMap();
         }
@@ -102,7 +198,7 @@
 
         private function hideBitmapLayers():void
         {
-            if (keepInBitmapMode)
+            if (keepInBitmapMode || zoomLevel <= 1)
                 return;
 
             for each (var c:UIComponent in mapLayers)
@@ -114,6 +210,12 @@
                 if (bmp != null)
                     bmp.visible = false;
             }
+        }
+
+        private function delayHideBitmapLayers():void
+        {
+            hideBitmapLayersCountdown.reset();
+            hideBitmapLayersCountdown.start();
         }
 
         public function getMapLayer(id:String):UIComponent
@@ -145,14 +247,15 @@
                 mapLayerGroup.y += distance.y;
             }
 
-            var appEvent:AppEvent = new AppEvent(AppEvent.MAP_MOUSE_MOVE, new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY));
-            signal.dispatchEvent(appEvent);
+            var e:PayloadEvent = new PayloadEvent(PayloadEvent.MAP_MOUSE_MOVE, new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY));
+            signal.dispatchEvent(e);
         }
 
         private function onMouseDown(event:MouseEvent):void
         {
             isDragging = false;
             dragPoint = new Point(event.stageX, event.stageY);
+            initialDragPoint = dragPoint.clone();
         }
 
         private function onMouseUp(event:Event):void
@@ -162,7 +265,7 @@
                 isDragging = false;
 
                 keepInBitmapMode = false;
-                setTimeout(hideBitmapLayers, 500);
+                delayHideBitmapLayers();
             });
             dragPoint = null;
         }
@@ -177,11 +280,16 @@
 
         public function zoomIn():void
         {
+            var previousZoomLevel:Number = zoomLevel;
+
             var zoomLevelIndex:int = zoomLevels.indexOf(zoomLevel);
             if (zoomLevelIndex < 0)
-                zoomLevel = 1;
+                zoomLevel = 0;
             else if (zoomLevelIndex + 1 < zoomLevels.length)
                 zoomLevel = zoomLevels[zoomLevelIndex + 1];
+
+            if (zoomLevel == previousZoomLevel)
+                return;
 
             validateZoom();
         }
@@ -221,9 +329,9 @@
         private function endZoom():void
         {
             keepInBitmapMode = false;
-            setTimeout(hideBitmapLayers, 500);
+            delayHideBitmapLayers();
 
-            signal.dispatchEvent(new AppEvent(AppEvent.MAP_ZOOM, zoomLevel))
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.MAP_ZOOM, zoomLevel))
         }
 
         private function centerMapOnPoint(p:Point, animate:Boolean = true):void
@@ -255,6 +363,17 @@
             var t:Object = event.target;
             t.height = (t.width / t.contentWidth) * t.contentHeight;
         }
+
+        private static function cacheLayer(c:UIComponent):void
+        {
+            var bmpd:BitmapData = new BitmapData(2000, 1000, true, 0x000000);
+            bmpd.draw(c);
+            var bmp:Bitmap = new Bitmap(bmpd);
+            bmp.name = "bmp";
+            bmp.smoothing = true;
+
+            c.addChild(bmp);
+        }
         ]]></fx:Script>
 
     <s:Group id="layerGroupMask"
@@ -277,13 +396,6 @@
         <s:Group id="mapLayerGroup"
                  width="2000"
                  height="1000">
-            <s:Rect width="100%"
-                    height="100%">
-                <s:fill>
-                    <s:SolidColor color="0xff0000"
-                                  alpha=".2"/>
-                </s:fill>
-            </s:Rect>
         </s:Group>
     </s:VGroup>
 
