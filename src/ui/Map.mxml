@@ -14,7 +14,6 @@
         import global.Color;
         import global.Draw;
         import global.Signal;
-        import global.Util;
 
         import logic.Layer;
         import logic.Model;
@@ -71,6 +70,12 @@
             signal.addEventListener(PayloadEvent.ZOOM_OUT, onZoomOut);
             signal.addEventListener(PayloadEvent.MOVE_MAP_TO_CENTER, onMoveMapToCenter);
             signal.addEventListener(PayloadEvent.DRAW, onDraw);
+            signal.addEventListener(PayloadEvent.PICK_CELL_END, onPickCellEnd);
+        }
+
+        private function onPickCellEnd(event:PayloadEvent):void
+        {
+            highlightCell(null);
         }
 
         private function onClick(event:MouseEvent):void
@@ -119,6 +124,24 @@
             }
 
             cacheLayer(c);
+        }
+
+        public function highlightCell(cell:Cell):void
+        {
+            var c:UIComponent = getMapLayer(Layer.HIGHLIGHT);
+            while (c.numChildren > 0)
+                c.removeChildAt(0);
+
+            if (!cell)
+                return;
+
+            var spr:Sprite = new Sprite();
+            c.addChild(spr);
+            var g:Graphics = spr.graphics;
+
+            for each (var edge:Edge in cell.edges)
+                if (edge.v0 && edge.v1)
+                    Draw.drawLine(g, edge.v0.point, edge.v1.point, Color.white);
         }
 
         public function drawVoronoi():void
@@ -249,6 +272,17 @@
 
             var e:PayloadEvent = new PayloadEvent(PayloadEvent.MAP_MOUSE_MOVE, new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY));
             signal.dispatchEvent(e);
+
+            validatePickingCell();
+        }
+
+        private function validatePickingCell():void
+        {
+            if (model.isPickingCell)
+            {
+                var cell:Cell = model.getCellByPoint(model.getClosestPoint(new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY)));
+                highlightCell(cell);
+            }
         }
 
         private function onMouseDown(event:MouseEvent):void
@@ -328,6 +362,8 @@
 
         private function endZoom():void
         {
+            validatePickingCell();
+
             keepInBitmapMode = false;
             delayHideBitmapLayers();
 

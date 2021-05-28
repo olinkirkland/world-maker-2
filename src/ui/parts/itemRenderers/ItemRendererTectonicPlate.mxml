@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:c="ui.parts.components.*"
+                width="100%"
+                autoDrawBackground="false"
+                creationComplete="onCreationComplete(event)">
+
+    <fx:Script><![CDATA[
+        import global.Color;
+        import global.Icons;
+        import global.Local;
+
+        import logic.modules.TectonicPlate;
+
+        import mx.events.FlexEvent;
+
+        import ui.PopupManager;
+        import ui.popups.ConfirmPopup;
+
+        public var plate:TectonicPlate;
+
+        override public function set data(value:Object):void
+        {
+
+            if (!value)
+                return;
+
+            solidColor.color = data.color;
+            if (!data.origin)
+            {
+                buttonOriginPoint.label = Local.text('set_origin');
+            } else
+            {
+//                var p:Point = Map.instance.points[data.origin];
+//                buttonOriginPoint.label = p.x + ", " + p.y;
+            }
+
+            imageWarning.visible = imageWarning.includeInLayout = !data.origin;
+        }
+
+        private function onClickDelete(event:MouseEvent):void
+        {
+            var p:ConfirmPopup = new ConfirmPopup();
+            p.callbackConfirm = removePlate;
+            p.header = Local.text('remove_plate');
+            p.description = Local.text('are_you_sure');
+            p.textConfirm = Local.text('yes_im_sure');
+            p.textCancel = Local.text('cancel');
+            PopupManager.open(p);
+        }
+
+        private function onClickColor(event:MouseEvent):void
+        {
+//            var plate:Object = Tectonics.getPlate(data.id);
+//            plate.color = Color.stringToLightColor("foo" + Math.random() * 999);
+//            State.invalidate("plates");
+        }
+
+        private function removePlate():void
+        {
+//            Tectonics.removePlate(data.id);
+        }
+
+        private function onClickOriginPoint(event:MouseEvent):void
+        {
+//            dispatchEvent(new Event(Tectonics.CHOOSE_PLATE, true, false));
+        }
+
+        private function onCreationComplete(event:FlexEvent):void
+        {
+            sliderStrength.label.text = Local.text('plate_strength');
+            sliderStrength.slider.minimum = 1;
+            sliderStrength.slider.maximum = 10;
+            sliderStrength.slider.stepSize = 1;
+            sliderStrength.slider.snapInterval = 1;
+            sliderStrength.value = data.strength;
+            sliderStrength.addEventListener(Event.CHANGE, onChangeStrength, false, 0, true);
+        }
+
+        private function onChangeStrength(event:Event):void
+        {
+//            var plate:Object = Tectonics.getPlate(data.id);
+//            plate.strength = sliderStrength.value;
+//            State.invalidate("plates");
+        }
+        ]]>
+    </fx:Script>
+
+    <s:Group width="100%">
+
+        <s:Rect width="100%"
+                height="100%"
+                radiusX="5"
+                radiusY="5">
+            <s:fill>
+                <s:SolidColor color="{Color.fillMedium}"/>
+            </s:fill>
+        </s:Rect>
+
+        <s:VGroup width="100%"
+                  padding="0">
+
+            <s:Rect width="100%"
+                    height="8">
+                <s:fill>
+                    <s:SolidColor id="solidColor"/>
+                </s:fill>
+            </s:Rect>
+
+            <s:VGroup width="100%"
+                      padding="5">
+
+                <s:HGroup width="100%"
+                          verticalAlign="middle"
+                          gap="5">
+
+                    <s:VGroup padding="0"
+                              toolTip="{Local.text('plate_no_origin')}">
+                        <c:ColorBitmapImage id="imageWarning"
+                                            source="{Icons.Error}"
+                                            color="{Color.theme}"/>
+                    </s:VGroup>
+
+                    <s:Button id="buttonOriginPoint"
+                              icon="{Icons.Marker}"
+                              click="onClickOriginPoint(event)"/>
+
+                    <s:Spacer width="100%"/>
+
+                    <s:Button id="buttonColor"
+                              skinClass="ui.parts.skins.ButtonSkinIcon"
+                              icon="{Icons.Brush}"
+                              toolTip="{Local.text('change_color')}"
+                              click="onClickColor(event)"/>
+
+                    <s:Button id="buttonDelete"
+                              skinClass="ui.parts.skins.ButtonSkinIcon"
+                              icon="{Icons.Delete}"
+                              toolTip="{Local.text('remove')}"
+                              click="onClickDelete(event)"/>
+
+                </s:HGroup>
+
+                <s:Panel skinClass="ui.parts.skins.PanelSkinOutline"
+                         width="100%">
+                    <c:SliderWithInput id="sliderStrength"
+                                       width="100%"/>
+                </s:Panel>
+
+            </s:VGroup>
+
+        </s:VGroup>
+
+    </s:Group>
+
+</s:ItemRenderer>

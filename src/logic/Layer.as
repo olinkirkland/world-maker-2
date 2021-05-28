@@ -6,6 +6,7 @@ package logic
         public static const VORONOI:String = "voronoi";
         public static const DELAUNAY:String = "delaunay";
         public static const TECTONIC_PLATES:String = "tectonicPlates";
+        public static const HIGHLIGHT:String = "highlight";
 
         public var id:String;
         public var visible:Boolean = true;

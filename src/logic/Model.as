@@ -22,6 +22,8 @@ package logic
 
     import managers.TaskManager;
 
+    import mx.collections.ArrayCollection;
+
     import nodename.delaunay.Voronoi;
     import nodename.geom.*;
 
@@ -58,6 +60,9 @@ package logic
         public var points:Vector.<Point>;
         public var cellsByPoints:Object;
         public var quad:QuadTree;
+
+        // Tectonics
+        public var tectonicPlates:Array;
 
         public function Model()
         {

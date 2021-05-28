@@ -18,6 +18,10 @@
         public function set cell(cell:Cell):void
         {
             _cell = cell;
+            if (_cell)
+                buttonCell.label = Local.text('cell', [cell.index]);
+            else
+                buttonCell.label = Local.text('cell_none');
         }
 
         public function get cell():Cell
@@ -46,14 +50,14 @@
 
     <s:Label id="label"
              width="100%"
-             text="Slider"/>
+             text="{Local.text('pick_cell')}"/>
     <s:HGroup width="100%"
               verticalAlign="middle"
               gap="15">
         <s:Button id="buttonCell"
-                  label="foo"
-                  width="100%"
-                  click="onPickCell(event)"/>
+                  click="onPickCell(event)"
+                  icon="{Icons.Marker}"
+                  label="{Local.text('cell_none')}"/>
         <s:Button toolTip="{Local.text('randomize')}"
                   icon="{Icons.Dice}"
                   click="onPickRandomCell(event)"/>

@@ -11,7 +11,6 @@ package global
         [Embed(source="/assets/icons/home.png")]
         public static const Home:Class;
 
-
         [Embed(source="/assets/icons/marker.png")]
         public static const Marker:Class;
 

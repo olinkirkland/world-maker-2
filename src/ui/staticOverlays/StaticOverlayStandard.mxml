@@ -60,7 +60,7 @@
                 if (!p)
                     return;
                 var cell:Cell = model.getCellByPoint(p);
-                labelNearestCell.text = Local.text('cell', [cell.index]);
+                labelNearestCell.text = Local.text('pick_cell', [cell.index]);
             }
         }
 
@@ -147,35 +147,19 @@
             <s:HGroup id="groupPickCell"
                       width="100%"
                       height="100%"
-                      horizontalAlign="center"
+                      horizontalAlign="left"
                       verticalAlign="bottom"
-                      bottom="5"
                       visible="false"
                       mouseEnabled="false">
-                <s:Group>
-                    <s:Rect width="100%"
-                            height="100%"
-                            radiusX="15"
-                            radiusY="15">
-                        <s:fill>
-                            <s:SolidColor color="{Color.black}"
-                                          alpha=".7"/>
-                        </s:fill>
-                    </s:Rect>
-                    <s:VGroup horizontalAlign="center"
-                              padding="10"
-                              minWidth="150">
-                        <s:HGroup verticalAlign="middle">
-                            <c:ColorBitmapImage color="{Color.theme}"
-                                                source="{Icons.Target}"/>
-                            <s:Label id="labelNearestCell"
-                                     color="{Color.theme}"/>
-                        </s:HGroup>
+                <s:Panel skinClass="ui.parts.skins.PanelSkinPopup">
+                    <s:VGroup minWidth="120"
+                              horizontalAlign="center"
+                              gap="10">
+                        <s:Label id="labelNearestCell"/>
                         <s:Button label="{Local.text('cancel')}"
-                                  skinClass="ui.parts.skins.ButtonTextSkin"
                                   click="onEndPickCell(event)"/>
                     </s:VGroup>
-                </s:Group>
+                </s:Panel>
             </s:HGroup>
         </s:Group>
     </s:Panel>
