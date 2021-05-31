@@ -51,7 +51,7 @@
             callLater(function ():void
             {
                 popupModalRectangle.includeInLayout = popupModalRectangle.visible = true;
-                TweenLite.to(popupModalRectangle, 1, {alpha: groupPopups.numElements > 0 ? 1 : 0, onComplete: validatePopupModalRectangle});
+                TweenLite.to(popupModalRectangle, .2, {alpha: groupPopups.numElements > 0 ? 1 : 0, onComplete: validatePopupModalRectangle});
             });
 
             function validatePopupModalRectangle():void

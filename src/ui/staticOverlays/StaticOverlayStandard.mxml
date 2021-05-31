@@ -16,6 +16,8 @@
 
         import ui.panes.PaneLayers;
 
+        private var mousePoint:Point;
+
         override protected function onCreationComplete(event:FlexEvent):void
         {
             super.onCreationComplete(event);
@@ -41,7 +43,16 @@
 
         private function onPickCellStart(event:PayloadEvent):void
         {
+            if (!mousePoint)
+                return;
+
             groupPickCell.visible = true;
+            mousePoint = model.getClosestPoint(mousePoint);
+            if (!mousePoint)
+                return;
+
+            var cell:Cell = model.getCellByPoint(mousePoint);
+            labelNearestCell.text = Local.text('pick_cell', [cell.index]);
         }
 
         private function onPickCellEnd(event:PayloadEvent):void
@@ -51,15 +62,15 @@
 
         private function onMouseMoveAnywhere(event:PayloadEvent):void
         {
-            var p:Point = event.payload;
-            labelMouse.text = "x=" + p.x + ", y=" + p.y;
+            mousePoint = event.payload;
+            labelMouse.text = "x=" + mousePoint.x + ", y=" + mousePoint.y;
 
             if (model.isPickingCell)
             {
-                p = model.getClosestPoint(p);
-                if (!p)
+                mousePoint = model.getClosestPoint(mousePoint);
+                if (!mousePoint)
                     return;
-                var cell:Cell = model.getCellByPoint(p);
+                var cell:Cell = model.getCellByPoint(mousePoint);
                 labelNearestCell.text = Local.text('pick_cell', [cell.index]);
             }
         }
@@ -147,16 +158,18 @@
             <s:HGroup id="groupPickCell"
                       width="100%"
                       height="100%"
-                      horizontalAlign="left"
+                      horizontalAlign="center"
                       verticalAlign="bottom"
                       visible="false"
                       mouseEnabled="false">
-                <s:Panel skinClass="ui.parts.skins.PanelSkinPopup">
+                <s:Panel skinClass="ui.parts.skins.PanelSkinOverlay">
                     <s:VGroup minWidth="120"
                               horizontalAlign="center"
                               gap="10">
                         <s:Label id="labelNearestCell"/>
-                        <s:Button label="{Local.text('cancel')}"
+                        <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                                  toolTip="{Local.text('cancel')}"
+                                  icon="{Icons.Multiply}"
                                   click="onEndPickCell(event)"/>
                     </s:VGroup>
                 </s:Panel>

@@ -26,17 +26,9 @@
             if (!value)
                 return;
 
-            solidColor.color = data.color;
-            if (!data.origin)
-            {
-                buttonOriginPoint.label = Local.text('set_origin');
-            } else
-            {
-//                var p:Point = Map.instance.points[data.origin];
-//                buttonOriginPoint.label = p.x + ", " + p.y;
-            }
-
-            imageWarning.visible = imageWarning.includeInLayout = !data.origin;
+            plate = TectonicPlate(value);
+            picker.cell = plate.origin;
+            solidColor.color = plate.color;
         }
 
         private function onClickDelete(event:MouseEvent):void
@@ -74,7 +66,7 @@
             sliderStrength.slider.maximum = 10;
             sliderStrength.slider.stepSize = 1;
             sliderStrength.slider.snapInterval = 1;
-            sliderStrength.value = data.strength;
+            sliderStrength.value = plate.strength;
             sliderStrength.addEventListener(Event.CHANGE, onChangeStrength, false, 0, true);
         }
 
@@ -99,7 +91,7 @@
         </s:Rect>
 
         <s:VGroup width="100%"
-                  padding="0">
+                  padding="10">
 
             <s:Rect width="100%"
                     height="8">
@@ -110,24 +102,14 @@
 
             <s:VGroup width="100%"
                       padding="5">
+                <c:CellPicker id="picker"/>
+
+                <c:SliderWithInput id="sliderStrength"
+                                   width="100%"/>
 
                 <s:HGroup width="100%"
                           verticalAlign="middle"
-                          gap="5">
-
-                    <s:VGroup padding="0"
-                              toolTip="{Local.text('plate_no_origin')}">
-                        <c:ColorBitmapImage id="imageWarning"
-                                            source="{Icons.Error}"
-                                            color="{Color.theme}"/>
-                    </s:VGroup>
-
-                    <s:Button id="buttonOriginPoint"
-                              icon="{Icons.Marker}"
-                              click="onClickOriginPoint(event)"/>
-
-                    <s:Spacer width="100%"/>
-
+                          horizontalAlign="center">
                     <s:Button id="buttonColor"
                               skinClass="ui.parts.skins.ButtonSkinIcon"
                               icon="{Icons.Brush}"
@@ -139,14 +121,7 @@
                               icon="{Icons.Delete}"
                               toolTip="{Local.text('remove')}"
                               click="onClickDelete(event)"/>
-
                 </s:HGroup>
-
-                <s:Panel skinClass="ui.parts.skins.PanelSkinOutline"
-                         width="100%">
-                    <c:SliderWithInput id="sliderStrength"
-                                       width="100%"/>
-                </s:Panel>
 
             </s:VGroup>
 

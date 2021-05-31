@@ -31,7 +31,7 @@
               verticalAlign="bottom">
         <s:VGroup width="100%"
                   height="100%">
-            <s:Label text="{Local.text('task_introduction')}"
+            <s:Label text="{Local.text('task_introduction_text')}"
                      width="100%"/>
         </s:VGroup>
     </s:VGroup>

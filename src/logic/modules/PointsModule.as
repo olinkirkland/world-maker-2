@@ -6,21 +6,17 @@ package logic.modules
     import global.Rand;
     import global.Util;
 
-    import logic.Model;
     import logic.graph.QuadTree;
 
     public class PointsModule extends Module
     {
-        // Singletons
-        private var model:Model;
-
         // Options
         public var spacing:int;
         public var precision:int;
 
         public function PointsModule()
         {
-            model = Model.instance;
+            super();
 
             spacing = 10;
             precision = 20;

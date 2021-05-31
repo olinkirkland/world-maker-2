@@ -11,6 +11,7 @@
         import global.Util;
 
         import logic.Model;
+        import logic.tasks.Task;
 
         import managers.TaskManager;
 
@@ -20,11 +21,13 @@
         import ui.popups.TasksPopup;
 
         protected var model:Model;
+        protected var task:Task;
 
         public function onCreationComplete(event:FlexEvent):void
         {
             // Singletons
             model = Model.instance;
+            task = TaskManager.instance.currentTask;
 
             var taskManager:TaskManager = TaskManager.instance;
             labelTaskNumber.text = (taskManager.currentTask.index + 1) + "/" + taskManager.tasks.length;

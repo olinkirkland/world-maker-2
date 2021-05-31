@@ -11,9 +11,13 @@
         import global.Local;
         import global.Signal;
 
+        import logic.Model;
+
         import logic.graph.Cell;
 
         private var _cell:Cell;
+
+        private var validatePick:Function;
 
         public function set cell(cell:Cell):void
         {
@@ -38,7 +42,7 @@
 
         private function onPickRandomCell(event:MouseEvent):void
         {
-            // todo
+            onCellPicked(cell = Model.instance.cells[int(Math.random() * Model.instance.cells.length)]);
         }
 
         private function onPickCell(event:MouseEvent):void
@@ -52,14 +56,14 @@
              width="100%"
              text="{Local.text('pick_cell')}"/>
     <s:HGroup width="100%"
-              verticalAlign="middle"
-              gap="15">
+              verticalAlign="middle">
         <s:Button id="buttonCell"
                   click="onPickCell(event)"
                   icon="{Icons.Marker}"
                   label="{Local.text('cell_none')}"/>
         <s:Button toolTip="{Local.text('randomize')}"
                   icon="{Icons.Dice}"
+                  skinClass="ui.parts.skins.ButtonSkinIcon"
                   click="onPickRandomCell(event)"/>
     </s:HGroup>
 </s:VGroup>

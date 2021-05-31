@@ -18,6 +18,7 @@ package logic
     import logic.graph.Edge;
     import logic.graph.QuadTree;
     import logic.modules.Module;
+    import logic.modules.TectonicsModule;
     import logic.tasks.Task;
 
     import managers.TaskManager;
@@ -62,7 +63,7 @@ package logic
         public var quad:QuadTree;
 
         // Tectonics
-        public var tectonicPlates:Array;
+        public var tectonicPlates:ArrayCollection;
 
         public function Model()
         {
@@ -172,6 +173,23 @@ package logic
             isValid = true;
             signal.dispatchEvent(new PayloadEvent(PayloadEvent.VALIDITY_CHANGED));
             signal.dispatchEvent(new PayloadEvent(PayloadEvent.DRAW));
+        }
+
+        public function loadTectonicPlates(arr:Array):void
+        {
+            trace("Model:loadTectonicPlates");
+
+            tectonicPlates = new ArrayCollection();
+            for each (var u:Object in arr)
+                addTectonicPlate(u);
+
+            trace("...loaded " + tectonicPlates.length + " tectonicPlates");
+        }
+
+        private function addTectonicPlate(u:Object):void
+        {
+            // todo
+            TectonicsModule.addPlate();
         }
 
         public function loadPoints(arr:Array):void
@@ -439,13 +457,22 @@ package logic
         {
             Util.log("Model: deserialize");
 
+            // Points
             if (u.points)
                 loadPoints(u.points);
 
+            // Task
             if (u.currentTaskId)
                 TaskManager.instance.setCurrentTaskById(u.currentTaskId);
             else
                 signal.dispatchEvent(new PayloadEvent(PayloadEvent.TASK_CHANGED));
+
+            // Tectonics
+            if (u.tectonicPlates)
+                loadTectonicPlates(u.tectonicPlates);
+            else
+                loadTectonicPlates([]);
+
 
             loaded = true;
         }

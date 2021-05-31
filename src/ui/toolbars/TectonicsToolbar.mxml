@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <t:Toolbar xmlns:fx="http://ns.adobe.com/mxml/2009"
            xmlns:s="library://ns.adobe.com/flex/spark"
-           xmlns:c="ui.parts.components.*"
            creationComplete="onCreationComplete(event)"
            xmlns:t="ui.toolbars.*">
 
@@ -15,6 +14,8 @@
         {
             var plate:Object = TectonicsModule.addPlate();
             // Scroll to the plate in the list
+            trace(model.tectonicPlates.length);
+            listPlates.dataProvider = model.tectonicPlates;
         }
         ]]>
     </fx:Script>
@@ -38,19 +39,20 @@
     <s:VGroup width="100%"
               height="100%"
               gap="10">
-        <s:Label text="{Local.text('task_tectonics')}"
+        <s:Label text="{Local.text('task_tectonics_text')}"
                  width="100%"/>
         <s:Button label="{Local.text('add_tectonic_plate')}"
                   click="onAddPlate(event)"/>
-        <c:CellPicker/>
         <s:List id="listPlates"
                 useVirtualLayout="false"
                 width="100%"
+                height="100%"
                 contentBackgroundAlpha="0"
                 borderVisible="false"
                 horizontalScrollPolicy="off"
-                preventSelection="true">
-            <!--                itemRenderer="ui.itemRenderers.ItemRendererTectonicPlate">-->
+                preventSelection="true"
+                dataProvider="{model.tectonicPlates}"
+                itemRenderer="ui.parts.itemRenderers.ItemRendererTectonicPlate">
             <s:layout>
                 <s:VerticalLayout gap="5"/>
             </s:layout>

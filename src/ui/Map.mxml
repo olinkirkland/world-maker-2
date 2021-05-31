@@ -58,7 +58,7 @@
 
         private function addEventListeners():void
         {
-            systemManager.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+            addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
             systemManager.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUp);
             systemManager.stage.addEventListener(Event.MOUSE_LEAVE, onMouseUp);
 
