@@ -5,17 +5,27 @@
            xmlns:t="ui.toolbars.*">
 
     <fx:Script><![CDATA[
+        import events.PayloadEvent;
+
         import global.Icons;
         import global.Local;
 
         import logic.modules.TectonicsModule;
 
+        import mx.events.CollectionEvent;
         import mx.events.FlexEvent;
 
         override public function onCreationComplete(event:FlexEvent):void
         {
             super.onCreationComplete(event);
             listPlates.dataProvider = model.tectonicPlates;
+            model.tectonicPlates.addEventListener(CollectionEvent.COLLECTION_CHANGE, onTectonicPlatesChanged);
+        }
+
+        private function onTectonicPlatesChanged(event:CollectionEvent):void
+        {
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.CHANGE_TECTONICS, event));
+            model.invalidate();
         }
 
         private function onAddPlate(event:MouseEvent):void

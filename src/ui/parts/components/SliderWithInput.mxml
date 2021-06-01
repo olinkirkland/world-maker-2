@@ -54,6 +54,11 @@
 
             return n.toFixed(0);
         }
+
+        private function onSliderMouseUp(event:MouseEvent):void
+        {
+            stage.focus = null;
+        }
         ]]></fx:Script>
 
     <s:Label id="label"
@@ -73,6 +78,7 @@
                    stepSize="0.05"
                    snapInterval="0.05"
                    liveDragging="true"
+                   mouseUp="onSliderMouseUp(event)"
                    change="{onSliderChange(event)}"/>
     </s:HGroup>
 </s:VGroup>

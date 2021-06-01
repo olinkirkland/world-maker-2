@@ -12,12 +12,9 @@
         import global.Signal;
 
         import logic.Model;
-
         import logic.graph.Cell;
 
         private var _cell:Cell;
-
-        private var validatePick:Function;
 
         public function set cell(cell:Cell):void
         {
@@ -35,7 +32,6 @@
 
         private function onCellPicked(pickedCell:Cell):void
         {
-            trace("Picked cell #" + pickedCell.index);
             cell = pickedCell;
             dispatchEvent(new Event(Event.CHANGE));
         }
@@ -61,9 +57,9 @@
                   click="onPickCell(event)"
                   icon="{Icons.Marker}"
                   label="{Local.text('cell_none')}"/>
-<!--        <s:Button toolTip="{Local.text('randomize')}"-->
-<!--                  icon="{Icons.Dice}"-->
-<!--                  skinClass="ui.parts.skins.ButtonSkinIcon"-->
-<!--                  click="onPickRandomCell(event)"/>-->
+        <!--        <s:Button toolTip="{Local.text('randomize')}"-->
+        <!--                  icon="{Icons.Dice}"-->
+        <!--                  skinClass="ui.parts.skins.ButtonSkinIcon"-->
+        <!--                  click="onPickRandomCell(event)"/>-->
     </s:HGroup>
 </s:VGroup>

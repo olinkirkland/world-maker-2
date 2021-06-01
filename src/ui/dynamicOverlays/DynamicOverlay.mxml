@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         creationComplete="onCreationComplete(event)"
+         width="100%"
+         height="100%">
+    <fx:Script><![CDATA[
+        import global.Signal;
+
+        import logic.Model;
+
+        import mx.events.FlexEvent;
+
+        import ui.AnchoredMapElement;
+
+        protected var signal:Signal;
+        protected var model:Model;
+
+        public var mapLayerGroup:Group;
+
+        protected function onCreationComplete(event:FlexEvent):void
+        {
+            signal = Signal.instance;
+            model = Model.instance;
+
+            addEventListeners();
+
+            populate();
+        }
+
+        protected function addEventListeners():void
+        {
+        }
+
+        protected function populate():void
+        {
+            trace("DynamicOverlay:populate");
+        }
+
+        public function validate(considerScale:Boolean = false):void
+        {
+            // considerScale only matters for zooming in and out or populating the overlay
+            // using it costs more performance
+
+            x = mapLayerGroup.x;
+            y = mapLayerGroup.y;
+
+            if (!considerScale)
+                return;
+
+            // Adjust the location of each AnchoredMapElement
+            for (var i:int = 0; i < numElements; i++)
+            {
+                var element:AnchoredMapElement = AnchoredMapElement(getElementAt(i));
+                var p:Point = element.anchor;
+                element.x = p.x * mapLayerGroup.scaleX;
+                element.y = p.y * mapLayerGroup.scaleY;
+            }
+        }
+
+        public function dispose():void
+        {
+            removeEventListeners();
+        }
+
+        protected function removeEventListeners():void
+        {
+
+        }
+        ]]></fx:Script>
+</s:Group>

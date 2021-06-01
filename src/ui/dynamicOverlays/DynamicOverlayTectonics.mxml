@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<dynamicoverlays:DynamicOverlay xmlns:fx="http://ns.adobe.com/mxml/2009"
+                                xmlns:dynamicoverlays="ui.dynamicOverlays.*">
+
+    <fx:Script><![CDATA[
+        import events.PayloadEvent;
+
+        import logic.modules.TectonicPlate;
+
+        import mx.events.CollectionEvent;
+
+        import ui.AnchoredMapElement;
+        import ui.parts.components.PlateTip;
+
+        override protected function addEventListeners():void
+        {
+            signal.addEventListener(PayloadEvent.CHANGE_TECTONICS, onChangeTectonics);
+        }
+
+        private function onChangeTectonics(event:PayloadEvent):void
+        {
+            var collectionEvent:CollectionEvent = event.payload;
+            switch (collectionEvent.kind)
+            {
+                case "add":
+                    var plate:TectonicPlate = collectionEvent.items[0];
+                    addPlateTip(plate);
+                    break;
+                case "remove":
+                    var plate:TectonicPlate = collectionEvent.items[0];
+                    for (var i:int = 0; i < numElements; i++)
+                    {
+                        var m:AnchoredMapElement = AnchoredMapElement(getElementAt(i));
+                        if (!m.getElementAt(0) is PlateTip)
+                            continue;
+
+                        var t:PlateTip = PlateTip(m.getElementAt(0));
+                        if (t.plate == plate)
+                            removeElement(m);
+                    }
+                    break;
+                default:
+                    // Update
+                    for (var i:int = 0; i < numElements; i++)
+                    {
+                        var m:AnchoredMapElement = AnchoredMapElement(getElementAt(i));
+                        if (!m.getElementAt(0) is PlateTip)
+                            continue;
+
+                        var t:PlateTip = PlateTip(m.getElementAt(0));
+                        m.anchor = t.plate.origin ? t.plate.origin.point : new Point(0, 0);
+                        m.visible = m.includeInLayout = t.plate.origin;
+                        t.update();
+                    }
+                    break;
+            }
+
+            validate(true);
+        }
+
+        private function rebuild():void
+        {
+            while (numElements > 0)
+                removeElementAt(0);
+            for each (var plate:TectonicPlate in model.tectonicPlates)
+                addPlateTip(plate);
+        }
+
+        override protected function populate():void
+        {
+            super.populate();
+
+            rebuild();
+            validate(true);
+        }
+
+        private function addPlateTip(plate:TectonicPlate):void
+        {
+            var plateTip:PlateTip = new PlateTip();
+            plateTip.plate = plate;
+
+            var m:AnchoredMapElement = new AnchoredMapElement();
+            m.anchor = plate.origin ? plate.origin.point : new Point(0, 0);
+            m.visible = m.includeInLayout = plate.origin;
+            m.addElement(plateTip);
+            addElement(m);
+        }
+
+        override protected function removeEventListeners():void
+        {
+            signal.removeEventListener(PayloadEvent.CHANGE_TECTONICS, onChangeTectonics);
+        }
+        ]]></fx:Script>
+
+</dynamicoverlays:DynamicOverlay>

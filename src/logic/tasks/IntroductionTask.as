@@ -11,8 +11,9 @@ package logic.tasks
             id = INTRODUCTION;
             toolbar = IntroductionToolbar;
             staticOverlay = StaticOverlayIntroduction;
+            //dynamicOverlay
             name = "task_introduction";
-            //module = ModuleIntroduction;
+            //module
             layers = [];
         }
     }

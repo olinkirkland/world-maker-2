@@ -26,6 +26,8 @@
         import mx.events.FlexEvent;
         import mx.events.ResizeEvent;
 
+        import ui.dynamicOverlays.DynamicOverlay;
+
         // Singletons
         private var signal:Signal;
         private var model:Model;
@@ -39,6 +41,7 @@
         private var initialDragPoint:Point;
         private var zoomLevels:Array = [.25, .5, .67, .8, .9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
         private var keepInBitmapMode:Boolean = false;
+        private var _dynamicOverlay:DynamicOverlay;
 
         private function onCreationComplete(event:FlexEvent):void
         {
@@ -82,6 +85,20 @@
         {
             var p:Point = new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY);
             signal.dispatchEvent(new PayloadEvent(PayloadEvent.MAP_CLICK, p));
+        }
+
+        public function set dynamicOverlay(d:DynamicOverlay):void
+        {
+            if (_dynamicOverlay)
+            {
+                dynamicOverlayGroup.removeElement(_dynamicOverlay);
+                _dynamicOverlay.dispose();
+            }
+
+            _dynamicOverlay = d;
+            _dynamicOverlay.mapLayerGroup = mapLayerGroup;
+            dynamicOverlayGroup.addElement(_dynamicOverlay);
+            validateDynamicOverlay();
         }
 
         private function onDraw(event:Event):void
@@ -273,6 +290,8 @@
             var e:PayloadEvent = new PayloadEvent(PayloadEvent.MAP_MOUSE_MOVE, new Point(mapLayerGroup.mouseX, mapLayerGroup.mouseY));
             signal.dispatchEvent(e);
 
+            validateDynamicOverlay();
+
             validatePickingCell();
         }
 
@@ -356,6 +375,7 @@
                 {
                     mapLayerGroup.scaleY = mapLayerGroup.scaleX;
                     centerMapOnPoint(p, false);
+                    _dynamicOverlay.validate(true);
                 }, onComplete: endZoom
             });
         }
@@ -366,6 +386,8 @@
 
             keepInBitmapMode = false;
             delayHideBitmapLayers();
+
+            _dynamicOverlay.validate(true);
 
             signal.dispatchEvent(new PayloadEvent(PayloadEvent.MAP_ZOOM, zoomLevel))
         }
@@ -381,12 +403,18 @@
 
             if (animate)
             {
-                TweenLite.to(mapLayerGroup, .6, {x: goal.x, y: goal.y});
+                TweenLite.to(mapLayerGroup, .6, {x: goal.x, y: goal.y, onUpdate: validateDynamicOverlay});
             } else
             {
                 mapLayerGroup.x = goal.x;
                 mapLayerGroup.y = goal.y;
             }
+        }
+
+        private function validateDynamicOverlay():void
+        {
+            if (_dynamicOverlay)
+                _dynamicOverlay.validate();
         }
 
         private function onDoubleClick(event:MouseEvent):void
@@ -431,8 +459,11 @@
 
         <s:Group id="mapLayerGroup"
                  width="2000"
-                 height="1000">
-        </s:Group>
+                 height="1000"/>
+
+        <s:Group id="dynamicOverlayGroup"
+                 width="2000"
+                 height="1000"/>
     </s:VGroup>
 
 </s:Group>

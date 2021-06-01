@@ -8,10 +8,12 @@
     <fx:Script><![CDATA[
         import global.Icons;
 
+        import logic.modules.TectonicPlate;
+
         import mx.events.FlexEvent;
 
         private var created:Boolean = false;
-        private var data:Object;
+        private var _plate:TectonicPlate;
 
         public function onCreationComplete(event:FlexEvent):void
         {
@@ -19,21 +21,33 @@
             y -= height + 4;
 
             created = true;
-            plate = data;
+            plate = _plate;
         }
 
-        public function set plate(data:Object):void
+        public function update():void
         {
-            this.data = data;
+            plate = _plate;
+        }
+
+        public function set plate(p:TectonicPlate):void
+        {
+            _plate = p;
             if (!created)
                 return;
 
-            imageMarker.color = data.color;
+            imageMarker.color = _plate.color;
+            labelStrength.text = "" + _plate.strength;
+        }
+
+        public function get plate():TectonicPlate
+        {
+            return _plate;
         }
         ]]>
     </fx:Script>
 
-    <s:VGroup horizontalAlign="center">
+    <s:HGroup horizontalAlign="center"
+              verticalAlign="middle">
 
         <c:ColorBitmapImage id="imageMarker"
                             source="{Icons.Marker}"
@@ -41,6 +55,8 @@
                             width="24"
                             height="24"/>
 
-    </s:VGroup>
+        <s:Label id="labelStrength"/>
+
+    </s:HGroup>
 
 </s:Panel>

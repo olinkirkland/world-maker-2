@@ -8,6 +8,7 @@
     <fx:Script><![CDATA[
         import global.Icons;
         import global.Local;
+        import global.Signal;
         import global.Util;
 
         import logic.Model;
@@ -21,12 +22,14 @@
         import ui.popups.TasksPopup;
 
         protected var model:Model;
+        protected var signal:Signal;
         protected var task:Task;
 
         public function onCreationComplete(event:FlexEvent):void
         {
             // Singletons
             model = Model.instance;
+            signal = Signal.instance;
             task = TaskManager.instance.currentTask;
 
             var taskManager:TaskManager = TaskManager.instance;

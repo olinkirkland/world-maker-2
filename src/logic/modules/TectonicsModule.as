@@ -1,7 +1,6 @@
 package logic.modules
 {
     import global.Color;
-    import global.Util;
 
     import mx.utils.UIDUtil;
 
@@ -10,6 +9,13 @@ package logic.modules
         public function TectonicsModule()
         {
             super();
+        }
+
+        override public function run():void
+        {
+            trace("TectonicsModule:run");
+
+            // todo
         }
 
         public static function addPlate():TectonicPlate

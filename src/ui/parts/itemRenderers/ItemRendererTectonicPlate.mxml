@@ -23,6 +23,21 @@
 
         public var plate:TectonicPlate;
 
+        private function onCreationComplete(event:FlexEvent):void
+        {
+            sliderStrength.label.text = Local.text('plate_strength');
+            sliderStrength.slider.minimum = 1;
+            sliderStrength.slider.maximum = 10;
+            sliderStrength.slider.stepSize = 1;
+            sliderStrength.slider.snapInterval = 1;
+            sliderStrength.value = plate.strength;
+            sliderStrength.addEventListener(Event.CHANGE, onChangeStrength, false, 0, true);
+
+            picker.addEventListener(Event.CHANGE, onChangeCell, false, 0, true);
+
+            validateToggleIcon();
+        }
+
         override public function set data(value:Object):void
         {
 
@@ -32,6 +47,12 @@
             plate = TectonicPlate(value);
             picker.cell = plate.origin;
             solidColor.color = plate.color;
+        }
+
+        private function onChangeCell(event:Event):void
+        {
+            plate.origin = picker.cell;
+            Model.instance.tectonicPlates.itemUpdated(plate);
         }
 
         private function onClickRemove(event:MouseEvent):void
@@ -54,19 +75,6 @@
         private function removePlate():void
         {
             TectonicsModule.removePlate(plate);
-        }
-
-        private function onCreationComplete(event:FlexEvent):void
-        {
-            sliderStrength.label.text = Local.text('plate_strength');
-            sliderStrength.slider.minimum = 1;
-            sliderStrength.slider.maximum = 10;
-            sliderStrength.slider.stepSize = 1;
-            sliderStrength.slider.snapInterval = 1;
-            sliderStrength.value = plate.strength;
-            sliderStrength.addEventListener(Event.CHANGE, onChangeStrength, false, 0, true);
-
-            validateToggleIcon();
         }
 
         private function onChangeStrength(event:Event):void

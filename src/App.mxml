@@ -23,6 +23,7 @@
         import mx.events.FlexEvent;
 
         import ui.PopupManager;
+        import ui.dynamicOverlays.DynamicOverlay;
         import ui.panes.Pane;
 
         import ui.popups.ConfirmPopup;
@@ -37,6 +38,7 @@
 
         private var toolbar:Toolbar;
         private var staticOverlay:StaticOverlay;
+        private var dynamicOverlay:DynamicOverlay;
         private var pane:Pane;
 
         private function onCreationComplete(event:FlexEvent):void
@@ -125,6 +127,12 @@
             staticOverlay.percentWidth = 100;
             staticOverlay.percentHeight = 100;
             groupStaticOverlay.addElement(staticOverlay);
+
+            // Add dynamic overlay
+            dynamicOverlay = new task.dynamicOverlay;
+            dynamicOverlay.percentWidth = 100;
+            dynamicOverlay.percentHeight = 100;
+            map.dynamicOverlay = dynamicOverlay;
 
             // Remove pane
             if (pane)

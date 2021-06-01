@@ -1,5 +1,8 @@
 package logic.tasks
 {
+    import ui.dynamicOverlays.DynamicOverlay;
+    import ui.staticOverlays.StaticOverlay;
+
     public class Task
     {
         public static const INTRODUCTION:String = "taskReadIntroduction";
@@ -12,8 +15,8 @@ package logic.tasks
 
         public var module:Class;
         public var toolbar:Class;
-        public var staticOverlay:Class;
-        // public var dynamicOverlay:Class;
+        public var staticOverlay:Class = StaticOverlay;
+        public var dynamicOverlay:Class = DynamicOverlay;
         public var layers:Array;
 
         public function Task()

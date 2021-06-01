@@ -3,6 +3,8 @@ package logic.tasks
     import logic.Layer;
     import logic.modules.TectonicsModule;
 
+    import ui.dynamicOverlays.DynamicOverlayTectonics;
+
     import ui.staticOverlays.StaticOverlay;
     import ui.staticOverlays.StaticOverlayStandard;
     import ui.toolbars.TectonicsToolbar;
@@ -14,6 +16,7 @@ package logic.tasks
             id = TECTONICS;
             toolbar = TectonicsToolbar;
             staticOverlay = StaticOverlayStandard;
+            dynamicOverlay = DynamicOverlayTectonics;
             name = "task_tectonics";
             module = TectonicsModule;
             layers = [Layer.VORONOI, Layer.TECTONIC_PLATES];

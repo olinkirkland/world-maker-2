@@ -16,6 +16,7 @@ package logic.tasks
             id = POINTS;
             toolbar = PointsToolbar;
             staticOverlay = StaticOverlayStandard;
+            //dynamicOverlay
             name = "task_points";
             module = PointsModule;
             layers = [Layer.VORONOI];
