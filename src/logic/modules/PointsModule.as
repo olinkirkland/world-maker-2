@@ -25,9 +25,9 @@ package logic.modules
             model.quad = new QuadTree(model.bounds);
         }
 
-        override public function run():void
+        override protected function calculate():void
         {
-            trace("PointsModule:run");
+            trace("PointsModule:calculate");
 
             makePoints();
             model.makeGraphFromPoints();

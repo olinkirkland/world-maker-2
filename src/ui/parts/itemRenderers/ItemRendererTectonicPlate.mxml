@@ -27,9 +27,9 @@
         {
             sliderStrength.label.text = Local.text('plate_strength');
             sliderStrength.slider.minimum = 1;
-            sliderStrength.slider.maximum = 10;
-            sliderStrength.slider.stepSize = 1;
-            sliderStrength.slider.snapInterval = 1;
+            sliderStrength.slider.maximum = 5;
+            sliderStrength.slider.stepSize = .2;
+            sliderStrength.slider.snapInterval = .2;
             sliderStrength.value = plate.strength;
             sliderStrength.addEventListener(Event.CHANGE, onChangeStrength, false, 0, true);
 

@@ -16,6 +16,7 @@
         import global.Util;
 
         import logic.Model;
+        import logic.modules.Module;
         import logic.tasks.Task;
 
         import managers.TaskManager;
@@ -67,6 +68,9 @@
             var isValid:Boolean = Model.instance.isValid;
             buttonBuild.visible = buttonBuild.includeInLayout = !isValid;
             buttonNextTask.visible = buttonNextTask.includeInLayout = isValid;
+
+            var m:Module = new taskManager.currentTask.module;
+            buttonBuild.enabled = m.canRun();
         }
 
         private function onOpenPane(event:PayloadEvent):void

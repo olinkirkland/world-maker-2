@@ -2,6 +2,8 @@ package logic.graph
 {
     import flash.geom.Point;
 
+    import logic.modules.TectonicPlate;
+
     public class Cell
     {
         public var index:int;
@@ -14,7 +16,8 @@ package logic.graph
         public var corners:Vector.<Corner>;
         public var area:Number;
 
-        public var plate:String;
+        public var tectonicPlate:TectonicPlate;
+        public var tectonicStrength:Number;
 
         public function Cell()
         {
@@ -48,12 +51,8 @@ package logic.graph
         public function sharedEdge(neighbor:Cell):Edge
         {
             for each (var edge:Edge in edges)
-            {
                 if (edge.d0 == neighbor || edge.d1 == neighbor)
-                {
                     return edge;
-                }
-            }
 
             return null;
         }

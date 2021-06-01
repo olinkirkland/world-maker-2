@@ -31,7 +31,6 @@
         private function onAddPlate(event:MouseEvent):void
         {
             var plate:Object = TectonicsModule.addPlate();
-            // Scroll to the plate in the list
             var i:int = model.tectonicPlates.getItemIndex(plate);
             listPlates.ensureIndexIsVisible(i);
         }

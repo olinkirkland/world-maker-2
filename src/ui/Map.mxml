@@ -119,8 +119,28 @@
                     case Layer.DELAUNAY:
                         drawDelaunay();
                         break;
+                    case Layer.TECTONIC_PLATES:
+                        drawTectonics();
+                        break;
                 }
             }
+        }
+
+        public function drawTectonics():void
+        {
+            trace("Map:drawTectonics");
+            var c:UIComponent = getMapLayer(Layer.TECTONIC_PLATES);
+            while (c.numChildren > 0)
+                c.removeChildAt(0);
+            var spr:Sprite = new Sprite();
+            c.addChild(spr);
+            var g:Graphics = spr.graphics;
+
+            for each (var cell:Cell in model.cells)
+                if (cell.tectonicPlate)
+                    Draw.fillCell(g, cell, cell.tectonicPlate.color);
+
+            cacheLayer(c);
         }
 
         public function drawPoints():void

@@ -6,9 +6,6 @@
               skinClass="ui.parts.skins.PanelSkinHidden">
 
     <fx:Script><![CDATA[
-        import com.greensock.TweenMax;
-        import com.greensock.easing.Linear;
-
         import global.Color;
         import global.Icons;
 
@@ -28,13 +25,10 @@
             setTimeout(function ():void
             {
                 calculation.apply();
-                callLater(function ():void
-                {
-                    close();
-                    if (callbackComplete != null)
-                        callLater(callbackComplete.apply);
-                });
-            }, (fadeSpeed + .1) * 1000)
+                if (callbackComplete != null)
+                    callLater(callbackComplete.apply);
+                setTimeout(close, 200);
+            }, 200);
         }
         ]]>
     </fx:Script>

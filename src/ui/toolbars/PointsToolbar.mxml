@@ -96,13 +96,15 @@
         <s:Panel width="100%"
                  skinClass="ui.parts.skins.PanelSkinInset">
             <s:VGroup width="100%">
-                <s:HGroup width="100%">
+                <s:HGroup width="100%"
+                          verticalAlign="middle">
                     <c:IconTextInput id="inputSeed"
                                      width="100%"
                                      icon="{Icons.Flower}"
                                      change="onSeedChange(event)"/>
                     <s:Button toolTip="{Local.text('randomize')}"
                               icon="{Icons.Dice}"
+                              skinClass="ui.parts.skins.ButtonSkinIcon"
                               click="onRandomizeSeed(event)"/>
                 </s:HGroup>
                 <s:Label id="labelSeedHash"

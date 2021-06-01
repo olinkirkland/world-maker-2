@@ -90,6 +90,12 @@ package logic
             signal.addEventListener(PayloadEvent.MAP_CLICK, onMapClick);
         }
 
+        public function unuseCells():void
+        {
+            for each (var cell:Cell in cells)
+                cell.used = false;
+        }
+
         private function onStartPickCellMode(event:PayloadEvent):void
         {
             isPickingCell = true;

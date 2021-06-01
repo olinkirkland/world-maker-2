@@ -15,10 +15,10 @@
         ]]></fx:Script>
 
     <s:states>
-        <s:State name="up" />
-        <s:State name="over" />
-        <s:State name="down" />
-        <s:State name="disabled" />
+        <s:State name="up"/>
+        <s:State name="over"/>
+        <s:State name="down"/>
+        <s:State name="disabled"/>
     </s:states>
 
     <s:Rect width="100%"
@@ -26,7 +26,7 @@
             radiusX="{height/2}"
             radiusY="{height/2}">
         <s:fill>
-            <s:SolidColor color="{Color.fillHigh}" />
+            <s:SolidColor color="{Color.fillLow}"/>
         </s:fill>
 
     </s:Rect>

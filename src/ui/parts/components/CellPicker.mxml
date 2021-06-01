@@ -38,7 +38,7 @@
 
         private function onPickRandomCell(event:MouseEvent):void
         {
-            onCellPicked(cell = Model.instance.cells[int(Math.random() * Model.instance.cells.length)]);
+            onCellPicked(Model.instance.cells[int(Math.random() * Model.instance.cells.length)]);
         }
 
         private function onPickCell(event:MouseEvent):void
@@ -57,9 +57,9 @@
                   click="onPickCell(event)"
                   icon="{Icons.Marker}"
                   label="{Local.text('cell_none')}"/>
-        <!--        <s:Button toolTip="{Local.text('randomize')}"-->
-        <!--                  icon="{Icons.Dice}"-->
-        <!--                  skinClass="ui.parts.skins.ButtonSkinIcon"-->
-        <!--                  click="onPickRandomCell(event)"/>-->
+        <s:Button toolTip="{Local.text('random')}"
+                  icon="{Icons.Dice}"
+                  skinClass="ui.parts.skins.ButtonSkinIcon"
+                  click="onPickRandomCell(event)"/>
     </s:HGroup>
 </s:VGroup>

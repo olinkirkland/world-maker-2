@@ -6,21 +6,17 @@
          title="Popup">
 
     <fx:Script><![CDATA[
-        import com.greensock.TweenLite;
-
-        import ui.PopupManager;
-
         import mx.events.FlexEvent;
 
         import spark.components.Group;
 
-        protected var fadeSpeed:Number = .2;
+        import ui.PopupManager;
+
         protected var closed:Boolean = false;
 
         public function onCreationComplete(event:FlexEvent):void
         {
             visible = false;
-            TweenLite.fromTo(this, fadeSpeed, {alpha: 0}, {alpha: 1});
             callLater(function ():void
             {
                 visible = true;
