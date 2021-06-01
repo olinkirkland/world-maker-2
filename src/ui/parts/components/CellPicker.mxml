@@ -52,18 +52,18 @@
         }
         ]]></fx:Script>
 
-    <s:Label id="label"
-             width="100%"
-             text="{Local.text('pick_cell')}"/>
+    <!--    <s:Label id="label"-->
+    <!--             width="100%"-->
+    <!--             text="{Local.text('pick_cell')}"/>-->
     <s:HGroup width="100%"
               verticalAlign="middle">
         <s:Button id="buttonCell"
                   click="onPickCell(event)"
                   icon="{Icons.Marker}"
                   label="{Local.text('cell_none')}"/>
-        <s:Button toolTip="{Local.text('randomize')}"
-                  icon="{Icons.Dice}"
-                  skinClass="ui.parts.skins.ButtonSkinIcon"
-                  click="onPickRandomCell(event)"/>
+<!--        <s:Button toolTip="{Local.text('randomize')}"-->
+<!--                  icon="{Icons.Dice}"-->
+<!--                  skinClass="ui.parts.skins.ButtonSkinIcon"-->
+<!--                  click="onPickRandomCell(event)"/>-->
     </s:HGroup>
 </s:VGroup>

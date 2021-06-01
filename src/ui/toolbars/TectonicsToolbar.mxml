@@ -10,12 +10,20 @@
 
         import logic.modules.TectonicsModule;
 
+        import mx.events.FlexEvent;
+
+        override public function onCreationComplete(event:FlexEvent):void
+        {
+            super.onCreationComplete(event);
+            listPlates.dataProvider = model.tectonicPlates;
+        }
+
         private function onAddPlate(event:MouseEvent):void
         {
             var plate:Object = TectonicsModule.addPlate();
             // Scroll to the plate in the list
-            trace(model.tectonicPlates.length);
-            listPlates.dataProvider = model.tectonicPlates;
+            var i:int = model.tectonicPlates.getItemIndex(plate);
+            listPlates.ensureIndexIsVisible(i);
         }
         ]]>
     </fx:Script>
@@ -51,7 +59,6 @@
                 borderVisible="false"
                 horizontalScrollPolicy="off"
                 preventSelection="true"
-                dataProvider="{model.tectonicPlates}"
                 itemRenderer="ui.parts.itemRenderers.ItemRendererTectonicPlate">
             <s:layout>
                 <s:VerticalLayout gap="5"/>

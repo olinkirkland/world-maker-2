@@ -11,7 +11,10 @@
         import global.Icons;
         import global.Local;
 
+        import logic.Model;
+
         import logic.modules.TectonicPlate;
+        import logic.modules.TectonicsModule;
 
         import mx.events.FlexEvent;
 
@@ -31,7 +34,7 @@
             solidColor.color = plate.color;
         }
 
-        private function onClickDelete(event:MouseEvent):void
+        private function onClickRemove(event:MouseEvent):void
         {
             var p:ConfirmPopup = new ConfirmPopup();
             p.callbackConfirm = removePlate;
@@ -44,19 +47,13 @@
 
         private function onClickColor(event:MouseEvent):void
         {
-//            var plate:Object = Tectonics.getPlate(data.id);
-//            plate.color = Color.stringToLightColor("foo" + Math.random() * 999);
-//            State.invalidate("plates");
+            plate.color = Color.stringToLightColor("" + Math.random() * 999);
+            Model.instance.tectonicPlates.itemUpdated(plate);
         }
 
         private function removePlate():void
         {
-//            Tectonics.removePlate(data.id);
-        }
-
-        private function onClickOriginPoint(event:MouseEvent):void
-        {
-//            dispatchEvent(new Event(Tectonics.CHOOSE_PLATE, true, false));
+            TectonicsModule.removePlate(plate);
         }
 
         private function onCreationComplete(event:FlexEvent):void
@@ -68,13 +65,26 @@
             sliderStrength.slider.snapInterval = 1;
             sliderStrength.value = plate.strength;
             sliderStrength.addEventListener(Event.CHANGE, onChangeStrength, false, 0, true);
+
+            validateToggleIcon();
         }
 
         private function onChangeStrength(event:Event):void
         {
-//            var plate:Object = Tectonics.getPlate(data.id);
-//            plate.strength = sliderStrength.value;
-//            State.invalidate("plates");
+            plate.strength = sliderStrength.value;
+            Model.instance.tectonicPlates.itemUpdated(plate);
+        }
+
+        private function onToggle(event:MouseEvent):void
+        {
+            // Toggles collapsed/uncollapsed state
+            groupAdvanced.visible = groupAdvanced.includeInLayout = !groupAdvanced.visible;
+            validateToggleIcon();
+        }
+
+        private function validateToggleIcon():void
+        {
+            buttonToggle.setStyle("icon", groupAdvanced.visible ? Icons.ChevronUp : Icons.ChevronDown);
         }
         ]]>
     </fx:Script>
@@ -102,26 +112,38 @@
 
             <s:VGroup width="100%"
                       padding="5">
-                <c:CellPicker id="picker"/>
-
-                <c:SliderWithInput id="sliderStrength"
-                                   width="100%"/>
-
                 <s:HGroup width="100%"
-                          verticalAlign="middle"
-                          horizontalAlign="center">
-                    <s:Button id="buttonColor"
-                              skinClass="ui.parts.skins.ButtonSkinIcon"
-                              icon="{Icons.Brush}"
-                              toolTip="{Local.text('change_color')}"
-                              click="onClickColor(event)"/>
-
-                    <s:Button id="buttonDelete"
-                              skinClass="ui.parts.skins.ButtonSkinIcon"
-                              icon="{Icons.Delete}"
-                              toolTip="{Local.text('remove')}"
-                              click="onClickDelete(event)"/>
+                          verticalAlign="middle">
+                    <c:CellPicker id="picker"/>
+                    <s:Spacer width="100%"/>
+                    <s:Button id="buttonToggle"
+                              click="onToggle(event)"
+                              skinClass="ui.parts.skins.ButtonSkinIcon"/>
                 </s:HGroup>
+
+                <s:Panel id="groupAdvanced"
+                         visible="false"
+                         includeInLayout="false"
+                         width="100%"
+                         skinClass="ui.parts.skins.PanelSkinOutline">
+
+                    <s:VGroup width="100%"
+                              padding="0">
+
+                        <c:SliderWithInput id="sliderStrength"
+                                           width="100%"/>
+
+                        <s:Button icon="{Icons.Brush}"
+                                  label="{Local.text('change_color')}"
+                                  click="onClickColor(event)"/>
+
+                        <s:Button icon="{Icons.Delete}"
+                                  label="{Local.text('remove')}"
+                                  click="onClickRemove(event)"/>
+
+                    </s:VGroup>
+
+                </s:Panel>
 
             </s:VGroup>
 

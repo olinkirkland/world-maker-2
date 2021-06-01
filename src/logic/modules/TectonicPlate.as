@@ -9,7 +9,6 @@ package logic.modules
         public var color:uint;
         public var strength:int;
 
-
         public function TectonicPlate()
         {
         }

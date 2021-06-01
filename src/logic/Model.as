@@ -18,6 +18,7 @@ package logic
     import logic.graph.Edge;
     import logic.graph.QuadTree;
     import logic.modules.Module;
+    import logic.modules.TectonicPlate;
     import logic.modules.TectonicsModule;
     import logic.tasks.Task;
 
@@ -181,15 +182,9 @@ package logic
 
             tectonicPlates = new ArrayCollection();
             for each (var u:Object in arr)
-                addTectonicPlate(u);
+                TectonicsModule.loadPlate(u);
 
             trace("...loaded " + tectonicPlates.length + " tectonicPlates");
-        }
-
-        private function addTectonicPlate(u:Object):void
-        {
-            // todo
-            TectonicsModule.addPlate();
         }
 
         public function loadPoints(arr:Array):void
@@ -447,8 +442,17 @@ package logic
             Util.log("Model: serialize");
 
             var u:Object = {};
+
+            // Task
             u.currentTaskId = taskManager.currentTask.id;
+
+            // Points
             u.points = points;
+
+            // Tectonics
+            u.tectonicPlates = [];
+            for each (var t:TectonicPlate in tectonicPlates)
+                u.tectonicPlates.push({id: t.id, originIndex: t.origin ? t.origin.index : -1, strength: t.strength, color: t.color});
 
             return u;
         }

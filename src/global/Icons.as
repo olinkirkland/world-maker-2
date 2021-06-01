@@ -62,6 +62,12 @@ package global
         [Embed(source="/assets/icons/up.png")]
         public static const Up:Class;
 
+        [Embed(source="/assets/icons/chevron-down.png")]
+        public static const ChevronDown:Class;
+
+        [Embed(source="/assets/icons/chevron-up.png")]
+        public static const ChevronUp:Class;
+
         [Embed(source="/assets/icons/layers.png")]
         public static const Layers:Class;
 
