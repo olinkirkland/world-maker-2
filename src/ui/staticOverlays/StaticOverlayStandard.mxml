@@ -68,8 +68,12 @@
             if (model.isPickingCell)
             {
                 mousePoint = model.getClosestPoint(mousePoint);
+
                 if (!mousePoint)
+                {
+                    labelNearestCell.text = Local.text('no_cell');
                     return;
+                }
                 var cell:Cell = model.getCellByPoint(mousePoint);
                 labelNearestCell.text = Local.text('pick_cell', [cell.index]);
             }

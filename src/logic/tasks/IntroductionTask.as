@@ -1,6 +1,7 @@
 package logic.tasks
 {
-    import ui.staticOverlays.StaticOverlay;
+    import logic.modules.Module;
+
     import ui.staticOverlays.StaticOverlayIntroduction;
     import ui.toolbars.IntroductionToolbar;
 
@@ -13,7 +14,7 @@ package logic.tasks
             staticOverlay = StaticOverlayIntroduction;
             //dynamicOverlay
             name = "task_introduction";
-            //module
+            module = Module;
             layers = [];
         }
     }

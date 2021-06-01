@@ -20,14 +20,14 @@ package logic.modules
 
             spacing = 10;
             precision = 20;
-
-            model.points = new Vector.<Point>();
-            model.quad = new QuadTree(model.bounds);
         }
 
         override protected function calculate():void
         {
             trace("PointsModule:calculate");
+
+            model.points = new Vector.<Point>();
+            model.quad = new QuadTree(model.bounds);
 
             makePoints();
             model.makeGraphFromPoints();

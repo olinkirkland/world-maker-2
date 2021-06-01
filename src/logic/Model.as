@@ -470,6 +470,8 @@ package logic
             // Points
             if (u.points)
                 loadPoints(u.points);
+            else
+                loadPoints([]);
 
             // Task
             if (u.currentTaskId)
