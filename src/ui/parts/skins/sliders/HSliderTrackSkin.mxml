@@ -26,7 +26,7 @@
             radiusX="{height/2}"
             radiusY="{height/2}">
         <s:fill>
-            <s:SolidColor color="{Color.fillLow}"/>
+            <s:SolidColor color="{Color.fillHigh}"/>
         </s:fill>
 
     </s:Rect>

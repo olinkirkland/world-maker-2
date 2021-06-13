@@ -46,7 +46,7 @@
                 radiusX="5"
                 radiusY="5">
             <s:fill>
-                <s:SolidColor color="{Color.fillMedium}"
+                <s:SolidColor color="{Color.tartOrange}"
                               alpha.normal="1"
                               alpha.disabled=".5"/>
             </s:fill>
@@ -58,7 +58,7 @@
                 radiusY="5">
             <s:fill>
                 <s:SolidColor color="{Color.white}"
-                              alpha=".05"
+                              alpha="0"
                               alpha.over=".1"
                               alpha.disabled="0"/>
             </s:fill>
@@ -74,7 +74,7 @@
 
             <ui:ColorBitmapImage id="iconDisplay"
                                  includeInLayout="{iconDisplay.source}"
-                                 color="0x6d7173"
+                                 color="0x202427"
                                  width="16"
                                  height="16"
                                  smooth="true"
@@ -85,7 +85,7 @@
                      styleName="button"
                      height="16"
                      verticalAlign="middle"
-                     color="0x6d7173"
+                     color="0x202427"
                      alpha.normal="1"
                      alpha.disabled=".5"/>
 

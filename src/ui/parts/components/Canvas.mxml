@@ -19,6 +19,8 @@
         import mx.events.FlexEvent;
         import mx.events.ResizeEvent;
 
+        import ui.Map;
+
         public static const ZOOM_CHANGED:String = "zoomChanged";
 
         private var mapLayers:Object = {};
@@ -269,12 +271,12 @@
         <s:Group>
 
             <s:Group id="mapLayerGroup"
-                     width="2000"
-                     height="1000"/>
+                     width="{Map.mapWidth}"
+                     height="{Map.mapHeight}"/>
 
             <s:Group id="anchoredUIGroup"
-                     width="2000"
-                     height="1000"/>
+                     width="{Map.mapWidth}"
+                     height="{Map.mapHeight}"/>
 
         </s:Group>
 

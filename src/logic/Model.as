@@ -58,13 +58,14 @@ package logic
         public var callbackPickCell:Function;
 
         // Point Mapping
-        public var pointsSeed:String;
+        public var seed:String;
         public var points:Vector.<Point>;
         public var cellsByPoints:Object;
         public var quad:QuadTree;
 
         // Tectonics
         public var tectonicPlates:ArrayCollection;
+        public var tectonicJitter:Number;
 
         public function Model()
         {
@@ -401,6 +402,15 @@ package logic
             quad.insert(p);
         }
 
+        public function getNextUnusedCell():Cell
+        {
+            for (var i:int = 0; i < cells.length; i++)
+                if (!cells[i].used)
+                    return cells[i];
+
+            return null;
+        }
+
         public function save(u:Object = null):void
         {
             if (callbackSave != null)
@@ -409,7 +419,7 @@ package logic
 
         private static function standaloneSave(u:Object):void
         {
-            Util.log("Model: save (standalone)");
+            Util.log("Model:save (standalone)");
 
             var fileStream:FileStream = new FileStream();
             fileStream.open(File.applicationStorageDirectory.resolvePath("localSave.json"), FileMode.WRITE);
@@ -424,7 +434,7 @@ package logic
 
         public function standaloneLoad():void
         {
-            Util.log("Model: load (standalone)");
+            Util.log("Model:load (standalone)");
 
             // Only triggered in standalone mode
             var file:File = File.applicationStorageDirectory.resolvePath("localSave.json");
@@ -445,7 +455,7 @@ package logic
 
         public function serialize():Object
         {
-            Util.log("Model: serialize");
+            Util.log("Model:serialize");
 
             var u:Object = {};
 
@@ -460,12 +470,15 @@ package logic
             for each (var t:TectonicPlate in tectonicPlates)
                 u.tectonicPlates.push({id: t.id, originIndex: t.origin ? t.origin.index : -1, strength: t.strength, color: t.color});
 
+            // Tectonic Jitter
+            u.tectonicJitter = tectonicJitter;
+
             return u;
         }
 
         public function deserialize(u:Object):void
         {
-            Util.log("Model: deserialize");
+            Util.log("Model:deserialize");
 
             // Points
             if (u.points)
@@ -484,6 +497,12 @@ package logic
                 loadTectonicPlates(u.tectonicPlates);
             else
                 loadTectonicPlates([]);
+
+            // Tectonics Jitter
+            if (u.tectonicJitter)
+                tectonicJitter = u.tectonicJitter
+            else
+                tectonicJitter = 0;
 
 
             loaded = true;

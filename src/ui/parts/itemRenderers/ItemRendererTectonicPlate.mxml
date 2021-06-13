@@ -12,11 +12,13 @@
         import global.Local;
 
         import logic.Model;
-
         import logic.modules.TectonicPlate;
         import logic.modules.TectonicsModule;
 
+        import mx.collections.ArrayCollection;
         import mx.events.FlexEvent;
+
+        import spark.events.IndexChangeEvent;
 
         import ui.PopupManager;
         import ui.popups.ConfirmPopup;
@@ -25,13 +27,16 @@
 
         private function onCreationComplete(event:FlexEvent):void
         {
-            sliderStrength.label.text = Local.text('plate_strength');
-            sliderStrength.slider.minimum = 1;
-            sliderStrength.slider.maximum = 5;
-            sliderStrength.slider.stepSize = .2;
-            sliderStrength.slider.snapInterval = .2;
-            sliderStrength.value = plate.strength;
-            sliderStrength.addEventListener(Event.CHANGE, onChangeStrength, false, 0, true);
+            buttonBarStrength.dataProvider = new ArrayCollection([
+                {strength: 0.8, label: Local.text('small')},
+                {strength: 1.2, label: Local.text('medium')},
+                {strength: 1.6, label: Local.text('big')}
+            ]);
+            buttonBarStrength.addEventListener(IndexChangeEvent.CHANGE, onChangeStrength, false, 0, true);
+
+            for each (var u:Object in buttonBarStrength.dataProvider)
+                if (u.value == plate.strength)
+                    buttonBarStrength.selectedItem = u;
 
             picker.addEventListener(Event.CHANGE, onChangeCell, false, 0, true);
 
@@ -40,13 +45,19 @@
 
         override public function set data(value:Object):void
         {
-
             if (!value)
                 return;
 
             plate = TectonicPlate(value);
             picker.cell = plate.origin;
+            groupCaution.visible = groupCaution.includeInLayout = !plate.origin;
             solidColor.color = plate.color;
+            labelId.text = plate.id.substr(0, 4);
+            labelId.setStyle('color', plate.color);
+
+            for each (var u:Object in buttonBarStrength.dataProvider)
+                if (u.strength == plate.strength)
+                    buttonBarStrength.selectedItem = u;
         }
 
         private function onChangeCell(event:Event):void
@@ -77,9 +88,10 @@
             TectonicsModule.removePlate(plate);
         }
 
-        private function onChangeStrength(event:Event):void
+        private function onChangeStrength(event:IndexChangeEvent):void
         {
-            plate.strength = sliderStrength.value;
+            plate.strength = buttonBarStrength.selectedItem.value;
+            trace(buttonBarStrength.selectedItem.value);
             Model.instance.tectonicPlates.itemUpdated(plate);
         }
 
@@ -122,8 +134,17 @@
                       padding="5">
                 <s:HGroup width="100%"
                           verticalAlign="middle">
-                    <c:CellPicker id="picker"/>
-                    <s:Spacer width="100%"/>
+                    <s:VGroup id="groupCaution"
+                              toolTip="needs_cell">
+                        <c:ColorBitmapImage source="{Icons.Error}"
+                                            color="{Color.theme}"/>
+                    </s:VGroup>
+
+                    <s:Label id="labelId"/>
+
+                    <c:CellPicker id="picker"
+                                  width="100%"/>
+
                     <s:Button id="buttonToggle"
                               click="onToggle(event)"
                               skinClass="ui.parts.skins.ButtonSkinIcon"/>
@@ -135,19 +156,22 @@
                          width="100%"
                          skinClass="ui.parts.skins.PanelSkinOutline">
 
-                    <s:VGroup width="100%"
-                              padding="0">
+                    <s:VGroup width="100%">
 
-                        <c:SliderWithInput id="sliderStrength"
-                                           width="100%"/>
+                        <s:ButtonBar id="buttonBarStrength"
+                                     width="100%"
+                                     requireSelection="true"/>
 
                         <s:Button icon="{Icons.Brush}"
                                   label="{Local.text('change_color')}"
-                                  click="onClickColor(event)"/>
+                                  click="onClickColor(event)"
+                                  width="100%"/>
 
                         <s:Button icon="{Icons.Delete}"
                                   label="{Local.text('remove')}"
-                                  click="onClickRemove(event)"/>
+                                  click="onClickRemove(event)"
+                                  skinClass="ui.parts.skins.ButtonRedSkin"
+                                  width="100%"/>
 
                     </s:VGroup>
 

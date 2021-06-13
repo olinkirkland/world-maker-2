@@ -26,6 +26,11 @@ package global
         public static const textMedium:uint = 0x6d7173;
         public static const textHigh:uint = 0xfcfcfb;
 
+        // Preset colors
+        [Embed(source='/assets/colors.json', mimeType='application/octet-stream')]
+        private static var ColorsJSON:Class;
+        private static var colors:Array;
+
         public static function stringToColor(str:String):uint
         {
             var modifier:int = 1;
@@ -89,6 +94,13 @@ package global
                 g: (hex & 0x00ff00) >> 8,
                 b: (hex & 0x0000ff)
             };
+        }
+
+        public static function randomColorFromPalette():Object
+        {
+            if (!colors)
+                colors = JSON.parse(new ColorsJSON()) as Array;
+            return colors[int(Math.random() * colors.length)];
         }
     }
 }

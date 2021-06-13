@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <t:Toolbar xmlns:fx="http://ns.adobe.com/mxml/2009"
            xmlns:s="library://ns.adobe.com/flex/spark"
+           xmlns:c="ui.parts.components.*"
            creationComplete="onCreationComplete(event)"
            xmlns:t="ui.toolbars.*">
 
@@ -15,24 +16,84 @@
         import mx.events.CollectionEvent;
         import mx.events.FlexEvent;
 
+        import ui.PopupManager;
+
+        import ui.popups.BusyPopup;
+        import ui.popups.ConfirmPopup;
+        import ui.popups.Popup;
+
         override public function onCreationComplete(event:FlexEvent):void
         {
             super.onCreationComplete(event);
+
             listPlates.dataProvider = model.tectonicPlates;
+
+            if (model.tectonicPlates.length == 0)
+                onQuickStart(null);
+
+
+            sliderJitter.label.text = Local.text('jitter');
+            sliderJitter.slider.minimum = 0;
+            sliderJitter.slider.maximum = 1;
+            sliderJitter.slider.stepSize = .1;
+            sliderJitter.slider.snapInterval = .1;
+            sliderJitter.value = model.tectonicJitter;
+
+            updateTectonicPlatesCount();
+        }
+
+        private function updateTectonicPlatesCount():void
+        {
+            labelPlateCount.text = Local.text('plate_count', [model.tectonicPlates.length]);
+        }
+
+        override protected function addEventListeners():void
+        {
             model.tectonicPlates.addEventListener(CollectionEvent.COLLECTION_CHANGE, onTectonicPlatesChanged);
+
+            sliderJitter.addEventListener(Event.CHANGE, onChangeJitter);
+        }
+
+        override protected function removeEventListeners():void
+        {
+            sliderJitter.removeEventListener(Event.CHANGE, onChangeJitter);
+        }
+
+        private function onChangeJitter(event:Event):void
+        {
+            model.tectonicJitter = sliderJitter.value;
+            model.invalidate();
         }
 
         private function onTectonicPlatesChanged(event:CollectionEvent):void
         {
+            updateTectonicPlatesCount();
+
             signal.dispatchEvent(new PayloadEvent(PayloadEvent.CHANGE_TECTONICS, event));
             model.invalidate();
         }
 
         private function onAddPlate(event:MouseEvent):void
         {
-            var plate:Object = TectonicsModule.addPlate();
-            var i:int = model.tectonicPlates.getItemIndex(plate);
-            listPlates.ensureIndexIsVisible(i);
+            TectonicsModule.addPlate();
+        }
+
+        private function onQuickStart(event:MouseEvent):void
+        {
+            var p:ConfirmPopup = new ConfirmPopup();
+            p.header = Local.text('tectonics_quick_start');
+            p.description = Local.text('tectonics_quick_start_text');
+            p.callbackConfirm = quickStart;
+            PopupManager.open(p);
+        }
+
+
+        private function quickStart():void
+        {
+            var p:BusyPopup = new BusyPopup();
+            p.text = Local.text('generating_plates');
+            p.calculation = TectonicsModule.quickStart;
+            PopupManager.open(p);
         }
         ]]>
     </fx:Script>
@@ -58,7 +119,16 @@
               gap="10">
         <s:Label text="{Local.text('task_tectonics_text')}"
                  width="100%"/>
+        <s:Button label="{Local.text('quick_start')}"
+                  icon="{Icons.Magic}"
+                  width="100%"
+                  click="onQuickStart(event)"/>
+        <s:Label id="labelPlateCount"
+                 width="100%"/>
+        <c:SliderWithInput id="sliderJitter"
+                           width="100%"/>
         <s:Button label="{Local.text('add_tectonic_plate')}"
+                  width="100%"
                   click="onAddPlate(event)"/>
         <s:List id="listPlates"
                 useVirtualLayout="false"

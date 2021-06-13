@@ -30,9 +30,9 @@
             module = new task.module;
 
             // Set initial seed to random
-            if (!model.pointsSeed)
+            if (!model.seed)
             {
-                model.pointsSeed = Util.randomSeed();
+                model.seed = Util.randomSeed();
                 model.invalidate();
             }
 
@@ -42,14 +42,14 @@
         private function validate():void
         {
             // Validate UI from model
-            inputSeed.text = model.pointsSeed;
+            inputSeed.text = model.seed;
             updateSeedHash();
         }
 
         private function onSeedChange(event:TextOperationEvent):void
         {
             // Seed was changed
-            model.pointsSeed = inputSeed.text;
+            model.seed = inputSeed.text;
             model.invalidate();
             updateSeedHash();
         }
@@ -57,14 +57,14 @@
         private function onRandomizeSeed(event:MouseEvent):void
         {
             // Pick random seed
-            model.pointsSeed = Util.randomSeed();
+            model.seed = Util.randomSeed();
             model.invalidate();
             validate();
         }
 
         private function updateSeedHash():void
         {
-            labelSeedHash.text = Local.text('seed_hash', [Util.stringToSeed(model.pointsSeed)]);
+            labelSeedHash.text = Local.text('seed_hash', [Util.stringToSeed(model.seed)]);
         }
         ]]>
     </fx:Script>

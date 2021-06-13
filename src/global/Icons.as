@@ -193,5 +193,8 @@ package global
 
         [Embed(source="/assets/icons/closePane.png")]
         public static const ClosePane:Class;
+
+        [Embed(source="/assets/icons/magic.png")]
+        public static const Magic:Class;
     }
 }

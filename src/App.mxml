@@ -298,12 +298,14 @@
                         <s:Button id="buttonBuild"
                                   label="{Local.text('build')}"
                                   icon="{Icons.Build}"
+                                  width="100%"
                                   click="onClickBuild(event)"/>
 
                         <s:Button id="buttonNextTask"
                                   skinClass="ui.parts.skins.ButtonThemeSkin"
                                   label="{Local.text('next_task')}"
-                                  click="onClickNextTask(event)"/>
+                                  click="onClickNextTask(event)"
+                                  width="100%"/>
 
                     </s:HGroup>
 

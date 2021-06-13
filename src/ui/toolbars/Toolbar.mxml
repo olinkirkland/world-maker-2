@@ -35,11 +35,23 @@
             var taskManager:TaskManager = TaskManager.instance;
             labelTaskNumber.text = (taskManager.currentTask.index + 1) + "/" + taskManager.tasks.length;
             labelTaskName.text = Local.text(taskManager.currentTask.name);
+
+            addEventListeners();
+        }
+
+        protected function addEventListeners():void
+        {
+
+        }
+
+        protected function removeEventListeners():void
+        {
+
         }
 
         public function dispose():void
         {
-
+            removeEventListeners();
         }
 
         protected function onAllTasks(event:MouseEvent):void

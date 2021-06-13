@@ -17,10 +17,16 @@
 
         import mx.events.FlexEvent;
 
+        import spark.components.Button;
+
         private function onCreationComplete(event:FlexEvent):void
         {
             if (Label(labelDisplay).text.length == 0)
                 Label(labelDisplay).includeInLayout = false;
+
+            var w:Number = Button(hostComponent).percentWidth;
+            if (w != NaN)
+                groupContent.percentWidth = groupButton.percentWidth = w;
         }
         ]]></fx:Script>
 
@@ -32,7 +38,7 @@
         <s:State name="up"/>
     </s:states>
 
-    <s:Group>
+    <s:Group id="groupContent">
 
         <s:Rect id="rect"
                 width="100%"
@@ -58,7 +64,9 @@
             </s:fill>
         </s:Rect>
 
-        <s:HGroup padding="7"
+        <s:HGroup id="groupButton"
+                  horizontalAlign="center"
+                  padding="7"
                   paddingLeft="15"
                   paddingRight="15"
                   verticalAlign="middle"

@@ -32,6 +32,9 @@
         private var signal:Signal;
         private var model:Model;
 
+        public static const mapWidth:int = 2000;
+        public static const mapHeight:int = 1000;
+
         public var isDragging:Boolean = false;
         public var zoomLevel:Number = 1;
         private var hideBitmapLayersCountdown:Timer;
@@ -178,7 +181,7 @@
 
             for each (var edge:Edge in cell.edges)
                 if (edge.v0 && edge.v1)
-                    Draw.drawLine(g, edge.v0.point, edge.v1.point, Color.white);
+                    Draw.drawLine(g, edge.v0.point, edge.v1.point, Color.black);
         }
 
         public function drawVoronoi():void
@@ -450,7 +453,7 @@
 
         private static function cacheLayer(c:UIComponent):void
         {
-            var bmpd:BitmapData = new BitmapData(2000, 1000, true, 0x000000);
+            var bmpd:BitmapData = new BitmapData(mapWidth, mapHeight, true, 0x000000);
             bmpd.draw(c);
             var bmp:Bitmap = new Bitmap(bmpd);
             bmp.name = "bmp";
@@ -478,12 +481,12 @@
               resize="onLayerGroupContainerResize(event)">
 
         <s:Group id="mapLayerGroup"
-                 width="2000"
-                 height="1000"/>
+                 width="{mapWidth}"
+                 height="{mapHeight}"/>
 
         <s:Group id="dynamicOverlayGroup"
-                 width="2000"
-                 height="1000"/>
+                 width="{mapWidth}"
+                 height="{mapHeight}"/>
     </s:VGroup>
 
 </s:Group>

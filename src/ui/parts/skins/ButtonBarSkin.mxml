@@ -16,7 +16,7 @@
 
     <fx:Declarations>
         <fx:Component id="firstButton">
-            <s:ButtonBarButton skinClass="ui.parts.skins.ButtonBarMiddleButtonSkin"/>
+            <s:ButtonBarButton skinClass="ui.parts.skins.ButtonBarFirstButtonSkin"/>
         </fx:Component>
 
         <fx:Component id="middleButton">
@@ -24,7 +24,7 @@
         </fx:Component>
 
         <fx:Component id="lastButton">
-            <s:ButtonBarButton skinClass="ui.parts.skins.ButtonBarMiddleButtonSkin"/>
+            <s:ButtonBarButton skinClass="ui.parts.skins.ButtonBarLastButtonSkin"/>
         </fx:Component>
 
     </fx:Declarations>
@@ -33,7 +33,7 @@
                  width="100%"
                  height="100%">
         <s:layout>
-            <s:ButtonBarHorizontalLayout gap="15"/>
+            <s:ButtonBarHorizontalLayout gap="0"/>
         </s:layout>
     </s:DataGroup>
 

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009"
          xmlns:s="library://ns.adobe.com/flex/spark"
-         xmlns:c="ui.parts.components.*"
          skinClass="ui.parts.skins.PanelSkinTip"
          creationComplete="onCreationComplete(event)">
 
@@ -35,8 +34,9 @@
             if (!created)
                 return;
 
-            imageMarker.color = _plate.color;
-            labelStrength.text = "" + _plate.strength;
+            //imageMarker.color = _plate.color;
+            labelId.text = "" + _plate.id.substr(0,4);
+            labelId.setStyle('color', plate.color);
         }
 
         public function get plate():TectonicPlate
@@ -49,13 +49,13 @@
     <s:HGroup horizontalAlign="center"
               verticalAlign="middle">
 
-        <c:ColorBitmapImage id="imageMarker"
-                            source="{Icons.Marker}"
-                            y="-24"
-                            width="24"
-                            height="24"/>
+<!--        <c:ColorBitmapImage id="imageMarker"-->
+<!--                            source="{Icons.Marker}"-->
+<!--                            y="-24"-->
+<!--                            width="24"-->
+<!--                            height="24"/>-->
 
-        <s:Label id="labelStrength"/>
+        <s:Label id="labelId"/>
 
     </s:HGroup>
 

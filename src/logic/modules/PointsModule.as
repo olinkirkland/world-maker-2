@@ -37,7 +37,7 @@ package logic.modules
         {
             trace("PointsModule:makePoints");
 
-            var rand:Rand = new Rand(Util.stringToSeed(model.pointsSeed));
+            var rand:Rand = new Rand(Util.stringToSeed(model.seed));
 
             // The active point queue
             var queue:Vector.<Point> = new Vector.<Point>();

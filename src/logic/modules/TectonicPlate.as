@@ -8,7 +8,12 @@ package logic.modules
         public var origin:Cell;
         public var color:uint;
         public var strength:int;
+        public var type:String;
         public var cells:Array = [];
+
+        public static const DEEP:String = "deep";
+        public static const CONTINENTAL:String = "continental";
+        public static const OCEANIC:String = "oceanic";
 
         public function TectonicPlate()
         {
