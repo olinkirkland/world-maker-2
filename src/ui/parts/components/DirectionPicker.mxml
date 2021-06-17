@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+          xmlns:s="library://ns.adobe.com/flex/spark"
+          gap="5"
+          width="100%"
+          creationComplete="onCreationComplete(event)">
+
+    <fx:Script><![CDATA[
+        import global.Icons;
+        import global.Local;
+        import global.Util;
+
+        import mx.events.FlexEvent;
+
+        private var _direction:Number = 0;
+
+        private function onCreationComplete(event:FlexEvent):void
+        {
+            validateIconAndLabel();
+        }
+
+        public function set direction(value:Number):void
+        {
+            _direction = value;
+            validateIconAndLabel();
+        }
+
+        public function get direction():Number
+        {
+            return _direction;
+        }
+
+        private function onClickCompass(event:MouseEvent):void
+        {
+            _direction += 45;
+            if (_direction >= 360)
+                _direction = 0;
+
+            validateIconAndLabel();
+        }
+
+        private function validateIconAndLabel():void
+        {
+            buttonCompass.setStyle("icon", Util.iconFromDirection(_direction));
+            buttonCompass.label = Util.labelFromDirection(_direction);
+        }
+        ]]></fx:Script>
+
+    <s:Button id="buttonCompass"
+              click="onClickCompass(event)"
+              width="100%"/>
+</s:VGroup>

@@ -58,7 +58,8 @@
                  stateGroups="selectedUpStates, disabledStates, selectedStates"/>
     </s:states>
 
-    <s:Group id="groupContent" width="100%">
+    <s:Group id="groupContent"
+             width="100%">
 
         <s:Rect id="rect"
                 width="100%"
@@ -105,6 +106,7 @@
                                 alpha.disabled=".5"/>
 
             <s:Label id="labelDisplay"
+                     includeInLayout="{labelDisplay.text}"
                      textDecoration="none"
                      textDecoration.selectedStates="underline"
                      styleName="button"

@@ -34,6 +34,8 @@
             ]);
             buttonBarStrength.addEventListener(IndexChangeEvent.CHANGE, onChangeStrength, false, 0, true);
 
+            directionPicker.addEventListener(MouseEvent.CLICK, onChangeDirection);
+
             for each (var u:Object in buttonBarStrength.dataProvider)
                 if (u.value == plate.strength)
                     buttonBarStrength.selectedItem = u;
@@ -93,6 +95,11 @@
             plate.strength = buttonBarStrength.selectedItem.value;
             trace(buttonBarStrength.selectedItem.value);
             Model.instance.tectonicPlates.itemUpdated(plate);
+        }
+
+        private function onChangeDirection(event:Event):void
+        {
+
         }
 
         private function onToggle(event:MouseEvent):void
@@ -166,6 +173,9 @@
                                   label="{Local.text('change_color')}"
                                   click="onClickColor(event)"
                                   width="100%"/>
+
+                        <c:DirectionPicker id="directionPicker"
+                                           width="100%"/>
 
                         <s:Button icon="{Icons.Delete}"
                                   label="{Local.text('remove')}"

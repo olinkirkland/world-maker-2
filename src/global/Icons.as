@@ -196,5 +196,29 @@ package global
 
         [Embed(source="/assets/icons/magic.png")]
         public static const Magic:Class;
+
+        [Embed(source="/assets/icons/circled-left.png")]
+        public static const CircledLeft:Class;
+
+        [Embed(source="/assets/icons/circled-up.png")]
+        public static const CircledUp:Class;
+
+        [Embed(source="/assets/icons/circled-right.png")]
+        public static const CircledRight:Class;
+
+        [Embed(source="/assets/icons/circled-down.png")]
+        public static const CircledDown:Class;
+
+        [Embed(source="/assets/icons/circled-left-up.png")]
+        public static const CircledLeftUp:Class;
+
+        [Embed(source="/assets/icons/circled-right-up.png")]
+        public static const CircledRightUp:Class;
+
+        [Embed(source="/assets/icons/circled-left-down.png")]
+        public static const CircledLeftDown:Class;
+
+        [Embed(source="/assets/icons/circled-right-down.png")]
+        public static const CircledRightDown:Class;
     }
 }

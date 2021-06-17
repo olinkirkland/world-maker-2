@@ -246,5 +246,35 @@ package global
             var r:Number = toRadians(degrees);
             return new Point(point.x + Math.cos(r) * distance, point.y + Math.sin(r) * distance);
         }
+
+        public static function iconFromDirection(value:Number):Class
+        {
+            var iconsByDirection:Object = {
+                0: Icons.CircledUp,
+                45: Icons.CircledRightUp,
+                90: Icons.CircledRight,
+                135: Icons.CircledRightDown,
+                180: Icons.CircledDown,
+                225: Icons.CircledLeftDown,
+                270: Icons.CircledLeft,
+                315: Icons.CircledLeftUp
+            };
+            return iconsByDirection[value];
+        }
+
+        public static function labelFromDirection(value:Number):String
+        {
+            var labelsFromDirection:Object = {
+                0: Local.text('north'),
+                45: Local.text('north-east'),
+                90: Local.text('east'),
+                135: Local.text('south-east'),
+                180: Local.text('south'),
+                225: Local.text('south-west'),
+                270: Local.text('west'),
+                315: Local.text('north-west')
+            };
+            return labelsFromDirection[value];
+        }
     }
 }

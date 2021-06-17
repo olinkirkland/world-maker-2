@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009"
          xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:c="ui.parts.components.*"
          skinClass="ui.parts.skins.PanelSkinTip"
          creationComplete="onCreationComplete(event)">
 
     <fx:Script><![CDATA[
-        import global.Icons;
+        import global.Util;
 
         import logic.modules.TectonicPlate;
 
@@ -34,8 +35,9 @@
             if (!created)
                 return;
 
-            //imageMarker.color = _plate.color;
-            labelId.text = "" + _plate.id.substr(0,4);
+            imageDirection.color = _plate.color;
+            imageDirection.source = Util.iconFromDirection(_plate.direction);
+            labelId.text = "" + _plate.id.substr(0, 4);
             labelId.setStyle('color', plate.color);
         }
 
@@ -49,13 +51,11 @@
     <s:HGroup horizontalAlign="center"
               verticalAlign="middle">
 
-<!--        <c:ColorBitmapImage id="imageMarker"-->
-<!--                            source="{Icons.Marker}"-->
-<!--                            y="-24"-->
-<!--                            width="24"-->
-<!--                            height="24"/>-->
-
         <s:Label id="labelId"/>
+
+        <c:ColorBitmapImage id="imageDirection"
+                            width="16"
+                            height="16"/>
 
     </s:HGroup>
 

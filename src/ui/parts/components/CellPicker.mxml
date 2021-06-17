@@ -16,11 +16,11 @@
 
         private var _cell:Cell;
 
-        public function set cell(cell:Cell):void
+        public function set cell(value:Cell):void
         {
-            _cell = cell;
+            _cell = value;
             if (_cell)
-                buttonCell.label = Local.text('cell', [cell.index]);
+                buttonCell.label = Local.text('cell', [value.index]);
             else
                 buttonCell.label = Local.text('cell_none');
         }

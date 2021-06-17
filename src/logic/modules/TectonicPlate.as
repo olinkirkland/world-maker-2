@@ -10,6 +10,7 @@ package logic.modules
         public var strength:int;
         public var type:String;
         public var cells:Array = [];
+        public var direction:Number = 0;
 
         public static const DEEP:String = "deep";
         public static const CONTINENTAL:String = "continental";
