@@ -15,7 +15,9 @@ package logic.tasks
             //dynamicOverlay
             name = "task_introduction";
             module = Module;
-            layers = [];
+            _layerIds = [];
+
+            resetLayers();
         }
     }
 }

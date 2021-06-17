@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
 <panes:Pane xmlns:fx="http://ns.adobe.com/mxml/2009"
             xmlns:s="library://ns.adobe.com/flex/spark"
-            creationComplete="onCreationComplete(event)"
             xmlns:panes="ui.panes.*">
     <fx:Script>
         <![CDATA[
         import events.LayerEvent;
+        import events.PayloadEvent;
 
-        import global.Color;
         import global.Icons;
         import global.Local;
+        import global.Signal;
 
         import logic.Layer;
 
+        import managers.TaskManager;
+
         import mx.collections.ArrayCollection;
+        import mx.events.FlexEvent;
 
-        public function validate():void
+        override protected function onCreationComplete(event:FlexEvent):void
         {
+            super.onCreationComplete(event);
+            listLayers.dataProvider = TaskManager.instance.currentTask.layers;
             validateLayersCount();
-        }
-
-        private function get layers():ArrayCollection
-        {
-            return ArrayCollection(listLayers.dataProvider);
         }
 
         override protected function addEventListeners():void
@@ -37,6 +37,11 @@
             listLayers.removeEventListener(LayerEvent.UP, onLayerUp);
             listLayers.removeEventListener(LayerEvent.DOWN, onLayerDown);
             listLayers.removeEventListener(LayerEvent.TOGGLE, onLayerToggle);
+        }
+
+        private function get layers():ArrayCollection
+        {
+            return TaskManager.instance.currentTask.layers;
         }
 
         private function onLayerUp(event:LayerEvent):void
@@ -93,8 +98,12 @@
 
         private function onResetLayers(event:MouseEvent):void
         {
-            //Map.instance.resetLayers();
-            layers.refresh();
+            TaskManager.instance.currentTask.resetLayers();
+            Signal.instance.dispatchEvent(new PayloadEvent(PayloadEvent.DRAW));
+
+            listLayers.dataProvider = null;
+            listLayers.dataProvider = TaskManager.instance.currentTask.layers;
+
             validateLayersCount();
         }
         ]]>
@@ -106,7 +115,6 @@
                   padding="10">
             <s:Label text="{Local.text('map_layers')}"/>
             <s:Label id="labelLayersCount"
-                     color="{Color.theme}"
                      toolTip="{Local.text('layers_count_tooltip')}"/>
             <s:Spacer width="100%"/>
             <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"

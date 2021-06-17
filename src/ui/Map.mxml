@@ -22,6 +22,8 @@
 
         import managers.TaskManager;
 
+        import mx.collections.ArrayCollection;
+
         import mx.core.UIComponent;
         import mx.events.FlexEvent;
         import mx.events.ResizeEvent;
@@ -77,6 +79,7 @@
             signal.addEventListener(PayloadEvent.MOVE_MAP_TO_CENTER, onMoveMapToCenter);
             signal.addEventListener(PayloadEvent.DRAW, onDraw);
             signal.addEventListener(PayloadEvent.PICK_CELL_END, onPickCellEnd);
+            signal.addEventListener(PayloadEvent.LAYERS_CHANGED, onLayersChanged);
         }
 
         private function onPickCellEnd(event:PayloadEvent):void
@@ -107,11 +110,14 @@
         private function onDraw(event:Event):void
         {
             trace("Map:onDraw");
+            clearLayers();
 
-            var layersToDraw:Array = TaskManager.instance.currentTask.layers;
-            for each (var layer:String in layersToDraw)
+            for each (var layer:Layer in TaskManager.instance.currentTask.layers)
             {
-                switch (layer)
+                if (!layer.visible)
+                    continue;
+
+                switch (layer.id)
                 {
                     case Layer.POINTS:
                         drawPoints();
@@ -129,10 +135,36 @@
             }
         }
 
+        private function clearLayers():void
+        {
+            trace("Map:clearLayers");
+            for (var id:String in mapLayers)
+            {
+                var c:UIComponent = getOrAddMapLayer(id);
+                mapLayerGroup.removeElement(c);
+            }
+
+            mapLayers = {};
+        }
+
+        private function onLayersChanged(event:PayloadEvent):void
+        {
+            // Since it's just the map layer order and visibility changing here,
+            // we don't need to do a full redraw of each layer
+            var layers:ArrayCollection = TaskManager.instance.currentTask.layers;
+            for (var i:int = 0; i < layers.length; i++)
+            {
+                var layer:Layer = layers[i];
+                var mapLayer:UIComponent = getOrAddMapLayer(layer.id);
+                mapLayer.visible = layer.visible;
+                mapLayerGroup.setElementIndex(mapLayer, i);
+            }
+        }
+
         public function drawTectonics():void
         {
             trace("Map:drawTectonics");
-            var c:UIComponent = getMapLayer(Layer.TECTONIC_PLATES);
+            var c:UIComponent = getOrAddMapLayer(Layer.TECTONIC_PLATES);
             while (c.numChildren > 0)
                 c.removeChildAt(0);
             var spr:Sprite = new Sprite();
@@ -149,7 +181,7 @@
         public function drawPoints():void
         {
             trace("Map:drawPoints");
-            var c:UIComponent = getMapLayer(Layer.POINTS);
+            var c:UIComponent = getOrAddMapLayer(Layer.POINTS);
             while (c.numChildren > 0)
                 c.removeChildAt(0);
             var spr:Sprite = new Sprite();
@@ -168,7 +200,7 @@
 
         public function highlightCell(cell:Cell):void
         {
-            var c:UIComponent = getMapLayer(Layer.HIGHLIGHT);
+            var c:UIComponent = getOrAddMapLayer(Layer.HIGHLIGHT);
             while (c.numChildren > 0)
                 c.removeChildAt(0);
 
@@ -187,7 +219,7 @@
         public function drawVoronoi():void
         {
             trace("Map:drawVoronoi");
-            var c:UIComponent = getMapLayer(Layer.VORONOI);
+            var c:UIComponent = getOrAddMapLayer(Layer.VORONOI);
             while (c.numChildren > 0)
                 c.removeChildAt(0);
             var spr:Sprite = new Sprite();
@@ -207,7 +239,7 @@
         public function drawDelaunay():void
         {
             trace("Map:drawDelaunay");
-            var c:UIComponent = getMapLayer(Layer.DELAUNAY);
+            var c:UIComponent = getOrAddMapLayer(Layer.DELAUNAY);
             while (c.numChildren > 0)
                 c.removeChildAt(0);
             var spr:Sprite = new Sprite();
@@ -281,7 +313,7 @@
             hideBitmapLayersCountdown.start();
         }
 
-        public function getMapLayer(id:String):UIComponent
+        public function getOrAddMapLayer(id:String):UIComponent
         {
             if (!mapLayers.hasOwnProperty(id))
             {
@@ -383,7 +415,7 @@
 
         public function centerMap():void
         {
-            centerMapOnPoint(new Point(mapLayerGroup.width / 2, mapLayerGroup.height / 2));
+            centerMapOnPoint(new Point(mapLayerGroup.width / 2, mapLayerGroup.height / 2), false);
         }
 
         private function validateZoom():void

@@ -19,7 +19,9 @@ package logic.tasks
             //dynamicOverlay
             name = "task_points";
             module = PointsModule;
-            layers = [Layer.VORONOI];
+            _layerIds = [Layer.VORONOI];
+
+            resetLayers();
         }
     }
 }

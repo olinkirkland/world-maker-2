@@ -32,7 +32,6 @@
                 return;
 
             buttonUp.enabled = itemIndex > 0;
-            //buttonDown.enabled = itemIndex < Map.instance.layers.length - 1;
 
             layer = value as Layer;
 

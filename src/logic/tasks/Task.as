@@ -1,5 +1,9 @@
 package logic.tasks
 {
+    import logic.Layer;
+
+    import mx.collections.ArrayCollection;
+
     import ui.dynamicOverlays.DynamicOverlay;
     import ui.staticOverlays.StaticOverlay;
 
@@ -17,10 +21,25 @@ package logic.tasks
         public var toolbar:Class;
         public var staticOverlay:Class = StaticOverlay;
         public var dynamicOverlay:Class = DynamicOverlay;
-        public var layers:Array;
+
+        protected var _layerIds:Array;
+        public var layers:ArrayCollection = new ArrayCollection();
 
         public function Task()
         {
+        }
+
+        public function resetLayers():void
+        {
+            layers.removeAll();
+            for each (var l:String in _layerIds)
+            {
+                var layer:Layer = new Layer();
+                layer.id = l;
+                layer.visible = true;
+                layer.allowed = true;
+                layers.addItem(layer);
+            }
         }
     }
 }

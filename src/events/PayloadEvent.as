@@ -26,6 +26,7 @@ package events
         // Misc
         public static const INITIALIZE:String = "initialize"; // Tells the map the UI needs initial values for real time display (like mouse location or a hovered cell)
         public static const TASK_CHANGED:String = "taskChanged"; // Tells the model that the current task has changed
+        public static const LAYERS_CHANGED:String = "layersChanged"; // Tells the map that the current task's layers changed
 
         public var payload:*;
 

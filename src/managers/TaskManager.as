@@ -6,6 +6,8 @@ package managers
 
     import logic.tasks.*;
 
+    import mx.events.CollectionEvent;
+
     public class TaskManager
     {
         private static var _instance:TaskManager;
@@ -42,9 +44,18 @@ package managers
 
         public function set currentTask(task:Task):void
         {
+            if (_currentTask)
+                _currentTask.layers.removeEventListener(CollectionEvent.COLLECTION_CHANGE, onLayersChanged);
+
             _currentTask = task;
+            _currentTask.layers.addEventListener(CollectionEvent.COLLECTION_CHANGE, onLayersChanged);
 
             signal.dispatchEvent(new PayloadEvent(PayloadEvent.TASK_CHANGED));
+        }
+
+        private function onLayersChanged(event:CollectionEvent):void
+        {
+            Signal.instance.dispatchEvent(new PayloadEvent(PayloadEvent.LAYERS_CHANGED));
         }
 
         public function setCurrentTaskByIndex(index:int):void
