@@ -4,6 +4,8 @@ package global
     import flash.utils.Timer;
     import flash.utils.describeType;
 
+    import logic.modules.TectonicPlate;
+
     public class Util
     {
         public static var lorem:String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris maximus posuere lorem. Aliquam condimentum hendrerit interdum. Cras varius fringilla nisl, a placerat enim consequat nec. Cras porttitor aliquet mi.";

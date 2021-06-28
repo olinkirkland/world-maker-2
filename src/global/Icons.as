@@ -223,5 +223,8 @@ package global
 
         [Embed(source="/assets/icons/circled-right-down.png")]
         public static const CircledRightDown:Class;
+
+        [Embed(source="/assets/icons/lock.png")]
+        public static const DeepPlate:Class;
     }
 }

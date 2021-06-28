@@ -6,6 +6,8 @@
          creationComplete="onCreationComplete(event)">
 
     <fx:Script><![CDATA[
+        import global.Icons;
+        import global.Local;
         import global.Util;
 
         import logic.modules.TectonicPlate;
@@ -35,8 +37,13 @@
             if (!created)
                 return;
 
+            imageType.color = _plate.color;
+            imageType.source = _plate.type == TectonicPlate.DEEP ? Icons.Lock : null;
+            imageType.includeInLayout = imageType.visible = imageType.source;
+
             imageDirection.color = _plate.color;
             imageDirection.source = Util.iconFromDirection(_plate.direction);
+
             labelId.text = "" + _plate.id.substr(0, 4);
             labelId.setStyle('color', plate.color);
         }
@@ -50,6 +57,10 @@
 
     <s:HGroup horizontalAlign="center"
               verticalAlign="middle">
+
+        <c:ColorBitmapImage id="imageType"
+                            width="16"
+                            height="16"/>
 
         <s:Label id="labelId"/>
 

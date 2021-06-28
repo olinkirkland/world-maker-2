@@ -398,7 +398,7 @@
         {
             if (zoomLevels.indexOf(zoomLevel) >= 0)
                 return;
-            
+
             for (var i:int = 0; i < zoomLevels.length - 1; i++)
                 if (zoomLevel > zoomLevels[i] && zoomLevel < zoomLevels[i + 1])
                     zoomLevel = zoomLevels[i];

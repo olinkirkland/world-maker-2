@@ -11,7 +11,11 @@
         import global.Icons;
         import global.Local;
 
+        import logic.modules.TectonicPlate;
+
         import logic.modules.TectonicsModule;
+
+        import mx.collections.ArrayCollection;
 
         import mx.events.CollectionEvent;
         import mx.events.FlexEvent;
@@ -91,8 +95,25 @@
         {
             var p:BusyPopup = new BusyPopup();
             p.text = Local.text('generating_plates');
-            p.calculation = TectonicsModule.quickStart;
+            p.calculation = function ():void
+            {
+                checkBoxToggleDeepPlates.selected = true;
+                model.tectonicPlates.filterFunction = null;
+                model.tectonicPlates.refresh();
+                TectonicsModule.quickStart();
+            };
             PopupManager.open(p);
+        }
+
+        private function onToggleDeepPlates(event:MouseEvent):void
+        {
+            model.tectonicPlates.filterFunction = checkBoxToggleDeepPlates.selected ? null : filterByTypeIsNotDeep;
+            model.tectonicPlates.refresh();
+        }
+
+        private function filterByTypeIsNotDeep(plate:TectonicPlate):Boolean
+        {
+            return plate.type != TectonicPlate.DEEP;
         }
         ]]>
     </fx:Script>
@@ -122,13 +143,21 @@
                   icon="{Icons.Magic}"
                   width="100%"
                   click="onQuickStart(event)"/>
-        <s:Label id="labelPlateCount"
-                 width="100%"/>
         <c:SliderWithInput id="sliderJitter"
                            width="100%"/>
         <s:Button label="{Local.text('add_tectonic_plate')}"
                   width="100%"
                   click="onAddPlate(event)"/>
+        <s:HGroup width="100%"
+                  verticalAlign="middle">
+            <s:CheckBox id="checkBoxToggleDeepPlates"
+                        label="{Local.text('show_deep_plates')}"
+                        click="onToggleDeepPlates(event)"
+                        selected="true"/>
+            <s:Label id="labelPlateCount"
+                     width="100%"
+                     textAlign="right"/>
+        </s:HGroup>
         <s:List id="listPlates"
                 useVirtualLayout="false"
                 width="100%"

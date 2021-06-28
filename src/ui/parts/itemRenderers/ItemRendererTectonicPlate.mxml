@@ -34,12 +34,14 @@
             ]);
             buttonBarStrength.addEventListener(IndexChangeEvent.CHANGE, onChangeStrength, false, 0, true);
 
+            buttonBarType.visible = buttonBarType.includeInLayout = plate.type != TectonicPlate.DEEP;
             buttonBarType.dataProvider = new ArrayCollection([
-                {type: TectonicPlate.DEEP, label: Local.text('deep')},
                 {type: TectonicPlate.CONTINENTAL, label: Local.text('continental')},
                 {type: TectonicPlate.OCEANIC, label: Local.text('oceanic')},
             ]);
             buttonBarType.addEventListener(IndexChangeEvent.CHANGE, onChangeType, false, 0, true);
+
+            labelTypeDeep.visible = labelTypeDeep.includeInLayout = !buttonBarType.visible;
 
             directionPicker.addEventListener(MouseEvent.CLICK, onChangeDirection, false, 0, true);
 
@@ -104,7 +106,7 @@
 
         private function onChangeStrength(event:IndexChangeEvent):void
         {
-            plate.strength = buttonBarStrength.selectedItem.value;
+            plate.strength = buttonBarStrength.selectedItem["strength"];
             Model.instance.tectonicPlates.itemUpdated(plate);
         }
 
@@ -194,6 +196,10 @@
 
                         <c:DirectionPicker id="directionPicker"
                                            width="100%"/>
+
+                        <s:Label id="labelTypeDeep"
+                                 width="100%"
+                                 text="{Local.text('warning_plate_type_deep')}"/>
 
                         <s:ButtonBar id="buttonBarType"
                                      width="100%"

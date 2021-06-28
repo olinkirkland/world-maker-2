@@ -86,7 +86,7 @@ package logic.modules
                 }
 
                 plate.origin = cell;
-                plate.strength = 1;
+                plate.strength = 0.8;
             }
 
             var directions:Array = [0, 45, 90, 135, 180, 225, 270, 315];
