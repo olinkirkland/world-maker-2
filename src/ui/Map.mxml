@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
          xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:c="ui.parts.components.*"
          creationComplete="onCreationComplete(event)"
          middleMouseDown="onMouseDown(event)"
          mouseChildren="false"
@@ -13,6 +14,7 @@
 
         import global.Color;
         import global.Draw;
+        import global.Icons;
         import global.Signal;
 
         import logic.Layer;
@@ -61,7 +63,7 @@
 
             addEventListeners();
 
-            centerMap();
+            fitMap();
         }
 
         private function addEventListeners():void
@@ -77,6 +79,7 @@
             signal.addEventListener(PayloadEvent.ZOOM_IN, onZoomIn);
             signal.addEventListener(PayloadEvent.ZOOM_OUT, onZoomOut);
             signal.addEventListener(PayloadEvent.MOVE_MAP_TO_CENTER, onMoveMapToCenter);
+            signal.addEventListener(PayloadEvent.FIT_MAP_TO_VIEWPORT, onFitMapToViewport);
             signal.addEventListener(PayloadEvent.DRAW, onDraw);
             signal.addEventListener(PayloadEvent.PICK_CELL_END, onPickCellEnd);
             signal.addEventListener(PayloadEvent.LAYERS_CHANGED, onLayersChanged);
@@ -276,6 +279,11 @@
             centerMap();
         }
 
+        private function onFitMapToViewport(event:PayloadEvent):void
+        {
+            fitMap();
+        }
+
         private function showBitmapLayers():void
         {
             keepInBitmapMode = true;
@@ -386,14 +394,23 @@
                 zoomOut();
         }
 
+        private function snapZoomLevel():void
+        {
+            if (zoomLevels.indexOf(zoomLevel) >= 0)
+                return;
+            
+            for (var i:int = 0; i < zoomLevels.length - 1; i++)
+                if (zoomLevel > zoomLevels[i] && zoomLevel < zoomLevels[i + 1])
+                    zoomLevel = zoomLevels[i];
+        }
+
         public function zoomIn():void
         {
             var previousZoomLevel:Number = zoomLevel;
+            snapZoomLevel();
 
             var zoomLevelIndex:int = zoomLevels.indexOf(zoomLevel);
-            if (zoomLevelIndex < 0)
-                zoomLevel = 0;
-            else if (zoomLevelIndex + 1 < zoomLevels.length)
+            if (zoomLevelIndex + 1 < zoomLevels.length)
                 zoomLevel = zoomLevels[zoomLevelIndex + 1];
 
             if (zoomLevel == previousZoomLevel)
@@ -404,11 +421,15 @@
 
         public function zoomOut():void
         {
+            var previousZoomLevel:Number = zoomLevel;
+            snapZoomLevel();
+
             var zoomLevelIndex:int = zoomLevels.indexOf(zoomLevel);
-            if (zoomLevelIndex < 0)
-                zoomLevel = 1;
-            else if (zoomLevelIndex > 0)
+            if (zoomLevelIndex > 0)
                 zoomLevel = zoomLevels[zoomLevelIndex - 1];
+
+            if (zoomLevel == previousZoomLevel)
+                return;
 
             validateZoom();
         }
@@ -418,6 +439,20 @@
             centerMapOnPoint(new Point(mapLayerGroup.width / 2, mapLayerGroup.height / 2), false);
         }
 
+        private function fitMap():void
+        {
+            centerMapOnPoint(new Point(mapLayerGroup.width / 2, mapLayerGroup.height / 2), false);
+
+            var w:int = layerGroupMask.width - 30;
+            mapLayerGroup.scaleX = w / mapLayerGroup.width;
+            mapLayerGroup.scaleY = mapLayerGroup.scaleX;
+            centerMapOnPoint(new Point(mapLayerGroup.width / 2, mapLayerGroup.height / 2), false);
+            validateDynamicOverlay(true);
+
+            zoomLevel = mapLayerGroup.scaleX;
+            endZoom();
+        }
+
         private function validateZoom():void
         {
             // Get the viewport's center point
@@ -425,6 +460,7 @@
             p = mapLayerGroup.globalToLocal(localToGlobal(p));
 
             showBitmapLayers();
+
             TweenLite.to(mapLayerGroup, .2, {
                 scaleX: zoomLevel, onUpdate: function ():void
                 {
@@ -442,9 +478,9 @@
             keepInBitmapMode = false;
             delayHideBitmapLayers();
 
-            _dynamicOverlay.validate(true);
+            validateDynamicOverlay(true);
 
-            signal.dispatchEvent(new PayloadEvent(PayloadEvent.MAP_ZOOM, zoomLevel))
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.MAP_ZOOM, zoomLevel));
         }
 
         private function centerMapOnPoint(p:Point, animate:Boolean = true):void
@@ -464,12 +500,14 @@
                 mapLayerGroup.x = goal.x;
                 mapLayerGroup.y = goal.y;
             }
+
+            validateDynamicOverlay();
         }
 
-        private function validateDynamicOverlay():void
+        private function validateDynamicOverlay(considerScale:Boolean = false):void
         {
             if (_dynamicOverlay)
-                _dynamicOverlay.validate();
+                _dynamicOverlay.validate(considerScale);
         }
 
         private function onDoubleClick(event:MouseEvent):void

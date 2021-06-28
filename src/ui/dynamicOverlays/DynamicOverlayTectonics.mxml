@@ -20,34 +20,39 @@
         private function onChangeTectonics(event:PayloadEvent):void
         {
             var collectionEvent:CollectionEvent = event.payload;
+            var plate:TectonicPlate;
+            var m:AnchoredMapElement;
+            var i:int;
+            var t:PlateTip;
+
             switch (collectionEvent.kind)
             {
                 case "add":
-                    var plate:TectonicPlate = collectionEvent.items[0];
+                    plate = collectionEvent.items[0];
                     addPlateTip(plate);
                     break;
                 case "remove":
-                    var plate:TectonicPlate = collectionEvent.items[0];
-                    for (var i:int = 0; i < numElements; i++)
+                    plate = collectionEvent.items[0];
+                    for (i = 0; i < numElements; i++)
                     {
-                        var m:AnchoredMapElement = AnchoredMapElement(getElementAt(i));
+                        m = AnchoredMapElement(getElementAt(i));
                         if (!m.getElementAt(0) is PlateTip)
                             continue;
 
-                        var t:PlateTip = PlateTip(m.getElementAt(0));
+                        t = PlateTip(m.getElementAt(0));
                         if (t.plate == plate)
                             removeElement(m);
                     }
                     break;
                 default:
                     // Update
-                    for (var i:int = 0; i < numElements; i++)
+                    for (i = 0; i < numElements; i++)
                     {
-                        var m:AnchoredMapElement = AnchoredMapElement(getElementAt(i));
+                        m = AnchoredMapElement(getElementAt(i));
                         if (!m.getElementAt(0) is PlateTip)
                             continue;
 
-                        var t:PlateTip = PlateTip(m.getElementAt(0));
+                        t = PlateTip(m.getElementAt(0));
                         m.anchor = t.plate.origin ? t.plate.origin.point : new Point(0, 0);
                         m.visible = m.includeInLayout = t.plate.origin;
                         t.update();

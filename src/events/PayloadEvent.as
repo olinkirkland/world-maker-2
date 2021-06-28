@@ -13,6 +13,7 @@ package events
         public static const ZOOM_IN:String = "zoomIn"; // Tells the map to zoom in
         public static const ZOOM_OUT:String = "zoomOut"; // Tells the map to zoom out
         public static const MOVE_MAP_TO_CENTER:String = "moveMapToCenter"; // Tells the map to center itself
+        public static const FIT_MAP_TO_VIEWPORT:String = "fitMapToViewport"; // Tells the map to fit itself to the viewport
         public static const PICK_CELL_START:String = "pickCellStart"; // Tells the model to return the next cell that's been clicked on with the callback function provided in the event
         public static const PICK_CELL_END:String = "pickCellEnd"; // Tells the model to stop cell picking mode
         public static const OPEN_PANE:String = "openPane"; // Tells the app to open a (left) pane

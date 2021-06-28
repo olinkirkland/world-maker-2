@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <staticOverlays:StaticOverlay xmlns:fx="http://ns.adobe.com/mxml/2009"
                               xmlns:s="library://ns.adobe.com/flex/spark"
-                              xmlns:c="ui.parts.components.*"
                               xmlns:staticOverlays="ui.staticOverlays.*">
     <fx:Script><![CDATA[
         import events.PayloadEvent;
@@ -105,79 +104,85 @@
             signal.dispatchEvent(new PayloadEvent(PayloadEvent.MOVE_MAP_TO_CENTER));
         }
 
+        private function onFitMap(event:MouseEvent):void
+        {
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.FIT_MAP_TO_VIEWPORT));
+        }
+
         private function onEndPickCell(event:MouseEvent):void
         {
             model.isPickingCell = false;
             signal.dispatchEvent(new PayloadEvent(PayloadEvent.PICK_CELL_END));
         }
         ]]></fx:Script>
-    <s:Panel skinClass="ui.parts.skins.PanelSkinOutline"
-             width="100%"
+    <s:Group width="100%"
              height="100%">
 
-        <s:Group width="100%"
-                 height="100%">
+        <!--Map Controls-->
+        <s:Group width="100%">
+            <s:Rect width="100%"
+                    height="100%">
+                <s:fill>
+                    <s:SolidColor color="{Color.fillLow}"/>
+                </s:fill>
+            </s:Rect>
+            <s:HGroup width="100%"
+                      padding="5"
+                      verticalAlign="middle">
 
-            <!--Map Controls-->
-            <s:Group width="100%">
-                <s:Rect width="100%"
-                        height="100%"
-                        radiusX="5"
-                        radiusY="5">
-                    <s:fill>
-                        <s:SolidColor color="{Color.black}"
-                                      alpha=".8"/>
-                    </s:fill>
-                </s:Rect>
-                <s:HGroup width="100%"
-                          padding="5"
-                          verticalAlign="middle">
+                <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                          icon="{Icons.Layers}"
+                          toolTip="{Local.text('layers')}"
+                          click="onToggleLayers(event)"/>
 
-                    <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
-                              icon="{Icons.Layers}"
-                              toolTip="{Local.text('layers')}"
-                              click="onToggleLayers(event)"/>
+                <s:Spacer width="100%"/>
 
-                    <s:Spacer width="100%"/>
+                <s:Label id="labelMouse"/>
 
-                    <s:Label id="labelMouse"/>
+                <s:Label id="labelZoom"/>
 
-                    <s:Label id="labelZoom"/>
+                <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                          icon="{Icons.Minus}"
+                          toolTip="{Local.text('zoom_out')}"
+                          click="onZoomOut(event)"/>
+                <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                          icon="{Icons.Plus}"
+                          toolTip="{Local.text('zoom_in')}"
+                          click="onZoomIn(event)"/>
+                <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                          icon="{Icons.Center}"
+                          toolTip="{Local.text('center_map')}"
+                          click="onCenterMap(event)"/>
+                <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                          icon="{Icons.Fit}"
+                          toolTip="{Local.text('fit_map')}"
+                          click="onFitMap(event)"/>
 
-                    <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
-                              icon="{Icons.Minus}"
-                              toolTip="{Local.text('zoom_out')}"
-                              click="onZoomOut(event)"/>
-                    <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
-                              icon="{Icons.Plus}"
-                              toolTip="{Local.text('zoom_in')}"
-                              click="onZoomIn(event)"/>
-                    <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
-                              icon="{Icons.Fit}"
-                              toolTip="{Local.text('center_map')}"
-                              click="onCenterMap(event)"/>
-
-                </s:HGroup>
-            </s:Group>
-            <s:HGroup id="groupPickCell"
-                      width="100%"
-                      height="100%"
-                      horizontalAlign="center"
-                      verticalAlign="bottom"
-                      visible="false"
-                      mouseEnabled="false">
-                <s:Panel skinClass="ui.parts.skins.PanelSkinOverlay">
-                    <s:VGroup minWidth="120"
-                              horizontalAlign="center"
-                              gap="10">
-                        <s:Label id="labelNearestCell"/>
-                        <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
-                                  toolTip="{Local.text('cancel')}"
-                                  icon="{Icons.Multiply}"
-                                  click="onEndPickCell(event)"/>
-                    </s:VGroup>
-                </s:Panel>
             </s:HGroup>
         </s:Group>
-    </s:Panel>
+        <s:HGroup id="groupPickCell"
+                  width="100%"
+                  height="100%"
+                  horizontalAlign="center"
+                  verticalAlign="bottom"
+                  visible="false"
+                  mouseEnabled="false">
+            <s:Panel skinClass="ui.parts.skins.PanelSkinOverlay">
+                <s:VGroup minWidth="120"
+                          horizontalAlign="center"
+                          gap="10">
+                    <s:Label id="labelNearestCell"/>
+                    <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                              toolTip="{Local.text('cancel')}"
+                              icon="{Icons.Multiply}"
+                              click="onEndPickCell(event)"/>
+                </s:VGroup>
+            </s:Panel>
+        </s:HGroup>
+
+        <s:Panel skinClass="ui.parts.skins.PanelSkinOutline"
+                 width="100%"
+                 height="100%"/>
+
+    </s:Group>
 </staticOverlays:StaticOverlay>

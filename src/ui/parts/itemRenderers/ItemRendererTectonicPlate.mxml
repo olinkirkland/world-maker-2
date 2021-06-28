@@ -34,13 +34,20 @@
             ]);
             buttonBarStrength.addEventListener(IndexChangeEvent.CHANGE, onChangeStrength, false, 0, true);
 
-            directionPicker.addEventListener(MouseEvent.CLICK, onChangeDirection);
+            buttonBarType.dataProvider = new ArrayCollection([
+                {type: TectonicPlate.DEEP, label: Local.text('deep')},
+                {type: TectonicPlate.CONTINENTAL, label: Local.text('continental')},
+                {type: TectonicPlate.OCEANIC, label: Local.text('oceanic')},
+            ]);
+            buttonBarType.addEventListener(IndexChangeEvent.CHANGE, onChangeType, false, 0, true);
+
+            directionPicker.addEventListener(MouseEvent.CLICK, onChangeDirection, false, 0, true);
 
             for each (var u:Object in buttonBarStrength.dataProvider)
                 if (u.value == plate.strength)
                     buttonBarStrength.selectedItem = u;
 
-            picker.addEventListener(Event.CHANGE, onChangeCell, false, 0, true);
+            cellPicker.addEventListener(Event.CHANGE, onChangeCell, false, 0, true);
 
             validateToggleIcon();
         }
@@ -51,7 +58,8 @@
                 return;
 
             plate = TectonicPlate(value);
-            picker.cell = plate.origin;
+            cellPicker.cell = plate.origin;
+            directionPicker.direction = plate.direction;
             groupCaution.visible = groupCaution.includeInLayout = !plate.origin;
             solidColor.color = plate.color;
             labelId.text = plate.id.substr(0, 4);
@@ -60,11 +68,15 @@
             for each (var u:Object in buttonBarStrength.dataProvider)
                 if (u.strength == plate.strength)
                     buttonBarStrength.selectedItem = u;
+
+            for each (u in buttonBarStrength.dataProvider)
+                if (u.strength == plate.strength)
+                    buttonBarStrength.selectedItem = u;
         }
 
         private function onChangeCell(event:Event):void
         {
-            plate.origin = picker.cell;
+            plate.origin = cellPicker.cell;
             Model.instance.tectonicPlates.itemUpdated(plate);
         }
 
@@ -93,13 +105,19 @@
         private function onChangeStrength(event:IndexChangeEvent):void
         {
             plate.strength = buttonBarStrength.selectedItem.value;
-            trace(buttonBarStrength.selectedItem.value);
+            Model.instance.tectonicPlates.itemUpdated(plate);
+        }
+
+        private function onChangeType(event:IndexChangeEvent):void
+        {
+            plate.type = buttonBarType.selectedItem.value;
             Model.instance.tectonicPlates.itemUpdated(plate);
         }
 
         private function onChangeDirection(event:Event):void
         {
-
+            plate.direction = directionPicker.direction;
+            Model.instance.tectonicPlates.itemUpdated(plate);
         }
 
         private function onToggle(event:MouseEvent):void
@@ -149,7 +167,7 @@
 
                     <s:Label id="labelId"/>
 
-                    <c:CellPicker id="picker"
+                    <c:CellPicker id="cellPicker"
                                   width="100%"/>
 
                     <s:Button id="buttonToggle"
@@ -176,6 +194,10 @@
 
                         <c:DirectionPicker id="directionPicker"
                                            width="100%"/>
+
+                        <s:ButtonBar id="buttonBarType"
+                                     width="100%"
+                                     requireSelection="true"/>
 
                         <s:Button icon="{Icons.Delete}"
                                   label="{Local.text('remove')}"

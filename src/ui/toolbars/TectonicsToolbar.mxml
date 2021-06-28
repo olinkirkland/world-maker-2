@@ -31,7 +31,6 @@
             if (model.tectonicPlates.length == 0)
                 onQuickStart(null);
 
-
             sliderJitter.label.text = Local.text('jitter');
             sliderJitter.slider.minimum = 0;
             sliderJitter.slider.maximum = 1;

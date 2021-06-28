@@ -173,6 +173,9 @@ package global
         [Embed(source="/assets/icons/minus.png")]
         public static const Minus:Class;
 
+        [Embed(source="/assets/icons/center.png")]
+        public static const Center:Class;
+
         [Embed(source="/assets/icons/fit.png")]
         public static const Fit:Class;
 

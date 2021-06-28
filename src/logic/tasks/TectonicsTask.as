@@ -19,7 +19,7 @@ package logic.tasks
             dynamicOverlay = DynamicOverlayTectonics;
             name = "task_tectonics";
             module = TectonicsModule;
-            _layerIds = [Layer.VORONOI, Layer.TECTONIC_PLATES];
+            _layerIds = [Layer.TECTONIC_PLATES, Layer.TECTONIC_BORDERS, Layer.VORONOI];
 
             resetLayers();
         }

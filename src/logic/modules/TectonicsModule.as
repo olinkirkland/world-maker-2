@@ -89,6 +89,10 @@ package logic.modules
                 plate.strength = 1;
             }
 
+            var directions:Array = [0, 45, 90, 135, 180, 225, 270, 315];
+            for each (plate in model.tectonicPlates)
+                plate.direction = directions[int(Math.random() * directions.length)];
+
             model.tectonicPlates.refresh();
             model.build();
         }
@@ -325,6 +329,8 @@ package logic.modules
             t.origin = u.originIndex >= 0 ? model.cells[u.originIndex] : null;
             t.color = u.color;
             t.strength = u.strength;
+            t.direction = u.direction;
+            t.type = u.type;
             model.tectonicPlates.addItem(t);
             model.tectonicPlates.itemUpdated(t);
         }

@@ -2,13 +2,12 @@
 <popups:Popup xmlns:fx="http://ns.adobe.com/mxml/2009"
               xmlns:s="library://ns.adobe.com/flex/spark"
               xmlns:popups="ui.popups.*"
-              xmlns:c="ui.parts.components.*"
-              width="100%"
-              skinClass="ui.parts.skins.PanelSkinHidden">
+              xmlns:c="ui.parts.components.*">
 
     <fx:Script><![CDATA[
         import global.Color;
         import global.Icons;
+        import global.Local;
 
         import mx.events.FlexEvent;
 
@@ -34,28 +33,18 @@
         ]]>
     </fx:Script>
 
-    <s:Group width="100%"
-             height="100">
-        <s:Rect width="100%"
-                height="100%">
-            <s:fill>
-                <s:SolidColor color="0x000000"
-                              alpha=".7"/>
-            </s:fill>
-        </s:Rect>
-        <s:VGroup width="100%"
-                  height="100%"
-                  horizontalAlign="center"
-                  verticalAlign="middle"
-                  gap="10">
-            <c:ColorBitmapImage left="-15"
-                                top="-15"
-                                width="30"
-                                height="30"
-                                source="{Icons.Build}"
-                                color="{Color.theme}"/>
-            <s:Label id="label"
-                     color="{Color.theme}"/>
-        </s:VGroup>
-    </s:Group>
+    <s:VGroup horizontalAlign="center"
+              verticalAlign="middle"
+              gap="10"
+              padding="30">
+        <c:ColorBitmapImage left="-15"
+                            top="-15"
+                            width="30"
+                            height="30"
+                            source="{Icons.Build}"
+                            color="{Color.theme}"/>
+        <s:Label id="label"
+                 text="{Local.text('loading')}"
+                 color="{Color.theme}"/>
+    </s:VGroup>
 </popups:Popup>

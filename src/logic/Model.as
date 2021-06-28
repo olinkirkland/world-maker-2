@@ -468,7 +468,7 @@ package logic
             // Tectonics
             u.tectonicPlates = [];
             for each (var t:TectonicPlate in tectonicPlates)
-                u.tectonicPlates.push({id: t.id, originIndex: t.origin ? t.origin.index : -1, strength: t.strength, color: t.color});
+                u.tectonicPlates.push({id: t.id, originIndex: t.origin ? t.origin.index : -1, strength: t.strength, type: t.type, direction: t.direction, color: t.color});
 
             // Tectonic Jitter
             u.tectonicJitter = tectonicJitter;
