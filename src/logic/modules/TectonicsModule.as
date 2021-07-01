@@ -119,6 +119,7 @@ package logic.modules
             expandPlates();
             assignCellsWithoutPlates();
             removeFragments();
+            determineBorders();
         }
 
         private function assignCellsWithoutPlates():void
@@ -286,6 +287,18 @@ package logic.modules
             }
 
             return fragments;
+        }
+
+        private function determineBorders():void
+        {
+            // For each cell, if it has a neighbor with a different plate, consider it a border cell
+            for each (var cell:Cell in model.cells)
+            {
+                cell.isTectonicPlateBorder = false;
+                for each (var neighbor:Cell in cell.neighbors)
+                    if (cell.tectonicPlate != neighbor.tectonicPlate)
+                        cell.isTectonicPlateBorder = true;
+            }
         }
 
         public static function addPlate():TectonicPlate

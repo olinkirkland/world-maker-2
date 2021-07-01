@@ -18,6 +18,7 @@ package logic.graph
 
         public var tectonicPlate:TectonicPlate;
         public var tectonicStrength:Number;
+        public var isTectonicPlateBorder:Boolean;
 
         public function Cell()
         {

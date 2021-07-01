@@ -11,6 +11,8 @@
         import global.Icons;
         import global.Local;
 
+        import logic.graph.Cell;
+
         import logic.modules.TectonicPlate;
 
         import logic.modules.TectonicsModule;
@@ -25,6 +27,8 @@
         import ui.popups.BusyPopup;
         import ui.popups.ConfirmPopup;
         import ui.popups.Popup;
+
+        private var mousePoint:Point;
 
         override public function onCreationComplete(event:FlexEvent):void
         {
@@ -55,11 +59,68 @@
             model.tectonicPlates.addEventListener(CollectionEvent.COLLECTION_CHANGE, onTectonicPlatesChanged);
 
             sliderJitter.addEventListener(Event.CHANGE, onChangeJitter);
+
+            signal.addEventListener(PayloadEvent.PICK_CELL_START, onPickCellStart);
+            signal.addEventListener(PayloadEvent.PICK_CELL_END, onPickCellEnd);
+            signal.addEventListener(PayloadEvent.MAP_MOUSE_MOVE, onMouseMoveAnywhere);
         }
 
         override protected function removeEventListeners():void
         {
+            model.tectonicPlates.removeEventListener(CollectionEvent.COLLECTION_CHANGE, onTectonicPlatesChanged);
+
             sliderJitter.removeEventListener(Event.CHANGE, onChangeJitter);
+
+            signal.removeEventListener(PayloadEvent.PICK_CELL_START, onPickCellStart);
+            signal.removeEventListener(PayloadEvent.PICK_CELL_END, onPickCellEnd);
+            signal.removeEventListener(PayloadEvent.MAP_MOUSE_MOVE, onMouseMoveAnywhere);
+        }
+
+        private function onMouseMoveAnywhere(event:PayloadEvent):void
+        {
+            mousePoint = event.payload;
+
+            if (model.isPickingCell)
+            {
+                mousePoint = model.getClosestPoint(mousePoint);
+
+                if (!mousePoint)
+                {
+                    labelNearestCell.text = Local.text('no_cell');
+                    return;
+                }
+                var cell:Cell = model.getCellByPoint(mousePoint);
+                labelNearestCell.text = Local.text('pick_cell', [cell.index]);
+            }
+        }
+
+        private function onPickCellStart(event:PayloadEvent):void
+        {
+            groupContent.visible = groupContent.includeInLayout = false;
+            groupPickingCell.visible = groupPickingCell.includeInLayout = true;
+
+            if (!mousePoint)
+                return;
+
+            groupPickingCell.visible = true;
+            mousePoint = model.getClosestPoint(mousePoint);
+            if (!mousePoint)
+                return;
+
+            var cell:Cell = model.getCellByPoint(mousePoint);
+            labelNearestCell.text = Local.text('pick_cell', [cell.index]);
+        }
+
+        private function onPickCellEnd(event:PayloadEvent):void
+        {
+            groupContent.visible = groupContent.includeInLayout = true;
+            groupPickingCell.visible = groupPickingCell.includeInLayout = false;
+        }
+
+        private function onEndPickCell(event:MouseEvent):void
+        {
+            model.isPickingCell = false;
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.PICK_CELL_END));
         }
 
         private function onChangeJitter(event:Event):void
@@ -134,43 +195,58 @@
 
     </s:HGroup>
 
-    <s:VGroup width="100%"
-              height="100%"
-              gap="10">
-        <s:Label text="{Local.text('task_tectonics_text')}"
-                 width="100%"/>
-        <s:Button label="{Local.text('quick_start')}"
-                  icon="{Icons.Magic}"
+    <s:Group width="100%"
+             height="100%">
+        <s:VGroup id="groupContent"
                   width="100%"
-                  click="onQuickStart(event)"/>
-        <c:SliderWithInput id="sliderJitter"
-                           width="100%"/>
-        <s:Button label="{Local.text('add_tectonic_plate')}"
+                  height="100%"
+                  gap="10">
+            <s:Label text="{Local.text('task_tectonics_text')}"
+                     width="100%"/>
+            <s:Button label="{Local.text('quick_start')}"
+                      icon="{Icons.Magic}"
+                      width="100%"
+                      click="onQuickStart(event)"/>
+            <c:SliderWithInput id="sliderJitter"
+                               width="100%"/>
+            <s:Button label="{Local.text('add_tectonic_plate')}"
+                      width="100%"
+                      click="onAddPlate(event)"/>
+            <s:HGroup width="100%"
+                      verticalAlign="middle">
+                <s:CheckBox id="checkBoxToggleDeepPlates"
+                            label="{Local.text('show_deep_plates')}"
+                            click="onToggleDeepPlates(event)"
+                            selected="true"/>
+                <s:Label id="labelPlateCount"
+                         width="100%"
+                         textAlign="right"/>
+            </s:HGroup>
+            <s:List id="listPlates"
+                    useVirtualLayout="false"
+                    width="100%"
+                    height="100%"
+                    contentBackgroundAlpha="0"
+                    borderVisible="false"
+                    horizontalScrollPolicy="off"
+                    preventSelection="true"
+                    itemRenderer="ui.parts.itemRenderers.ItemRendererTectonicPlate">
+                <s:layout>
+                    <s:VerticalLayout gap="5"/>
+                </s:layout>
+            </s:List>
+        </s:VGroup>
+        <s:VGroup id="groupPickingCell"
+                  visible="false"
+                  includeInLayout="false"
+                  horizontalAlign="center"
+                  verticalAlign="middle"
                   width="100%"
-                  click="onAddPlate(event)"/>
-        <s:HGroup width="100%"
-                  verticalAlign="middle">
-            <s:CheckBox id="checkBoxToggleDeepPlates"
-                        label="{Local.text('show_deep_plates')}"
-                        click="onToggleDeepPlates(event)"
-                        selected="true"/>
-            <s:Label id="labelPlateCount"
-                     width="100%"
-                     textAlign="right"/>
-        </s:HGroup>
-        <s:List id="listPlates"
-                useVirtualLayout="false"
-                width="100%"
-                height="100%"
-                contentBackgroundAlpha="0"
-                borderVisible="false"
-                horizontalScrollPolicy="off"
-                preventSelection="true"
-                itemRenderer="ui.parts.itemRenderers.ItemRendererTectonicPlate">
-            <s:layout>
-                <s:VerticalLayout gap="5"/>
-            </s:layout>
-        </s:List>
-    </s:VGroup>
-
+                  height="100%">
+            <s:Label id="labelNearestCell"/>
+            <s:Button label="{Local.text('cancel')}"
+                      icon="{Icons.Multiply}"
+                      click="onEndPickCell(event)"/>
+        </s:VGroup>
+    </s:Group>
 </t:Toolbar>

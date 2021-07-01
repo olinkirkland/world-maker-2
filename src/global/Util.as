@@ -4,7 +4,8 @@ package global
     import flash.utils.Timer;
     import flash.utils.describeType;
 
-    import logic.modules.TectonicPlate;
+    import logic.graph.Cell;
+    import logic.graph.Edge;
 
     public class Util
     {
@@ -277,6 +278,17 @@ package global
                 315: Local.text('north-west')
             };
             return labelsFromDirection[value];
+        }
+
+        public static function getSharedEdgeBetweenCells(c1:Cell, c2:Cell):Edge
+        {
+            var edge:Edge = null;
+            for each (var edge1:Edge in c1.edges)
+                for each (var edge2:Edge in c2.edges)
+                    if (edge1 == edge2)
+                        edge = edge1;
+
+            return edge;
         }
     }
 }

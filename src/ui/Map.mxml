@@ -16,6 +16,7 @@
         import global.Draw;
         import global.Icons;
         import global.Signal;
+        import global.Util;
 
         import logic.Layer;
         import logic.Model;
@@ -62,8 +63,6 @@
             });
 
             addEventListeners();
-
-            fitMap();
         }
 
         private function addEventListeners():void
@@ -132,7 +131,10 @@
                         drawDelaunay();
                         break;
                     case Layer.TECTONIC_PLATES:
-                        drawTectonics();
+                        drawTectonicPlates();
+                        break;
+                    case Layer.TECTONIC_BORDERS:
+                        drawTectonicBorders();
                         break;
                 }
             }
@@ -164,9 +166,9 @@
             }
         }
 
-        public function drawTectonics():void
+        public function drawTectonicPlates():void
         {
-            trace("Map:drawTectonics");
+            trace("Map:drawTectonicPlates");
             var c:UIComponent = getOrAddMapLayer(Layer.TECTONIC_PLATES);
             while (c.numChildren > 0)
                 c.removeChildAt(0);
@@ -177,6 +179,38 @@
             for each (var cell:Cell in model.cells)
                 if (cell.tectonicPlate)
                     Draw.fillCell(g, cell, cell.tectonicPlate.color);
+
+            cacheLayer(c);
+        }
+
+        public function drawTectonicBorders():void
+        {
+            trace("Map:drawTectonicBorders");
+            var c:UIComponent = getOrAddMapLayer(Layer.TECTONIC_BORDERS);
+            while (c.numChildren > 0)
+                c.removeChildAt(0);
+            var spr:Sprite = new Sprite();
+            c.addChild(spr);
+            var g:Graphics = spr.graphics;
+
+            for each (var cell:Cell in model.cells)
+            {
+                if (cell.tectonicPlate && cell.isTectonicPlateBorder)
+                {
+                    //Draw.fillCell(g, cell, Color.white);
+
+                    // Draw a line between the cell and each neighbor that has a different plate
+                    for each (var neighbor:Cell in cell.neighbors)
+                    {
+                        if (cell.tectonicPlate == neighbor.tectonicPlate)
+                            continue;
+
+                        var border:Edge = Util.getSharedEdgeBetweenCells(cell, neighbor);
+                        if (border)
+                            Draw.drawLine(g, border.v0.point, border.v1.point, Color.black, 5);
+                    }
+                }
+            }
 
             cacheLayer(c);
         }
