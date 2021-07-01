@@ -7,7 +7,7 @@ package logic.modules
         public var id:String;
         public var origin:Cell;
         public var color:uint;
-        public var strength:int;
+        public var strength:Number = 1;
         public var type:String;
         public var cells:Array = [];
         public var direction:Number = 0;

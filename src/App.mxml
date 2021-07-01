@@ -87,7 +87,7 @@
                 groupPane.visible = groupPane.includeInLayout = false;
             }
 
-            if (!event.payload || event.payload.className == paneClassName)
+            if (!event || !event.payload || event.payload.className == paneClassName)
                 return;
 
             pane = event.payload;
@@ -117,6 +117,9 @@
             toolbar.percentWidth = 100;
             toolbar.percentHeight = 100;
             groupToolbar.addElement(toolbar);
+
+            // Close pane
+            onClosePane(null);
 
             // Remove static overlay
             if (staticOverlay)

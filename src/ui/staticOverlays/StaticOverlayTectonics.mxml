@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<staticOverlays:StaticOverlay xmlns:fx="http://ns.adobe.com/mxml/2009"
+                              xmlns:s="library://ns.adobe.com/flex/spark"
+                              xmlns:staticOverlays="ui.staticOverlays.*">
+    <fx:Script><![CDATA[
+        import events.PayloadEvent;
+
+        import global.Color;
+        import global.Icons;
+        import global.Local;
+
+        import logic.graph.Cell;
+
+        import mx.events.FlexEvent;
+
+        import ui.panes.PaneLayers;
+
+        private var mousePoint:Point;
+
+        override protected function onCreationComplete(event:FlexEvent):void
+        {
+            super.onCreationComplete(event);
+
+            // Initial fit to viewport
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.FIT_MAP_TO_VIEWPORT));
+        }
+
+        override protected function addEventListeners():void
+        {
+            signal.addEventListener(PayloadEvent.MAP_MOUSE_MOVE, onMouseMoveAnywhere);
+            signal.addEventListener(PayloadEvent.MAP_ZOOM, onZoom);
+        }
+
+        override protected function removeEventListeners():void
+        {
+            signal.removeEventListener(PayloadEvent.MAP_MOUSE_MOVE, onMouseMoveAnywhere);
+            signal.removeEventListener(PayloadEvent.MAP_ZOOM, onZoom);
+        }
+
+        private function onMouseMoveAnywhere(event:PayloadEvent):void
+        {
+            mousePoint = event.payload;
+            labelMouse.text = "x=" + mousePoint.x + ", y=" + mousePoint.y;
+        }
+
+        private function onZoom(event:PayloadEvent):void
+        {
+            var zoomLevel:Number = event.payload;
+            labelZoom.text = int(zoomLevel * 100) + "%";
+        }
+
+        private function onToggleLayers(event:MouseEvent):void
+        {
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.OPEN_PANE, new PaneLayers()));
+        }
+
+        private function onZoomOut(event:MouseEvent):void
+        {
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.ZOOM_OUT));
+        }
+
+        private function onZoomIn(event:MouseEvent):void
+        {
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.ZOOM_IN));
+        }
+
+        private function onCenterMap(event:MouseEvent):void
+        {
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.MOVE_MAP_TO_CENTER));
+        }
+
+        private function onFitMap(event:MouseEvent):void
+        {
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.FIT_MAP_TO_VIEWPORT));
+        }
+
+        private function onTogglePlateTips(event:MouseEvent):void
+        {
+            signal.dispatchEvent(new PayloadEvent(PayloadEvent.CHANGE_OVERLAY, {showPlateTips: checkBoxShowPlateTips.selected}));
+        }
+        ]]></fx:Script>
+    <s:Group width="100%"
+             height="100%">
+
+        <!--Map Controls-->
+        <s:Group width="100%">
+            <s:Panel width="100%"
+                     height="100%"
+                     skinClass="ui.parts.skins.PanelSkinOutline">
+                <s:Rect width="100%"
+                        height="100%">
+                    <s:fill>
+                        <s:SolidColor color="{Color.fillLow}"/>
+                    </s:fill>
+                </s:Rect>
+                <s:HGroup width="100%"
+                          padding="5"
+                          verticalAlign="middle">
+
+                    <s:Button id="buttonLayers"
+                              skinClass="ui.parts.skins.ButtonSkinIcon"
+                              icon="{Icons.Layers}"
+                              toolTip="{Local.text('layers')}"
+                              click="onToggleLayers(event)"/>
+
+                    <s:Spacer width="100%"/>
+
+                    <s:Label id="labelMouse"/>
+
+                    <s:Label id="labelZoom"/>
+
+                    <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                              icon="{Icons.Minus}"
+                              toolTip="{Local.text('zoom_out')}"
+                              click="onZoomOut(event)"/>
+                    <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                              icon="{Icons.Plus}"
+                              toolTip="{Local.text('zoom_in')}"
+                              click="onZoomIn(event)"/>
+                    <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                              icon="{Icons.Center}"
+                              toolTip="{Local.text('center_map')}"
+                              click="onCenterMap(event)"/>
+                    <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                              icon="{Icons.Fit}"
+                              toolTip="{Local.text('fit_map')}"
+                              click="onFitMap(event)"/>
+
+                </s:HGroup>
+            </s:Panel>
+        </s:Group>
+
+        <s:VGroup width="100%"
+                  height="100%"
+                  verticalAlign="bottom">
+            <s:Group width="100%">
+                <s:Panel width="100%"
+                         height="100%"
+                         skinClass="ui.parts.skins.PanelSkinOutline">
+                    <s:Rect width="100%"
+                            height="100%">
+                        <s:fill>
+                            <s:SolidColor color="{Color.fillLow}"/>
+                        </s:fill>
+                    </s:Rect>
+                    <s:HGroup width="100%"
+                              verticalAlign="middle"
+                              horizontalAlign="center">
+                        <s:CheckBox id="checkBoxShowPlateTips"
+                                    label="{Local.text('show_plate_tips')}"
+                                    click="onTogglePlateTips(event)"/>
+                    </s:HGroup>
+                </s:Panel>
+            </s:Group>
+        </s:VGroup>
+
+        <s:Panel skinClass="ui.parts.skins.PanelSkinOutline"
+                 width="100%"
+                 height="100%"/>
+
+    </s:Group>
+</staticOverlays:StaticOverlay>

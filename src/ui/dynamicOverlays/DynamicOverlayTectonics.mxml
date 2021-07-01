@@ -12,9 +12,26 @@
         import ui.AnchoredMapElement;
         import ui.parts.components.PlateTip;
 
+        private var config:Object = {showPlateTips: false, showBorderTips: true};
+
         override protected function addEventListeners():void
         {
             signal.addEventListener(PayloadEvent.CHANGE_TECTONICS, onChangeTectonics);
+            signal.addEventListener(PayloadEvent.CHANGE_OVERLAY, onChangeOverlay);
+        }
+
+        override protected function removeEventListeners():void
+        {
+            signal.removeEventListener(PayloadEvent.CHANGE_TECTONICS, onChangeTectonics);
+            signal.removeEventListener(PayloadEvent.CHANGE_OVERLAY, onChangeOverlay);
+        }
+
+        private function onChangeOverlay(event:PayloadEvent):void
+        {
+            for (var key:String in event.payload)
+                config[key] = event.payload[key];
+
+            rebuild();
         }
 
         private function onChangeTectonics(event:PayloadEvent):void
@@ -59,7 +76,7 @@
                     }
                     break;
             }
-
+            
             validate(true);
         }
 
@@ -67,8 +84,15 @@
         {
             while (numElements > 0)
                 removeElementAt(0);
-            for each (var plate:TectonicPlate in model.tectonicPlates)
-                addPlateTip(plate);
+
+            if (config["showPlateTips"])
+                for each (var plate:TectonicPlate in model.tectonicPlates)
+                    addPlateTip(plate);
+
+            // todo
+            // if (showBorderTips)
+
+            validate(true);
         }
 
         override protected function populate():void
@@ -76,7 +100,6 @@
             super.populate();
 
             rebuild();
-            validate(true);
         }
 
         private function addPlateTip(plate:TectonicPlate):void
@@ -89,11 +112,6 @@
             m.visible = m.includeInLayout = plate.origin;
             m.addElement(plateTip);
             addElement(m);
-        }
-
-        override protected function removeEventListeners():void
-        {
-            signal.removeEventListener(PayloadEvent.CHANGE_TECTONICS, onChangeTectonics);
         }
         ]]></fx:Script>
 

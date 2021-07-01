@@ -12,21 +12,16 @@
         import global.Local;
 
         import logic.graph.Cell;
-
         import logic.modules.TectonicPlate;
-
         import logic.modules.TectonicsModule;
-
-        import mx.collections.ArrayCollection;
 
         import mx.events.CollectionEvent;
         import mx.events.FlexEvent;
 
         import ui.PopupManager;
-
+        import ui.parts.skins.PanelSkinOutline;
         import ui.popups.BusyPopup;
         import ui.popups.ConfirmPopup;
-        import ui.popups.Popup;
 
         private var mousePoint:Point;
 
@@ -207,9 +202,13 @@
                       icon="{Icons.Magic}"
                       width="100%"
                       click="onQuickStart(event)"/>
-            <c:SliderWithInput id="sliderJitter"
-                               width="100%"/>
+            <s:Panel skinClass="ui.parts.skins.PanelSkinOutline"
+                     width="100%">
+                <c:SliderWithInput id="sliderJitter"
+                                   width="100%"/>
+            </s:Panel>
             <s:Button label="{Local.text('add_tectonic_plate')}"
+                      icon="{Icons.Add}"
                       width="100%"
                       click="onAddPlate(event)"/>
             <s:HGroup width="100%"

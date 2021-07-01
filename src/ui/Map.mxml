@@ -22,6 +22,7 @@
         import logic.Model;
         import logic.graph.Cell;
         import logic.graph.Edge;
+        import logic.modules.TectonicPlate;
 
         import managers.TaskManager;
 
@@ -130,6 +131,9 @@
                     case Layer.DELAUNAY:
                         drawDelaunay();
                         break;
+                    case Layer.DEEP_TECTONIC_PLATES:
+                        drawDeepTectonicPlates();
+                        break;
                     case Layer.TECTONIC_PLATES:
                         drawTectonicPlates();
                         break;
@@ -166,6 +170,23 @@
             }
         }
 
+        public function drawDeepTectonicPlates():void
+        {
+            trace("Map:drawDeepTectonicPlates");
+            var c:UIComponent = getOrAddMapLayer(Layer.DEEP_TECTONIC_PLATES);
+            while (c.numChildren > 0)
+                c.removeChildAt(0);
+            var spr:Sprite = new Sprite();
+            c.addChild(spr);
+            var g:Graphics = spr.graphics;
+
+            for each (var cell:Cell in model.cells)
+                if (cell.tectonicPlate && cell.tectonicPlate.type == TectonicPlate.DEEP)
+                    Draw.fillCell(g, cell, cell.tectonicPlate.color);
+
+            cacheLayer(c);
+        }
+
         public function drawTectonicPlates():void
         {
             trace("Map:drawTectonicPlates");
@@ -177,7 +198,7 @@
             var g:Graphics = spr.graphics;
 
             for each (var cell:Cell in model.cells)
-                if (cell.tectonicPlate)
+                if (cell.tectonicPlate && cell.tectonicPlate.type != TectonicPlate.DEEP)
                     Draw.fillCell(g, cell, cell.tectonicPlate.color);
 
             cacheLayer(c);
@@ -202,7 +223,7 @@
                     // Draw a line between the cell and each neighbor that has a different plate
                     for each (var neighbor:Cell in cell.neighbors)
                     {
-                        if (cell.tectonicPlate == neighbor.tectonicPlate)
+                        if (cell.tectonicPlate == neighbor.tectonicPlate || (cell.tectonicPlate.type == TectonicPlate.DEEP && neighbor.tectonicPlate.type == TectonicPlate.DEEP))
                             continue;
 
                         var border:Edge = Util.getSharedEdgeBetweenCells(cell, neighbor);

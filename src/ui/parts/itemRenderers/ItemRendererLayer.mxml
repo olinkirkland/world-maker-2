@@ -35,13 +35,9 @@
 
             layer = value as Layer;
 
-            labelName.text = Local.text(Util.camelCaseToUnderScore(layer.id));
-            buttonToggle.setStyle("icon", layer.visible ? Icons.Show : Icons.Hide);
-            buttonToggle.enabled = layer.allowed;
-            labelName.alpha = labelIndex.alpha = layer.allowed ? 1 : .5;
-
-            if (!layer.allowed)
-                buttonToggle.setStyle("icon", Icons.Lock);
+            checkBoxToggleLayer.label = Local.text(Util.camelCaseToUnderScore(layer.id));
+            checkBoxToggleLayer.selected = layer.visible;
+            checkBoxToggleLayer.enabled = layer.allowed;
 
             labelIndex.text = "" + itemIndex;
         }
@@ -60,7 +56,7 @@
 
         private function onToggle(event:MouseEvent):void
         {
-            layer.visible = !layer.visible;
+            layer.visible = checkBoxToggleLayer.selected;
             dispatchEvent(new LayerEvent(LayerEvent.TOGGLE, layer));
         }
         ]]>
@@ -76,35 +72,24 @@
                 <s:HGroup id="groupContent"
                           width="100%"
                           padding="5"
-                          paddingTop="10"
-                          paddingBottom="10"
                           verticalAlign="middle">
+
+                    <s:Button id="buttonUp"
+                              skinClass="ui.parts.skins.ButtonSkinIcon"
+                              icon="{Icons.Up}"
+                              click="onUp(event)"/>
+
+                    <s:Button id="buttonDown"
+                              skinClass="ui.parts.skins.ButtonSkinIcon"
+                              icon="{Icons.Down}"
+                              click="onDown(event)"/>
 
                     <s:Label id="labelIndex"/>
 
-                    <s:Button id="buttonToggle"
-                              skinClass="ui.parts.skins.ButtonSkinIcon"
-                              click="onToggle(event)"/>
-                    <s:Label id="labelName"
-                             width="100%"/>
+                    <s:CheckBox id="checkBoxToggleLayer"
+                                click="onToggle(event)"/>
 
-                    <s:HGroup>
-                        <s:Button id="buttonUp"
-                                  skinClass="ui.parts.skins.ButtonSkinIcon"
-                                  icon="{Icons.Up}"
-                                  click="onUp(event)"/>
-                        <s:Button id="buttonDown"
-                                  skinClass="ui.parts.skins.ButtonSkinIcon"
-                                  icon="{Icons.Down}"
-                                  click="onDown(event)"/>
-                    </s:HGroup>
                 </s:HGroup>
-                <s:Line width="100%">
-                    <s:stroke>
-                        <s:SolidColorStroke color="{Color.textLow}"
-                                            alpha=".5"/>
-                    </s:stroke>
-                </s:Line>
 
             </s:VGroup>
 

@@ -73,7 +73,7 @@ package logic.modules
             plate.type = TectonicPlate.DEEP;
 
             var rand:Rand = new Rand(Math.random() * 99);
-            var plateCount:int = 12;
+            var plateCount:int = 24;
             for (i = 0; i < plateCount; i++)
             {
                 plate = addPlate();
@@ -86,7 +86,7 @@ package logic.modules
                 }
 
                 plate.origin = cell;
-                plate.strength = 0.8;
+                plate.strength = 1;
             }
 
             var directions:Array = [0, 45, 90, 135, 180, 225, 270, 315];
@@ -314,7 +314,7 @@ package logic.modules
             } while (i < 3 && colorIsUsed(color))
 
             t.color = color;
-            t.strength = 1.2;
+            t.strength = 1;
             model.tectonicPlates.addItemAt(t, 0);
             model.tectonicPlates.itemUpdated(t);
             return t;

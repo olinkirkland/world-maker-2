@@ -5,7 +5,7 @@ package logic.tasks
     import logic.tasks.Task;
 
     import ui.staticOverlays.StaticOverlay;
-    import ui.staticOverlays.StaticOverlayStandard;
+    import ui.staticOverlays.StaticOverlayPoints;
 
     import ui.toolbars.PointsToolbar;
 
@@ -15,7 +15,7 @@ package logic.tasks
         {
             id = POINTS;
             toolbar = PointsToolbar;
-            staticOverlay = StaticOverlayStandard;
+            staticOverlay = StaticOverlayPoints;
             //dynamicOverlay
             name = "task_points";
             module = PointsModule;
