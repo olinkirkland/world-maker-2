@@ -84,16 +84,13 @@
         private function validateLayersCount():void
         {
             var visibleCount:int = 0;
-            var allowedCount:int = 0;
             for each (var layer:Layer in layers)
             {
-                if (layer.allowed)
-                    allowedCount++;
-                if (layer.allowed && layer.visible)
+                if (layer.visible)
                     visibleCount++;
             }
 
-            labelLayersCount.text = visibleCount + "/" + allowedCount;
+            labelLayersCount.text = visibleCount + "/" + layers.length;
         }
 
         private function onResetLayers(event:MouseEvent):void

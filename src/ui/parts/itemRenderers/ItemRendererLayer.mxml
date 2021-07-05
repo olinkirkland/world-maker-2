@@ -37,7 +37,6 @@
 
             checkBoxToggleLayer.label = Local.text(Util.camelCaseToUnderScore(layer.id));
             checkBoxToggleLayer.selected = layer.visible;
-            checkBoxToggleLayer.enabled = layer.allowed;
 
             labelIndex.text = "" + itemIndex;
         }

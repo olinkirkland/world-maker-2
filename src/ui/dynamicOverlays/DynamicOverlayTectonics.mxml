@@ -11,27 +11,16 @@
 
         import ui.AnchoredMapElement;
         import ui.parts.components.PlateTip;
-
-        private var config:Object = {showPlateTips: false, showBorderTips: true};
+        import ui.staticOverlays.StaticOverlayTectonics;
 
         override protected function addEventListeners():void
         {
             signal.addEventListener(PayloadEvent.CHANGE_TECTONICS, onChangeTectonics);
-            signal.addEventListener(PayloadEvent.CHANGE_OVERLAY, onChangeOverlay);
         }
 
         override protected function removeEventListeners():void
         {
             signal.removeEventListener(PayloadEvent.CHANGE_TECTONICS, onChangeTectonics);
-            signal.removeEventListener(PayloadEvent.CHANGE_OVERLAY, onChangeOverlay);
-        }
-
-        private function onChangeOverlay(event:PayloadEvent):void
-        {
-            for (var key:String in event.payload)
-                config[key] = event.payload[key];
-
-            rebuild();
         }
 
         private function onChangeTectonics(event:PayloadEvent):void
@@ -76,16 +65,16 @@
                     }
                     break;
             }
-            
+
             validate(true);
         }
 
-        private function rebuild():void
+        override public function rebuild():void
         {
             while (numElements > 0)
                 removeElementAt(0);
 
-            if (config["showPlateTips"])
+            if (StaticOverlayTectonics(staticOverlay).showPlateTips)
                 for each (var plate:TectonicPlate in model.tectonicPlates)
                     addPlateTip(plate);
 
@@ -98,7 +87,6 @@
         override protected function populate():void
         {
             super.populate();
-
             rebuild();
         }
 

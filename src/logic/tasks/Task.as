@@ -37,7 +37,6 @@ package logic.tasks
                 var layer:Layer = new Layer();
                 layer.id = l;
                 layer.visible = true;
-                layer.allowed = true;
                 layers.addItem(layer);
             }
         }

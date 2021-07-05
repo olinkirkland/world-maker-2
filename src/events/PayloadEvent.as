@@ -19,7 +19,6 @@ package events
         public static const OPEN_PANE:String = "openPane"; // Tells the app to open a (left) pane
         public static const CLOSE_PANE:String = "closePane"; // Tells the map to close the currently open (left) pane
         public static const CHANGE_TECTONICS:String = "changeTectonics"; // Tells the dynamic overlay that a change has been made to the tectonics
-        public static const CHANGE_OVERLAY:String = "changeOverlay"; // Tells the dynamic overlay that a change has been made to the way the overlay is displayed
 
         // Events dispatched from the Model
         public static const DRAW:String = "draw"; // Tells the map to perform a draw call

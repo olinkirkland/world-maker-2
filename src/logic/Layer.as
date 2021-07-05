@@ -12,6 +12,5 @@ package logic
 
         public var id:String;
         public var visible:Boolean = true;
-        public var allowed:Boolean = true;
     }
 }

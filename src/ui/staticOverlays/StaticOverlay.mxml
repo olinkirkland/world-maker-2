@@ -9,8 +9,11 @@
 
         import logic.Model;
 
+        import ui.dynamicOverlays.DynamicOverlay;
+
         protected var signal:Signal;
         protected var model:Model;
+        public var dynamicOverlay:DynamicOverlay;
 
         protected function onCreationComplete(event:FlexEvent):void
         {

@@ -20,7 +20,8 @@
                  showTruncationTip="true"
                  width="100%"/>
 
-        <s:Button label="{Local.text('all_tasks')}"
+        <s:Button toolTip="{Local.text('all_tasks')}"
+                  skinClass="ui.parts.skins.ButtonSkinIcon"
                   icon="{Icons.Tasks}"
                   click="onAllTasks(event)"/>
 

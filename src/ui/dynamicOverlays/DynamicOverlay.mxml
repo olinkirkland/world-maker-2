@@ -12,9 +12,11 @@
         import mx.events.FlexEvent;
 
         import ui.AnchoredMapElement;
+        import ui.staticOverlays.StaticOverlay;
 
         protected var signal:Signal;
         protected var model:Model;
+        public var staticOverlay:StaticOverlay;
 
         public var mapLayerGroup:Group;
 
@@ -58,6 +60,10 @@
             }
         }
 
+        public function rebuild():void
+        {
+        }
+
         public function dispose():void
         {
             removeEventListeners();
@@ -65,7 +71,6 @@
 
         protected function removeEventListeners():void
         {
-
         }
         ]]></fx:Script>
 </s:Group>
