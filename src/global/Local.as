@@ -5,6 +5,9 @@ package global
         [Embed(source='/assets/languages/en.json', mimeType='application/octet-stream')]
         private static var en:Class;
 
+        [Embed(source='/assets/languages/pig.json', mimeType='application/octet-stream')]
+        private static var pig:Class;
+
         private static var dictionary:Object;
 
         public static function text(key:String, args:Array = null):String
@@ -35,7 +38,7 @@ package global
 
         private static function set language(id:String):void
         {
-            var languages:Object = {"en": en};
+            var languages:Object = {"en": en, "pig": pig};
             if (!languages[id])
                 return;
 

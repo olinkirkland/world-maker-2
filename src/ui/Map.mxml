@@ -122,32 +122,33 @@
             trace("Map:onDraw");
             clearLayers();
 
+            var c:UIComponent;
+
             for each (var layer:Layer in TaskManager.instance.currentTask.layers)
             {
-                if (!layer.visible)
-                    continue;
-
                 switch (layer.id)
                 {
                     case Layer.POINTS:
-                        drawPoints();
+                        c = drawPoints();
                         break;
                     case Layer.VORONOI:
-                        drawVoronoi();
+                        c = drawVoronoi();
                         break;
                     case Layer.DELAUNAY:
-                        drawDelaunay();
+                        c = drawDelaunay();
                         break;
                     case Layer.DEEP_TECTONIC_PLATES:
-                        drawDeepTectonicPlates();
+                        c = drawDeepTectonicPlates();
                         break;
                     case Layer.TECTONIC_PLATES:
-                        drawTectonicPlates();
+                        c = drawTectonicPlates();
                         break;
                     case Layer.TECTONIC_BORDERS:
-                        drawTectonicBorders();
+                        c = drawTectonicBorders();
                         break;
                 }
+
+                c.visible = layer.visible;
             }
         }
 
@@ -177,7 +178,7 @@
             }
         }
 
-        public function drawDeepTectonicPlates():void
+        public function drawDeepTectonicPlates():UIComponent
         {
             trace("Map:drawDeepTectonicPlates");
             var c:UIComponent = getOrAddMapLayer(Layer.DEEP_TECTONIC_PLATES);
@@ -192,9 +193,10 @@
                     Draw.fillCell(g, cell, cell.tectonicPlate.color);
 
             cacheLayer(c);
+            return c;
         }
 
-        public function drawTectonicPlates():void
+        public function drawTectonicPlates():UIComponent
         {
             trace("Map:drawTectonicPlates");
             var c:UIComponent = getOrAddMapLayer(Layer.TECTONIC_PLATES);
@@ -209,9 +211,10 @@
                     Draw.fillCell(g, cell, cell.tectonicPlate.color);
 
             cacheLayer(c);
+            return c;
         }
 
-        public function drawTectonicBorders():void
+        public function drawTectonicBorders():UIComponent
         {
             trace("Map:drawTectonicBorders");
             var c:UIComponent = getOrAddMapLayer(Layer.TECTONIC_BORDERS);
@@ -239,9 +242,10 @@
             }
 
             cacheLayer(c);
+            return c;
         }
 
-        public function drawPoints():void
+        public function drawPoints():UIComponent
         {
             trace("Map:drawPoints");
             var c:UIComponent = getOrAddMapLayer(Layer.POINTS);
@@ -259,6 +263,7 @@
             }
 
             cacheLayer(c);
+            return c;
         }
 
         public function highlightCell(cell:Cell):void
@@ -279,7 +284,7 @@
                     Draw.drawLine(g, edge.v0.point, edge.v1.point, Color.black);
         }
 
-        public function drawVoronoi():void
+        public function drawVoronoi():UIComponent
         {
             trace("Map:drawVoronoi");
             var c:UIComponent = getOrAddMapLayer(Layer.VORONOI);
@@ -297,9 +302,10 @@
                         Draw.drawLine(g, edge.v0.point, edge.v1.point, Color.textLow);
 
             cacheLayer(c);
+            return c;
         }
 
-        public function drawDelaunay():void
+        public function drawDelaunay():UIComponent
         {
             trace("Map:drawDelaunay");
             var c:UIComponent = getOrAddMapLayer(Layer.DELAUNAY);
@@ -315,6 +321,7 @@
                         Draw.drawLine(g, edge.d0.point, edge.d1.point, Color.pacificBlue);
 
             cacheLayer(c);
+            return c;
         }
 
         private function onInitializeUI(event:PayloadEvent):void
