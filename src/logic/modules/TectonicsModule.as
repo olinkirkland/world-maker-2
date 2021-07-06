@@ -28,7 +28,7 @@ package logic.modules
             return true;
         }
 
-        public static function quickStart():void
+        public static function generatePlates():void
         {
             // Remove all tectonic plates
             while (model.tectonicPlates.length > 0)
@@ -43,34 +43,28 @@ package logic.modules
                 plate = addPlate();
                 p = new Point(Map.mapWidth * .05, Map.mapHeight * (i + 1) / 4);
                 plate.origin = model.getCellByPoint(model.getClosestPoint(p));
-                plate.type = TectonicPlate.DEEP;
 
                 plate = addPlate();
                 p = new Point(Map.mapWidth * .95, Map.mapHeight * (i + 1) / 4);
                 plate.origin = model.getCellByPoint(model.getClosestPoint(p));
-                plate.type = TectonicPlate.DEEP;
             }
 
             // North/South Oceans
             plate = addPlate();
             p = new Point(Map.mapWidth * (1 / 3), Map.mapHeight * .95);
             plate.origin = model.getCellByPoint(model.getClosestPoint(p));
-            plate.type = TectonicPlate.DEEP;
 
             plate = addPlate();
             p = new Point(Map.mapWidth * (2 / 3), Map.mapHeight * .95);
             plate.origin = model.getCellByPoint(model.getClosestPoint(p));
-            plate.type = TectonicPlate.DEEP;
 
             plate = addPlate();
             p = new Point(Map.mapWidth * (1 / 3), Map.mapHeight * .05);
             plate.origin = model.getCellByPoint(model.getClosestPoint(p));
-            plate.type = TectonicPlate.DEEP;
 
             plate = addPlate();
             p = new Point(Map.mapWidth * (2 / 3), Map.mapHeight * .05);
             plate.origin = model.getCellByPoint(model.getClosestPoint(p));
-            plate.type = TectonicPlate.DEEP;
 
             var rand:Rand = new Rand(Math.random() * 99);
             var plateCount:int = 24;
@@ -120,6 +114,7 @@ package logic.modules
             assignCellsWithoutPlates();
             removeFragments();
             determineBorders();
+            determinePlateTypes();
         }
 
         private function assignCellsWithoutPlates():void
@@ -185,6 +180,22 @@ package logic.modules
                             queue.push(neighbor);
                             neighbor.used = true;
                         }
+                    }
+                }
+            }
+        }
+
+        private function determinePlateTypes():void
+        {
+            // All plates that touch the edge must be deep plates
+            for each (var plate:TectonicPlate in model.tectonicPlates)
+            {
+                for each (var cell:Cell in plate.cells)
+                {
+                    if (cell.isBorder)
+                    {
+                        plate.type = TectonicPlate.DEEP;
+                        break;
                     }
                 }
             }

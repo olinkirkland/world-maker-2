@@ -42,7 +42,7 @@
             imageType.includeInLayout = imageType.visible = imageType.source;
 
             imageDirection.color = _plate.color;
-            imageDirection.source = Util.iconFromDirection(_plate.direction);
+            imageDirection.source = Util.iconFromDirection(_plate.direction, true);
 
             labelId.text = "" + _plate.id.substr(0, 4);
             labelId.setStyle('color', plate.color);

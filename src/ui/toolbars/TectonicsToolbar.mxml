@@ -32,7 +32,7 @@
             listPlates.dataProvider = model.tectonicPlates;
 
             if (model.tectonicPlates.length == 0)
-                onQuickStart(null);
+                onGeneratePlates(null);
 
             sliderJitter.label.text = Local.text('jitter');
             sliderJitter.slider.minimum = 0;
@@ -137,17 +137,17 @@
             TectonicsModule.addPlate();
         }
 
-        private function onQuickStart(event:MouseEvent):void
+        private function onGeneratePlates(event:MouseEvent):void
         {
             var p:ConfirmPopup = new ConfirmPopup();
-            p.header = Local.text('tectonics_quick_start');
-            p.description = Local.text('tectonics_quick_start_text');
-            p.callbackConfirm = quickStart;
+            p.header = Local.text('tectonics_generate_plates');
+            p.description = Local.text('tectonics_generate_plates_text');
+            p.callbackConfirm = autoGenerate;
             PopupManager.open(p);
         }
 
 
-        private function quickStart():void
+        private function autoGenerate():void
         {
             var p:BusyPopup = new BusyPopup();
             p.text = Local.text('generating_plates');
@@ -156,7 +156,8 @@
                 checkBoxToggleDeepPlates.selected = true;
                 model.tectonicPlates.filterFunction = null;
                 model.tectonicPlates.refresh();
-                TectonicsModule.quickStart();
+                TectonicsModule.generatePlates();
+                task.resetLayers();
             };
             PopupManager.open(p);
         }
@@ -199,10 +200,10 @@
                   gap="10">
             <s:Label text="{Local.text('task_tectonics_text')}"
                      width="100%"/>
-            <s:Button label="{Local.text('quick_start')}"
+            <s:Button label="{Local.text('generate_plates')}"
                       icon="{Icons.Magic}"
                       width="100%"
-                      click="onQuickStart(event)"/>
+                      click="onGeneratePlates(event)"/>
             <s:Panel skinClass="ui.parts.skins.PanelSkinOutline"
                      width="100%">
                 <c:SliderWithInput id="sliderJitter"

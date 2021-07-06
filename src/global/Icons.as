@@ -200,6 +200,11 @@ package global
         [Embed(source="/assets/icons/magic.png")]
         public static const Magic:Class;
 
+        [Embed(source="/assets/icons/lock.png")]
+        public static const DeepPlate:Class;
+
+        // Circled Arrows
+
         [Embed(source="/assets/icons/circled-left.png")]
         public static const CircledLeft:Class;
 
@@ -224,7 +229,30 @@ package global
         [Embed(source="/assets/icons/circled-right-down.png")]
         public static const CircledRightDown:Class;
 
-        [Embed(source="/assets/icons/lock.png")]
-        public static const DeepPlate:Class;
+        // Arrows
+
+        [Embed(source="/assets/icons/arrow-left.png")]
+        public static const ArrowLeft:Class;
+
+        [Embed(source="/assets/icons/arrow-up.png")]
+        public static const ArrowUp:Class;
+
+        [Embed(source="/assets/icons/arrow-right.png")]
+        public static const ArrowRight:Class;
+
+        [Embed(source="/assets/icons/arrow-down.png")]
+        public static const ArrowDown:Class;
+
+        [Embed(source="/assets/icons/arrow-left-up.png")]
+        public static const ArrowLeftUp:Class;
+
+        [Embed(source="/assets/icons/arrow-right-up.png")]
+        public static const ArrowRightUp:Class;
+
+        [Embed(source="/assets/icons/arrow-left-down.png")]
+        public static const ArrowLeftDown:Class;
+
+        [Embed(source="/assets/icons/arrow-right-down.png")]
+        public static const ArrowRightDown:Class;
     }
 }

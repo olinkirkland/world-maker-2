@@ -69,29 +69,22 @@
             validate(true);
         }
 
-        override public function rebuild():void
+        override public function build():void
         {
             while (numElements > 0)
                 removeElementAt(0);
 
-            if (StaticOverlayTectonics(staticOverlay).showPlateTips)
-                for each (var plate:TectonicPlate in model.tectonicPlates)
-                    addPlateTip(plate);
-
-            // todo
-            // if (showBorderTips)
+            for each (var plate:TectonicPlate in model.tectonicPlates)
+                addPlateTip(plate);
 
             validate(true);
         }
 
-        override protected function populate():void
-        {
-            super.populate();
-            rebuild();
-        }
-
         private function addPlateTip(plate:TectonicPlate):void
         {
+            if (!StaticOverlayTectonics(staticOverlay).showPlateTips)
+                return;
+
             var plateTip:PlateTip = new PlateTip();
             plateTip.plate = plate;
 

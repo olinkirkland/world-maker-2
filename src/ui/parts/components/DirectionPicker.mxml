@@ -41,7 +41,7 @@
 
         private function validateIconAndLabel():void
         {
-            buttonCompass.setStyle("icon", Util.iconFromDirection(_direction));
+            buttonCompass.setStyle("icon", Util.iconFromDirection(_direction, true));
             buttonCompass.label = Util.labelFromDirection(_direction);
         }
         ]]></fx:Script>

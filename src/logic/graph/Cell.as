@@ -2,6 +2,10 @@ package logic.graph
 {
     import flash.geom.Point;
 
+    import global.Util;
+
+    import logic.graph.Corner;
+
     import logic.modules.TectonicPlate;
 
     public class Cell
@@ -15,6 +19,7 @@ package logic.graph
         public var edges:Vector.<Edge>;
         public var corners:Vector.<Corner>;
         public var area:Number;
+        public var isBorder:Boolean;
 
         public var tectonicPlate:TectonicPlate;
         public var tectonicStrength:Number;
@@ -47,6 +52,29 @@ package logic.graph
             }
 
             area = Number(area.toFixed(2));
+        }
+
+        public function defineBorder():void
+        {
+            isBorder = false;
+
+            var arr:Array = [];
+            for each (var edge:Edge in edges)
+            {
+                checkPoint(edge.v0.point);
+                checkPoint(edge.v1.point);
+            }
+
+            if (arr.length > 0)
+                isBorder = true;
+
+            function checkPoint(p:Point):void
+            {
+                if (arr.indexOf(p) >= 0)
+                    arr.removeAt(arr.indexOf(p));
+                else
+                    arr.push(p);
+            }
         }
 
         public function sharedEdge(neighbor:Cell):Edge

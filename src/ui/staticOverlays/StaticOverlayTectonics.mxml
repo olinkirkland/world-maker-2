@@ -78,7 +78,7 @@
 
         private function onTogglePlateTips(event:MouseEvent):void
         {
-            DynamicOverlayTectonics(dynamicOverlay).rebuild();
+            DynamicOverlayTectonics(dynamicOverlay).build();
         }
 
         public function get showPlateTips():Boolean

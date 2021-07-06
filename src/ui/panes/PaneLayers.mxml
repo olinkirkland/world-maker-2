@@ -105,32 +105,37 @@
         }
         ]]>
     </fx:Script>
-    <s:VGroup width="100%"
-              height="100%">
-        <s:HGroup width="100%"
-                  verticalAlign="middle"
-                  padding="10">
-            <s:Label text="{Local.text('map_layers')}"/>
-            <s:Label id="labelLayersCount"
-                     toolTip="{Local.text('layers_count_tooltip')}"/>
-            <s:Spacer width="100%"/>
-            <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
-                      icon="{Icons.Multiply}"
-                      click="onClose(event)"/>
-        </s:HGroup>
-        <s:List id="listLayers"
-                useVirtualLayout="false"
-                width="100%"
-                height="100%"
-                contentBackgroundAlpha="0"
-                borderVisible="false"
-                horizontalScrollPolicy="off"
-                preventSelection="true"
-                itemRenderer="ui.parts.itemRenderers.ItemRendererLayer"/>
-        <s:HGroup width="100%"
-                  horizontalAlign="center">
-            <s:Button label="{Local.text('reset')}"
-                      click="onResetLayers(event)"/>
-        </s:HGroup>
-    </s:VGroup>
+    <s:Panel width="100%"
+             height="100%"
+             skinClass="ui.parts.skins.PanelSkinOutline">
+        <s:VGroup width="100%"
+                  height="100%">
+            <s:HGroup width="100%"
+                      verticalAlign="middle"
+                      padding="5">
+                <s:Label text="{Local.text('map_layers')}"/>
+                <s:Label id="labelLayersCount"
+                         toolTip="{Local.text('layers_count_tooltip')}"/>
+                <s:Spacer width="100%"/>
+                <s:Button skinClass="ui.parts.skins.ButtonSkinIcon"
+                          icon="{Icons.Multiply}"
+                          click="onClose(event)"/>
+            </s:HGroup>
+            <s:List id="listLayers"
+                    useVirtualLayout="false"
+                    width="100%"
+                    height="100%"
+                    contentBackgroundAlpha="0"
+                    borderVisible="false"
+                    horizontalScrollPolicy="off"
+                    preventSelection="true"
+                    itemRenderer="ui.parts.itemRenderers.ItemRendererLayer"/>
+            <s:HGroup width="100%"
+                      horizontalAlign="center"
+                      padding="5">
+                <s:Button label="{Local.text('reset')}"
+                          click="onResetLayers(event)"/>
+            </s:HGroup>
+        </s:VGroup>
+    </s:Panel>
 </panes:Pane>

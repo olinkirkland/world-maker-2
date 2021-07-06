@@ -30,9 +30,7 @@ package logic
     import nodename.geom.*;
 
     import ui.PopupManager;
-    import ui.dynamicOverlays.DynamicOverlay;
     import ui.popups.BusyPopup;
-    import ui.staticOverlays.StaticOverlay;
 
     public class Model
     {
@@ -311,7 +309,10 @@ package logic
             }
 
             for each (cell in cells)
+            {
                 cell.calculateArea();
+                cell.defineBorder();
+            }
         }
 
         private function setupEdge(edge:Edge):void

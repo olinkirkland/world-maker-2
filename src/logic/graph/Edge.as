@@ -1,7 +1,9 @@
-package logic.graph {
+package logic.graph
+{
     import flash.geom.Point;
 
-    public class Edge {
+    public class Edge
+    {
         public var index:int;
 
         // The polygons connected by the Delaunay edge

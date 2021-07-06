@@ -6,14 +6,11 @@
 
     <fx:Script><![CDATA[
         import events.PayloadEvent;
-        import events.PayloadEvent;
-        import events.PayloadEvent;
 
         import global.Color;
         import global.Icons;
         import global.Local;
         import global.Signal;
-        import global.Util;
 
         import logic.Model;
         import logic.modules.Module;
@@ -26,10 +23,8 @@
         import ui.PopupManager;
         import ui.dynamicOverlays.DynamicOverlay;
         import ui.panes.Pane;
-
         import ui.popups.ConfirmPopup;
         import ui.staticOverlays.StaticOverlay;
-
         import ui.toolbars.Toolbar;
 
         // Singletons

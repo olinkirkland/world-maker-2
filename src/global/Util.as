@@ -250,9 +250,20 @@ package global
             return new Point(point.x + Math.cos(r) * distance, point.y + Math.sin(r) * distance);
         }
 
-        public static function iconFromDirection(value:Number):Class
+        public static function iconFromDirection(value:Number, circled:Boolean):Class
         {
-            var iconsByDirection:Object = {
+            var arrowIconsByDirection:Object = {
+                0: Icons.ArrowUp,
+                45: Icons.ArrowRightUp,
+                90: Icons.ArrowRight,
+                135: Icons.ArrowRightDown,
+                180: Icons.ArrowDown,
+                225: Icons.ArrowLeftDown,
+                270: Icons.ArrowLeft,
+                315: Icons.ArrowLeftUp
+            };
+
+            var circledArrowIconsByDirection:Object = {
                 0: Icons.CircledUp,
                 45: Icons.CircledRightUp,
                 90: Icons.CircledRight,
@@ -262,7 +273,8 @@ package global
                 270: Icons.CircledLeft,
                 315: Icons.CircledLeftUp
             };
-            return iconsByDirection[value];
+
+            return circled ? circledArrowIconsByDirection[value] : arrowIconsByDirection[value];
         }
 
         public static function labelFromDirection(value:Number):String

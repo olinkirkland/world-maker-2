@@ -26,7 +26,6 @@
             model = Model.instance;
 
             addEventListeners();
-
             populate();
         }
 
@@ -37,6 +36,7 @@
         protected function populate():void
         {
             trace("DynamicOverlay:populate");
+            build();
         }
 
         public function validate(considerScale:Boolean = false):void
@@ -58,10 +58,16 @@
                 element.x = p.x * mapLayerGroup.scaleX;
                 element.y = p.y * mapLayerGroup.scaleY;
             }
+
+            callLater(function ():void
+            {
+                visible = true;
+            });
         }
 
-        public function rebuild():void
+        public function build():void
         {
+            visible = false;
         }
 
         public function dispose():void
