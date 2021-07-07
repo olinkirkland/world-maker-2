@@ -5,10 +5,12 @@ package global
         [Embed(source='/assets/languages/en.json', mimeType='application/octet-stream')]
         private static var en:Class;
 
-        [Embed(source='/assets/languages/pig.json', mimeType='application/octet-stream')]
-        private static var pig:Class;
+        [Embed(source='/assets/languages/pg.json', mimeType='application/octet-stream')]
+        private static var pg:Class;
 
         private static var dictionary:Object;
+
+        private static var _language:String;
 
         public static function text(key:String, args:Array = null):String
         {
@@ -17,11 +19,11 @@ package global
             // If there are arguments, replace each "%%" in the key with an arg
 
             if (!dictionary)
-                language = "en";
+                throw new Error("dictionary must be set first");
 
             if (!dictionary[key])
             {
-                //trace("@Local, missing key: " + key);
+                trace("@Local, missing key: " + key);
                 if (args && args.length > 0)
                     return "[ " + key + " ] " + args.join(", ");
                 return "[ " + key + " ]";
@@ -36,14 +38,20 @@ package global
             return str;
         }
 
-        private static function set language(id:String):void
+        public static function set language(id:String):void
         {
-            var languages:Object = {"en": en, "pig": pig};
-            if (!languages[id])
+            _language = id;
+            var languages:Object = {"en": en, "pg": pg};
+            if (!languages[_language])
                 return;
 
-            var str:String = new languages[id]();
+            var str:String = new languages[_language]();
             dictionary = JSON.parse(str);
+        }
+
+        public static function get language():String
+        {
+            return _language;
         }
     }
 }

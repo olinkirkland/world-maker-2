@@ -24,6 +24,7 @@
         import ui.dynamicOverlays.DynamicOverlay;
         import ui.panes.Pane;
         import ui.popups.ConfirmPopup;
+        import ui.popups.OptionsPopup;
         import ui.staticOverlays.StaticOverlay;
         import ui.toolbars.Toolbar;
 
@@ -39,16 +40,18 @@
 
         private function onCreationComplete(event:FlexEvent):void
         {
-            signal = Signal.instance;
-            model = Model.instance;
-            taskManager = TaskManager.instance;
+            //groupContent.visible = false;
 
-            groupContent.visible = false;
+            signal = Signal.instance;
+            taskManager = TaskManager.instance;
+            model = Model.instance;
 
             signal.addEventListener(PayloadEvent.TASK_CHANGED, onTaskChanged);
             signal.addEventListener(PayloadEvent.VALIDITY_CHANGED, onValidityChanged);
             signal.addEventListener(PayloadEvent.OPEN_PANE, onOpenPane);
             signal.addEventListener(PayloadEvent.CLOSE_PANE, onClosePane);
+
+            onTaskChanged(null);
         }
 
         private function onTaskChanged(event:PayloadEvent):void
@@ -173,7 +176,8 @@
 
         private function onClickOptions(event:MouseEvent):void
         {
-            // todo open the options popup
+            var p:OptionsPopup = new OptionsPopup();
+            PopupManager.open(p);
         }
 
         private function onClickNextTask(event:MouseEvent):void

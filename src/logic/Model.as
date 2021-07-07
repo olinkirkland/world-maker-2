@@ -462,6 +462,9 @@ package logic
 
             var u:Object = {};
 
+            // Options
+            u.language = Local.language;
+
             // Task
             u.currentTaskId = taskManager.currentTask.id;
 
@@ -482,6 +485,9 @@ package logic
         public function deserialize(u:Object):void
         {
             Util.log("Model:deserialize");
+
+            // Options
+            Local.language = u.language ? u.language : "en";
 
             // Points
             if (u.points)

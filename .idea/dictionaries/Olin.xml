@@ -2,6 +2,7 @@
   <dictionary name="Olin">
     <words>
       <w>delaunay</w>
+      <w>preinitialize</w>
       <w>uncollapsed</w>
       <w>unuse</w>
       <w>voronoi</w>

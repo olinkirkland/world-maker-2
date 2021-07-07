@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<popups:Popup xmlns:fx="http://ns.adobe.com/mxml/2009"
+              xmlns:s="library://ns.adobe.com/flex/spark"
+              xmlns:popups="ui.popups.*"
+              width="320">
+
+    <fx:Script><![CDATA[
+        import global.Icons;
+        import global.Local;
+
+        import logic.Model;
+
+        import mx.collections.ArrayCollection;
+        import mx.events.FlexEvent;
+
+        import spark.events.IndexChangeEvent;
+
+        private var restartRequired:Boolean = false;
+
+        override public function onCreationComplete(event:FlexEvent):void
+        {
+            super.onCreationComplete(event);
+
+            buttonBarLanguages.dataProvider = new ArrayCollection([
+                {id: 'en', label: Local.text('english')},
+                {id: 'pg', label: Local.text('pig-latin')}
+            ]);
+
+            for each (var language:Object in buttonBarLanguages.dataProvider)
+                if (language.id == Local.language)
+                    buttonBarLanguages.selectedItem = language;
+        }
+
+        private function cancelAndClose(event:MouseEvent):void
+        {
+            close();
+        }
+
+        private function applyAndClose(event:MouseEvent):void
+        {
+            Local.language = buttonBarLanguages.selectedItem.id;
+
+            if (restartRequired)
+            {
+                Model.instance.save();
+                NativeApplication.nativeApplication.exit();
+            }
+
+            close();
+        }
+
+        private function validateRestartRequired():void
+        {
+            restartRequired = false;
+            var l:String = Local.language;
+            if (l != buttonBarLanguages.selectedItem.id)
+                restartRequired = true;
+
+            buttonApply.label = restartRequired ? Local.text('apply_and_restart') : Local.text('apply');
+            buttonApply.setStyle("icon", restartRequired ? Icons.Error : null);
+        }
+
+        private function onChangeLanguages(event:IndexChangeEvent):void
+        {
+            validateRestartRequired();
+        }
+        ]]>
+    </fx:Script>
+
+    <s:VGroup gap="10"
+              width="100%">
+
+        <s:HGroup width="100%"
+                  verticalAlign="middle">
+            <s:Label id="labelHeader"
+                     text="{Local.text('options')}"
+                     width="100%"
+                     styleName="header"/>
+        </s:HGroup>
+
+        <s:Panel width="100%">
+            <s:VGroup width="100%">
+                <s:Label text="{Local.text('languages')}"
+                         width="100%"/>
+                <s:ButtonBar id="buttonBarLanguages"
+                             change="onChangeLanguages(event)"
+                             width="100%"
+                             requireSelection="true"/>
+            </s:VGroup>
+        </s:Panel>
+
+        <s:HGroup width="100%"
+                  horizontalAlign="right">
+            <s:Button id="buttonCancel"
+                      label="{Local.text('cancel')}"
+                      click="cancelAndClose(event)"/>
+            <s:Button id="buttonApply"
+                      label="{Local.text('apply')}"
+                      click="applyAndClose(event)"/>
+        </s:HGroup>
+
+    </s:VGroup>
+</popups:Popup>
